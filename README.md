@@ -1,4 +1,4 @@
-# digital_driving_log-backend
+# digital_driving_log
 A project to digitalize driving logs (for private use).
 
 ## Whole project
