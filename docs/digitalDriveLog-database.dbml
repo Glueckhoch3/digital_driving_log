@@ -1,0 +1,54 @@
+Table Car [headercolor: #6a2b94] {
+	carId bigint [ pk, increment, not null, unique ]
+	name varchar(50) [ not null ]
+	platenumber varchar(15) [ not null ]
+	userId bigint [ note: '''owner
+''' ]
+	data jsonb
+}
+
+Table Drive [headercolor: #175e7a] {
+	driveId bigint [ pk, not null ]
+	carId bigint [ not null ]
+	distance integer [ not null ]
+	userId bigint [ not null, note: 'driver' ]
+	createdAt timestamp [ not null ]
+}
+
+Table Transaktion [headercolor: #175e7a] {
+	id bigint [ pk, increment, not null, unique ]
+	carId bigint [ not null ]
+	userId bigint [ not null, note: 'buyer' ]
+	transactionObject varchar(127) [ not null ]
+	price money [ not null ]
+	dayOfTransaction date [ not null ]
+	costType char(1) [ not null ]
+}
+
+Table User [headercolor: #177a1b] {
+	userId bigint [ pk, increment, not null, unique ]
+	firstname varchar(63) [ not null ]
+	lastname varchar(63) [ not null ]
+	driverLicense boolean [ not null ]
+	brithday date [ not null ]
+}
+
+Ref fk_Car_userId_User {
+	Car.userId > User.userId [ delete: no action, update: no action ]
+}
+
+Ref fk_Car_carId_Drive {
+	Car.carId < Drive.carId [ delete: no action, update: no action ]
+}
+
+Ref fk_User_userId_Drive {
+	User.userId < Drive.userId [ delete: no action, update: no action ]
+}
+
+Ref fk_User_userId_Transaktion {
+	User.userId < Transaktion.userId [ delete: no action, update: no action ]
+}
+
+Ref fk_Car_carId_Transaktion {
+	Car.carId < Transaktion.carId [ delete: no action, update: no action ]
+}
