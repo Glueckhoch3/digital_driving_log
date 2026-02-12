@@ -8,57 +8,6 @@
       </div>
     }
 
-    <!-- Cost Summary -->
-    @if (costSummary()) {
-      <div class="costs__summary">
-        <div class="summary-card">
-          <h3>Fixed Costs</h3>
-          <p class="summary-card__value">€{{ costSummary()!.totalFixed.toFixed(2) }}</p>
-        </div>
-        <div class="summary-card">
-          <h3>Variable Costs</h3>
-          <p class="summary-card__value">€{{ costSummary()!.totalVariable.toFixed(2) }}</p>
-        </div>
-        <div class="summary-card">
-          <h3>Fuel Costs</h3>
-          <p class="summary-card__value">€{{ costSummary()!.totalFuel.toFixed(2) }}</p>
-        </div>
-        <div class="summary-card summary-card--highlight">
-          <h3>Total Costs</h3>
-          <p class="summary-card__value">€{{ costSummary()!.totalCosts.toFixed(2) }}</p>
-        </div>
-      </div>
-
-      <!-- Cost Distribution -->
-      <div class="costs__distribution">
-        <h2>Cost Distribution</h2>
-        <div class="distribution-table">
-          <table>
-            <thead>
-              <tr>
-                <th>Shareholder</th>
-                <th>Total Owed</th>
-                <th>Fixed</th>
-                <th>Variable</th>
-                <th>Fuel</th>
-              </tr>
-            </thead>
-            <tbody>
-              @for (dist of costSummary()!.distributions; track dist.shareholder) {
-                <tr>
-                  <td>{{ dist.shareholder }}</td>
-                  <td class="amount">€{{ dist.totalOwed.toFixed(2) }}</td>
-                  <td>€{{ dist.fixedCosts.toFixed(2) }}</td>
-                  <td>€{{ dist.variableCosts.toFixed(2) }}</td>
-                  <td>€{{ dist.fuelCosts.toFixed(2) }}</td>
-                </tr>
-              }
-            </tbody>
-          </table>
-        </div>
-      </div>
-    }
-
     <!-- New Cost Form -->
     <div class="costs__form-container">
       <h2>Record New Cost</h2>
@@ -130,6 +79,57 @@
         </div>
       </form>
     </div>
+
+    <!-- Cost Summary -->
+    @if (costSummary()) {
+      <div class="costs__summary">
+        <div class="summary-card">
+          <h3>Fixed Costs</h3>
+          <p class="summary-card__value">€{{ costSummary()!.totalFixed.toFixed(2) }}</p>
+        </div>
+        <div class="summary-card">
+          <h3>Variable Costs</h3>
+          <p class="summary-card__value">€{{ costSummary()!.totalVariable.toFixed(2) }}</p>
+        </div>
+        <div class="summary-card">
+          <h3>Fuel Costs</h3>
+          <p class="summary-card__value">€{{ costSummary()!.totalFuel.toFixed(2) }}</p>
+        </div>
+        <div class="summary-card summary-card--highlight">
+          <h3>Total Costs</h3>
+          <p class="summary-card__value">€{{ costSummary()!.totalCosts.toFixed(2) }}</p>
+        </div>
+      </div>
+
+      <!-- Cost Distribution -->
+      <div class="costs__distribution">
+        <h2>Cost Distribution</h2>
+        <div class="distribution-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Shareholder</th>
+                <th>Total Owed</th>
+                <th>Fixed</th>
+                <th>Variable</th>
+                <th>Fuel</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (dist of costSummary()!.distributions; track dist.shareholder) {
+                <tr>
+                  <td>{{ dist.shareholder }}</td>
+                  <td class="amount">€{{ dist.totalOwed.toFixed(2) }}</td>
+                  <td>€{{ dist.fixedCosts.toFixed(2) }}</td>
+                  <td>€{{ dist.variableCosts.toFixed(2) }}</td>
+                  <td>€{{ dist.fuelCosts.toFixed(2) }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    }
 
     <!-- Costs List -->
     <div class="costs__list-container">

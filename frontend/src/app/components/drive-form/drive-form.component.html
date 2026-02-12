@@ -59,6 +59,22 @@
       }
     </div>
 
+      <div class="drive-form__group drive-form__group--refill-toggle">
+        <button type="button" class="drive-form__button drive-form__button--secondary" (click)="toggleRefill()">
+          @if (!showRefill()) { <span>(add refill)</span> } @else { <span>Cancel Refill</span> }
+        </button>
+      </div>
+
+      @if (showRefill()) {
+        <div class="drive-form__group drive-form__group--refill">
+          <label class="drive-form__label">Refill Entry</label>
+          <div class="drive-form__refill-fields">
+            <input type="number" class="drive-form__input" placeholder="Liters" [(ngModel)]="refill.liters" min="0.1" step="0.1" [disabled]="isSubmitting()" />
+            <input type="number" class="drive-form__input" placeholder="Cost (€)" [(ngModel)]="refill.cost" min="0.01" step="0.01" [disabled]="isSubmitting()" />
+          </div>
+        </div>
+      }
+
     <div class="drive-form__group">
       <label for="notes" class="drive-form__label">Notes</label>
       <textarea

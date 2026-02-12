@@ -23,10 +23,10 @@ export class HeaderComponent {
   readonly menuItems = [
     { label: 'Record Drive', route: '/drives' },
     { label: 'Driving History', route: '/history' },
-    { label: 'Fuel Tracking', route: '/fuel' },
     { label: 'Costs', route: '/costs' },
+    { label: 'Fuel Tracking', route: '/fuel' },
     { label: 'Shareholders', route: '/shareholders' },
-    { label: 'Settlements', route: '/settlements' },
-    { label: 'Reports', route: '/reports' }
+    { label: 'Reports', route: '/reports' },
+    { label: 'Settlements', route: '/settlements' }
   ];
 }

@@ -107,6 +107,34 @@
     margin-top: 0.25rem;
   }
 
+    &__group--refill-toggle {
+      margin-bottom: 0;
+      @media (min-width: 768px) {
+        grid-column: 1 / -1;
+      }
+    }
+
+    &__group--refill {
+      background: #f8f9fa;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      @media (min-width: 768px) {
+        grid-column: 1 / -1;
+      }
+    }
+
+    &__refill-fields {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      > input {
+        flex: 1 1 120px;
+        min-width: 100px;
+      }
+    }
+
   &__buttons {
     display: flex;
     gap: 1rem;
