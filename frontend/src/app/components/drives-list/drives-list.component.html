@@ -1,0 +1,87 @@
+<div class="drives-list">
+  <div class="drives-list__header">
+    <h2 class="drives-list__title">Driving History</h2>
+    <div class="drives-list__stats">
+      <div class="stat">
+        <span class="stat__label">Total Distance:</span>
+        <span class="stat__value">{{ getTotalDistance() }} km</span>
+      </div>
+      <div class="stat">
+        <span class="stat__label">Total Drives:</span>
+        <span class="stat__value">{{ drives().length }}</span>
+      </div>
+    </div>
+  </div>
+
+  @if (isLoading()) {
+    <div class="drives-list__loading">
+      <p>Loading drives...</p>
+    </div>
+  } @else if (drives().length === 0) {
+    <div class="drives-list__empty">
+      <p>No drives recorded yet. Start by recording your first drive!</p>
+    </div>
+  } @else {
+    <div class="drives-list__controls">
+      <label class="drives-list__sort-label">Sort by:</label>
+      <div class="drives-list__sort-buttons">
+        <button
+          class="drives-list__sort-btn"
+          [class.active]="sortBy() === 'date'"
+          (click)="setSortBy('date')"
+        >
+          Date
+        </button>
+        <button
+          class="drives-list__sort-btn"
+          [class.active]="sortBy() === 'driver'"
+          (click)="setSortBy('driver')"
+        >
+          Driver
+        </button>
+        <button
+          class="drives-list__sort-btn"
+          [class.active]="sortBy() === 'distance'"
+          (click)="setSortBy('distance')"
+        >
+          Distance
+        </button>
+      </div>
+    </div>
+
+    <div class="drives-list__table-wrapper">
+      <table class="drives-list__table">
+        <thead class="drives-list__thead">
+          <tr>
+            <th>Date</th>
+            <th>Driver</th>
+            <th>Distance (km)</th>
+            <th>Notes</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody class="drives-list__tbody">
+          @for (drive of getSortedDrives(); track drive.id) {
+            <tr class="drives-list__row">
+              <td class="drives-list__cell">{{ formatDate(drive.date) }}</td>
+              <td class="drives-list__cell">{{ drive.driver }}</td>
+              <td class="drives-list__cell">{{ drive.distance }}</td>
+              <td class="drives-list__cell drives-list__cell--notes">
+                {{ drive.notes || '-' }}
+              </td>
+              <td class="drives-list__cell drives-list__cell--actions">
+                <button
+                  class="drives-list__action-btn drives-list__action-btn--delete"
+                  (click)="deleteDrive(drive.id)"
+                  title="Delete drive"
+                >
+                  Delete
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>
