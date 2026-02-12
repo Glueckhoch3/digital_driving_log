@@ -33,6 +33,15 @@
   <!-- Mobile Navigation Menu -->
   @if (isMenuOpen()) {
     <nav class="header__nav header__nav--mobile">
+      <div class="header__mobile-close">
+        <button
+          class="header__mobile-close-btn"
+          (click)="closeMenu()"
+          aria-label="Close navigation menu"
+        >
+          ✕
+        </button>
+      </div>
       <a
         *ngFor="let item of menuItems"
         [routerLink]="item.route"
