@@ -1,0 +1,42 @@
+.driving-history {
+  background-color: #ecf0f1;
+  min-height: calc(100vh - 70px);
+  padding: 2rem 1rem;
+
+  &__container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  &__page-title {
+    color: #2c3e50;
+    margin: 0 0 2rem 0;
+    font-size: 2rem;
+
+    @media (max-width: 768px) {
+      font-size: 1.5rem;
+    }
+  }
+
+  &__content {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  &__section {
+    animation: fadeIn 0.3s ease;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

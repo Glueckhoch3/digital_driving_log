@@ -1,0 +1,264 @@
+.shareholders {
+  background-color: #ecf0f1;
+  min-height: calc(100vh - 70px);
+  padding: 2rem 1rem;
+
+  &__container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  &__title {
+    color: #2c3e50;
+    margin: 0 0 2rem 0;
+    font-size: 2rem;
+  }
+
+  &__alert {
+    padding: 1rem;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+
+    &--success {
+      background-color: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+  }
+
+  &__balances {
+    margin-bottom: 2rem;
+
+    h2 {
+      color: #2c3e50;
+      margin: 0 0 1rem 0;
+    }
+  }
+
+  &__form-container {
+    background-color: white;
+    border-radius: 8px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+    h2 {
+      margin: 0 0 1.5rem 0;
+      color: #2c3e50;
+    }
+  }
+
+  &__form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  &__form-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+  }
+
+  &__form-group {
+    display: flex;
+    flex-direction: column;
+
+    label {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: #2c3e50;
+    }
+  }
+
+  &__input {
+    padding: 0.75rem;
+    border: 1px solid #bdc3c7;
+    border-radius: 4px;
+    font-size: 1rem;
+
+    &:focus {
+      outline: none;
+      border-color: #3498db;
+      box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+    }
+
+    &:disabled {
+      background-color: #ecf0f1;
+    }
+  }
+
+  &__error {
+    color: #e74c3c;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+  }
+
+  &__buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+  }
+
+  &__button {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+
+    &--primary {
+      background-color: #3498db;
+      color: white;
+
+      &:hover:not(:disabled) {
+        background-color: #2980b9;
+      }
+
+      &:disabled {
+        background-color: #95a5a6;
+      }
+    }
+  }
+
+  &__list-container {
+    background-color: white;
+    border-radius: 8px;
+    padding: 2rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+    h2 {
+      margin: 0 0 1.5rem 0;
+      color: #2c3e50;
+    }
+  }
+
+  &__table-wrapper {
+    overflow-x: auto;
+  }
+
+  &__table {
+    width: 100%;
+    border-collapse: collapse;
+
+    thead {
+      background-color: #34495e;
+      color: white;
+
+      th {
+        padding: 1rem;
+        text-align: left;
+        font-weight: 600;
+      }
+    }
+
+    tbody {
+      tr {
+        border-bottom: 1px solid #ecf0f1;
+
+        &:hover {
+          background-color: #f8f9fa;
+        }
+
+        td {
+          padding: 1rem;
+        }
+      }
+    }
+  }
+
+  &__delete-btn {
+    padding: 0.5rem 1rem;
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+
+    &:hover {
+      background-color: #c0392b;
+    }
+  }
+
+  &__empty {
+    text-align: center;
+    color: #7f8c8d;
+    padding: 2rem;
+  }
+}
+
+.balance-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1rem;
+}
+
+.balance-card {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 1.5rem;
+  border-radius: 8px;
+  color: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+  h3 {
+    margin: 0 0 1rem 0;
+    font-size: 1.1rem;
+  }
+
+  .balance-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .balance-item {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.95rem;
+
+    span {
+      &.positive {
+        color: #2ecc71;
+        font-weight: 600;
+      }
+
+      &.negative {
+        color: #e74c3c;
+        font-weight: 600;
+      }
+    }
+  }
+}
+
+.type-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+
+  &.permanent {
+    background-color: #3498db;
+    color: white;
+  }
+
+  &:not(.permanent) {
+    background-color: #f39c12;
+    color: white;
+  }
+}
+
+.status-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  background-color: #e74c3c;
+  color: white;
+
+  &.active {
+    background-color: #27ae60;
+  }
+}

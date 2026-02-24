@@ -1,0 +1,151 @@
+<div class="drive-form">
+
+  @if (successMessage()) {
+    <div class="drive-form__alert drive-form__alert--success">
+      {{ successMessage() }}
+    </div>
+  }
+
+  @if (errorMessage()) {
+    <div class="drive-form__alert drive-form__alert--error">
+      {{ errorMessage() }}
+    </div>
+  }
+
+  <form [formGroup]="driveForm" (ngSubmit)="onSubmit()" class="drive-form__form">
+    <div class="drive-form__group">
+      <label for="date" class="drive-form__label">Date *</label>
+      <input
+        type="date"
+        id="date"
+        formControlName="date"
+        class="drive-form__input"
+        [disabled]="isSubmitting()"
+      />
+      @if (driveForm.get('date')?.invalid && driveForm.get('date')?.touched) {
+        <span class="drive-form__error">Date is required</span>
+      }
+    </div>
+
+    <div class="drive-form__group">
+      <label for="driver" class="drive-form__label">Driver Name *</label>
+      <input
+        type="text"
+        id="driver"
+        formControlName="driver"
+        placeholder="Enter driver name"
+        class="drive-form__input"
+        [disabled]="isSubmitting()"
+      />
+      @if (driveForm.get('driver')?.invalid && driveForm.get('driver')?.touched) {
+        <span class="drive-form__error">Driver name is required (minimum 2 characters)</span>
+      }
+    </div>
+
+    <div class="drive-form__group">
+      <label for="distance" class="drive-form__label">Distance (km) *</label>
+      <input
+        type="number"
+        id="distance"
+        formControlName="distance"
+        placeholder="Enter distance in kilometers"
+        class="drive-form__input"
+        step="1"
+        [disabled]="isSubmitting()"
+      />
+      @if (driveForm.get('distance')?.invalid && driveForm.get('distance')?.touched) {
+        <span class="drive-form__error">Distance must be greater than 0</span>
+      }
+    </div>
+
+      <div class="drive-form__group drive-form__group--refill-toggle">
+        <button type="button" class="drive-form__button drive-form__button--primary" (click)="toggleRefill()">
+          @if (!showRefill()) { <span>add refill</span> } @else { <span>cancel refill</span> }
+        </button>
+      </div>
+
+      @if (showRefill()) {
+        <div class="drive-form__group drive-form__group--refill">
+          <div class="drive-form__group">
+            <label for="liters" class="drive-form__label">Fuelvolume (l) *</label>
+            <input
+              type="number"
+              id="liters"
+              formControlName="liters"
+              placeholder="Enter fuel in liters"
+              class="drive-form__input"
+              step="0.01"
+              [disabled]="isSubmitting()"
+            />
+            @if (driveForm.get('liters')?.invalid && driveForm.get('liters')?.touched) {
+              <span class="drive-form__error">Liters must be greater than 0</span>
+            }
+          </div>
+
+          <div class="drive-form__group">
+            <label for="fuel_volume" class="drive-form__label">Cost (€) *</label>
+            <input
+              type="number"
+              id="cost"
+              formControlName="cost"
+              placeholder="Enter Cost in Euros"
+              class="drive-form__input"
+              step="0.01"
+              [disabled]="isSubmitting()"
+            />
+            @if (driveForm.get('cost')?.invalid && driveForm.get('cost')?.touched) {
+              <span class="drive-form__error">Cost must be greater than 0</span>
+            }
+          </div>
+
+          <div class="drive-form__group">
+            <label for="refilldate" class="drive-form__label">Date *</label>
+            <input
+              type="date"
+              id="refilldate"
+              formControlName="refilldate"
+              class="drive-form__input"
+              [disabled]="isSubmitting()"
+            />
+            @if (driveForm.get('refilldate')?.invalid && driveForm.get('refilldate')?.touched) {
+              <span class="drive-form__error">Date is required</span>
+            }
+          </div>
+        </div>
+      }
+
+    <div class="drive-form__group">
+      <label for="notes" class="drive-form__label">Notes</label>
+      <textarea
+        id="notes"
+        formControlName="notes"
+        placeholder="Add any notes about this drive"
+        class="drive-form__textarea"
+        rows="4"
+        [disabled]="isSubmitting()"
+      ></textarea>
+    </div>
+
+    <div class="drive-form__buttons">
+      <button
+        type="button"
+        class="drive-form__button drive-form__button--secondary"
+        (click)="resetForm()"
+        [disabled]="isSubmitting()"
+      >
+        Reset
+      </button>
+      <button
+        type="submit"
+        class="drive-form__button drive-form__button--primary rightaligned"
+        [disabled]="!driveForm.valid || isSubmitting()"
+      >
+        @if (isSubmitting()) {
+          <span>Recording...</span>
+        } @else {
+          <span>Record Drive</span>
+        }
+      </button>
+    </div>
+  </form>
+</div>
