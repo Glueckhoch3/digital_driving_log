@@ -80,7 +80,7 @@
 
     &:disabled {
       background-color: #ecf0f1;
-      color: #7f8c8d;
+      color: #5d6566;
       cursor: not-allowed;
     }
   }
@@ -135,6 +135,10 @@
       }
     }
 
+  .rightaligned {
+    margin-left: auto;
+  }
+
   &__buttons {
     display: flex;
     gap: 1rem;
@@ -143,7 +147,7 @@
     @media (min-width: 768px) {
       grid-column: 1 / -1;
       flex-direction: row;
-      justify-content: flex-end;
+      justify-content: flex-start;
     }
   }
 
@@ -165,17 +169,17 @@
       }
 
       &:disabled {
-        background-color: #95a5a6;
+        background-color: #616666;
         cursor: not-allowed;
       }
     }
 
     &--secondary {
-      background-color: #95a5a6;
+      background-color: #616666;
       color: white;
 
       &:hover:not(:disabled) {
-        background-color: #7f8c8d;
+        background-color: #050505;
       }
 
       &:disabled {
