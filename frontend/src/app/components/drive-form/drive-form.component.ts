@@ -1,9 +1,9 @@
 import { Component, OnInit, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, FormGroup, FormsModule , Validators } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { DriveService } from '../../services/drive.service';
-import { CostService } from '../../services/cost.service';
-import { CreateCostRequest } from '../../models/cost.model';
+import { Drive } from '../../models/drive.model';
 
 @Component({
   selector: 'app-drive-form',
@@ -13,9 +13,8 @@ import { CreateCostRequest } from '../../models/cost.model';
   styleUrl: './drive-form.component.scss'
 })
 export class DriveFormComponent implements OnInit {
-  private readonly fb = inject(FormBuilder);
-  private readonly driveService = inject(DriveService);
-  private readonly costService = inject(CostService);
+  private fb = inject(FormBuilder);
+  private driveService = inject(DriveService);
 
   driveForm!: FormGroup;
   isSubmitting = signal(false);
@@ -23,18 +22,14 @@ export class DriveFormComponent implements OnInit {
   errorMessage = signal('');
 
   showRefill = signal(false);
+  refill = {
+    date: [new Date().toISOString().split('T')[0], Validators.required],
+    liters: [0, [Validators.required, Validators.min(0)]],
+    cost: [0, [Validators.required, Validators.min(0)]],
+  };
 
   toggleRefill(): void {
     this.showRefill.update(v => !v);
-    if (this.showRefill()) {
-      this.driveForm.addControl('liters', this.fb.control(0, [Validators.required, Validators.min(0.01)]));
-      this.driveForm.addControl('cost', this.fb.control(0, [Validators.required, Validators.min(0.01)]));
-      this.driveForm.addControl('refilldate', this.fb.control(new Date().toISOString().split('T')[0], Validators.required));
-    } else {
-      this.driveForm.removeControl('liters');
-      this.driveForm.removeControl('cost');
-      this.driveForm.removeControl('refilldate');
-    }
   }
 
   ngOnInit(): void {
@@ -45,7 +40,7 @@ export class DriveFormComponent implements OnInit {
     this.driveForm = this.fb.group({
       date: [new Date().toISOString().split('T')[0], Validators.required],
       driver: ['', [Validators.required, Validators.minLength(2)]],
-      distance: [0, [Validators.required, Validators.min(1)]],
+      distance: [0, [Validators.required, Validators.min(0.1)]],
       notes: ['']
     });
   }
@@ -57,52 +52,34 @@ export class DriveFormComponent implements OnInit {
       this.successMessage.set('');
 
       const formValue = this.driveForm.value;
-      const driveRequest = {
+      const request = {
         date: new Date(formValue.date),
         driver: formValue.driver,
-        distance: Number.parseFloat(formValue.distance),
+        distance: parseFloat(formValue.distance),
         notes: formValue.notes || undefined
       };
 
-      this.driveService.createDrive(driveRequest).subscribe({
+      this.driveService.createDrive(request).subscribe({
         next: () => {
-          if (this.showRefill()) {
-            const costRequest: CreateCostRequest = {
-              type: 'variable',
-              amount: formValue.cost,
-              shareholder: formValue.driver,
-              date: new Date(formValue.refilldate),
-              description: 'Fuel refill',
-              category: 'Fuel'
-            };
-            this.costService.createCost(costRequest).subscribe({
-              next: () => {
-                this.successMessage.set('Drive and fuel cost recorded successfully!');
-                this.resetForm();
-                this.isSubmitting.set(false);
-                setTimeout(() => {
-                  this.successMessage.set('');
-                }, 3000);
-              },
-              error: () => {
-                this.errorMessage.set('Drive recorded but failed to record fuel cost.');
-                this.resetForm();
-                this.isSubmitting.set(false);
-              }
-            });
-          } else {
-            this.successMessage.set('Drive recorded successfully!');
-            this.resetForm();
-            this.isSubmitting.set(false);
-            setTimeout(() => {
-              this.successMessage.set('');
-            }, 3000);
-          }
+          this.successMessage.set('Drive recorded successfully!');
+          this.driveForm.reset({
+            date: new Date().toISOString().split('T')[0],
+            driver: '',
+            distance: 0,
+            notes: ''
+          });
+          this.isSubmitting.set(false);
+
+          setTimeout(() => {
+            this.successMessage.set('');
+          }, 3000);
         },
         error: () => {
           this.errorMessage.set('Failed to record drive. Please try again.');
           this.isSubmitting.set(false);
         }
+
+        // add costService.createCost(request).subscribe()
       });
     }
   }
@@ -112,10 +89,7 @@ export class DriveFormComponent implements OnInit {
       date: new Date().toISOString().split('T')[0],
       driver: '',
       distance: 0,
-      notes: '',
-      refilldate: new Date().toISOString().split('T')[0],
-      liters: 0,
-      cost: 0
+      notes: ''
     });
     this.errorMessage.set('');
     this.successMessage.set('');

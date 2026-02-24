@@ -4,7 +4,6 @@ export interface Cost {
   id?: string;
   type: CostType;
   amount: number;
-  shareholder: string;
   date: Date;
   description: string;
   category?: string;
@@ -42,7 +41,6 @@ export interface CostSummary {
 export interface CreateCostRequest {
   type: CostType;
   amount: number;
-  shareholder: string;
   date: Date;
   description: string;
   category?: string;

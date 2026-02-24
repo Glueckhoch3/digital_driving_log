@@ -32,7 +32,6 @@ export class CostsComponent implements OnInit {
     this.costForm = this.fb.group({
       type: ['fixed', Validators.required],
       amount: [0, [Validators.required, Validators.min(0.01)]],
-      shareholder: ['', [Validators.required, Validators.minLength(2)]],
       date: [new Date().toISOString().split('T')[0], Validators.required],
       description: ['', [Validators.required, Validators.minLength(3)]],
       category: [''],

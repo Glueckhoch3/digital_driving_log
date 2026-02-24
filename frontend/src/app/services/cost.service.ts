@@ -1,17 +1,16 @@
 import { Injectable, signal } from '@angular/core';
 import { Observable, of, BehaviorSubject } from 'rxjs';
-import { Cost, CostSummary, CreateCostRequest } from '../models/cost.model';
+import { Cost, CostDistribution, CostSummary, CreateCostRequest } from '../models/cost.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CostService {
-  private readonly costs = signal<Cost[]>([
+  private costs = signal<Cost[]>([
     {
       id: '1',
       type: 'fixed',
       amount: 500,
-      shareholder: 'Jane Smith',
       date: new Date(2026, 0, 1),
       description: 'Car Insurance',
       category: 'Insurance',
@@ -20,7 +19,7 @@ export class CostService {
     }
   ]);
 
-  private readonly costs$ = new BehaviorSubject<Cost[]>(this.costs());
+  private costs$ = new BehaviorSubject<Cost[]>(this.costs());
 
   getCosts(): Observable<Cost[]> {
     return this.costs$;
