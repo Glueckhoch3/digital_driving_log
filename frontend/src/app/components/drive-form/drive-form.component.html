@@ -1,5 +1,4 @@
 <div class="drive-form">
-  <h2 class="drive-form__title">Record a New Drive</h2>
 
   @if (successMessage()) {
     <div class="drive-form__alert drive-form__alert--success">
@@ -51,7 +50,7 @@
         formControlName="distance"
         placeholder="Enter distance in kilometers"
         class="drive-form__input"
-        step="0.1"
+        step="1"
         [disabled]="isSubmitting()"
       />
       @if (driveForm.get('distance')?.invalid && driveForm.get('distance')?.touched) {
@@ -60,17 +59,57 @@
     </div>
 
       <div class="drive-form__group drive-form__group--refill-toggle">
-        <button type="button" class="drive-form__button drive-form__button--secondary" (click)="toggleRefill()">
-          @if (!showRefill()) { <span>(add refill)</span> } @else { <span>Cancel Refill</span> }
+        <button type="button" class="drive-form__button drive-form__button--primary" (click)="toggleRefill()">
+          @if (!showRefill()) { <span>add refill</span> } @else { <span>cancel refill</span> }
         </button>
       </div>
 
       @if (showRefill()) {
         <div class="drive-form__group drive-form__group--refill">
-          <label class="drive-form__label">Refill Entry</label>
-          <div class="drive-form__refill-fields">
-            <input type="number" class="drive-form__input" placeholder="Liters" [(ngModel)]="refill.liters" min="0.1" step="0.1" [disabled]="isSubmitting()" />
-            <input type="number" class="drive-form__input" placeholder="Cost (€)" [(ngModel)]="refill.cost" min="0.01" step="0.01" [disabled]="isSubmitting()" />
+          <div class="drive-form__group">
+            <label for="liters" class="drive-form__label">Fuelvolume (l) *</label>
+            <input
+              type="number"
+              id="liters"
+              formControlName="liters"
+              placeholder="Enter fuel in liters"
+              class="drive-form__input"
+              step="0.01"
+              [disabled]="isSubmitting()"
+            />
+            @if (driveForm.get('liters')?.invalid && driveForm.get('liters')?.touched) {
+              <span class="drive-form__error">Liters must be greater than 0</span>
+            }
+          </div>
+
+          <div class="drive-form__group">
+            <label for="fuel_volume" class="drive-form__label">Cost (€) *</label>
+            <input
+              type="number"
+              id="cost"
+              formControlName="cost"
+              placeholder="Enter Cost in Euros"
+              class="drive-form__input"
+              step="0.01"
+              [disabled]="isSubmitting()"
+            />
+            @if (driveForm.get('cost')?.invalid && driveForm.get('cost')?.touched) {
+              <span class="drive-form__error">Cost must be greater than 0</span>
+            }
+          </div>
+
+          <div class="drive-form__group">
+            <label for="refilldate" class="drive-form__label">Date *</label>
+            <input
+              type="date"
+              id="refilldate"
+              formControlName="refilldate"
+              class="drive-form__input"
+              [disabled]="isSubmitting()"
+            />
+            @if (driveForm.get('refilldate')?.invalid && driveForm.get('refilldate')?.touched) {
+              <span class="drive-form__error">Date is required</span>
+            }
           </div>
         </div>
       }
@@ -89,8 +128,16 @@
 
     <div class="drive-form__buttons">
       <button
+        type="button"
+        class="drive-form__button drive-form__button--secondary"
+        (click)="resetForm()"
+        [disabled]="isSubmitting()"
+      >
+        Reset
+      </button>
+      <button
         type="submit"
-        class="drive-form__button drive-form__button--primary"
+        class="drive-form__button drive-form__button--primary rightaligned"
         [disabled]="!driveForm.valid || isSubmitting()"
       >
         @if (isSubmitting()) {
@@ -98,14 +145,6 @@
         } @else {
           <span>Record Drive</span>
         }
-      </button>
-      <button
-        type="button"
-        class="drive-form__button drive-form__button--secondary"
-        (click)="resetForm()"
-        [disabled]="isSubmitting()"
-      >
-        Reset
       </button>
     </div>
   </form>

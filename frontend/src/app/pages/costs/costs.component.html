@@ -34,17 +34,28 @@
           </div>
 
           <div class="costs__form-group">
-            <label>Date *</label>
+            <label>Shareholder *</label>
             <input
-              type="date"
-              formControlName="date"
-              class="costs__input"
+              type="text"
+              formControlName="shareholder"
+              placeholder="Name"
+              class="shareholder__input"
               [disabled]="isSubmitting()"
             />
           </div>
         </div>
 
         <div class="costs__form-row">
+        <div class="costs__form-group">
+          <label>Date *</label>
+          <input
+            type="date"
+            formControlName="date"
+            class="costs__input"
+            [disabled]="isSubmitting()"
+          />
+        </div>
+
           <div class="costs__form-group">
             <label>Description *</label>
             <input
@@ -146,6 +157,7 @@
                 <th>Date</th>
                 <th>Type</th>
                 <th>Amount</th>
+                <th>Shareholder</th>
                 <th>Description</th>
                 <th>Category</th>
                 <th>Actions</th>
@@ -161,6 +173,7 @@
                     </span>
                   </td>
                   <td>€{{ cost.amount.toFixed(2) }}</td>
+                  <td>{{ cost.shareholder }}</td>
                   <td>{{ cost.description }}</td>
                   <td>{{ cost.category || '-' }}</td>
                   <td>
