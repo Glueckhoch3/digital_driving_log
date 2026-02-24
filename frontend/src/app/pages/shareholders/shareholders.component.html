@@ -1,0 +1,170 @@
+<div class="shareholders">
+  <div class="shareholders__container">
+    <h1 class="shareholders__title">Shareholder Management</h1>
+
+    @if (successMessage()) {
+      <div class="shareholders__alert shareholders__alert--success">
+        {{ successMessage() }}
+      </div>
+    }
+
+    <!-- Current Balances -->
+    <div class="shareholders__balances">
+      <h2>Current Balances</h2>
+      @if (balances().length > 0) {
+        <div class="balance-cards">
+          @for (balance of balances(); track balance.shareholder.id) {
+            <div class="balance-card">
+              <h3>{{ balance.shareholder.name }}</h3>
+              <div class="balance-info">
+                <div class="balance-item">
+                  <span>Total Balance:</span>
+                  <span [class.positive]="balance.totalBalance > 0" [class.negative]="balance.totalBalance < 0">
+                    €{{ balance.totalBalance.toFixed(2) }}
+                  </span>
+                </div>
+                <div class="balance-item">
+                  @if (balance.owes > 0) {
+                    <span>Owes: €{{ balance.owes.toFixed(2) }}</span>
+                  } @else if (balance.isOwed > 0) {
+                    <span>Is Owed: €{{ balance.isOwed.toFixed(2) }}</span>
+                  }
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </div>
+
+    <!-- Add New Shareholder Form -->
+    <div class="shareholders__form-container">
+      <h2>Add New Shareholder</h2>
+      <form [formGroup]="shareholderForm" (ngSubmit)="onSubmit()" class="shareholders__form">
+        <div class="shareholders__form-row">
+          <div class="shareholders__form-group">
+            <label>Name *</label>
+            <input
+              type="text"
+              formControlName="name"
+              placeholder="Full name"
+              class="shareholders__input"
+              [disabled]="isSubmitting()"
+            />
+            @if (shareholderForm.get('name')?.invalid && shareholderForm.get('name')?.touched) {
+              <span class="shareholders__error">Name is required</span>
+            }
+          </div>
+
+          <div class="shareholders__form-group">
+            <label>Email *</label>
+            <input
+              type="email"
+              formControlName="email"
+              placeholder="Email address"
+              class="shareholders__input"
+              [disabled]="isSubmitting()"
+            />
+            @if (shareholderForm.get('email')?.invalid && shareholderForm.get('email')?.touched) {
+              <span class="shareholders__error">Valid email is required</span>
+            }
+          </div>
+        </div>
+
+        <div class="shareholders__form-row">
+          <div class="shareholders__form-group">
+            <label>Participant Type *</label>
+            <select formControlName="participantType" class="shareholders__input" [disabled]="isSubmitting()">
+              <option value="permanent">Permanent</option>
+              <option value="temporary">Temporary</option>
+            </select>
+          </div>
+
+          <div class="shareholders__form-group">
+            <label>Start Date *</label>
+            <input
+              type="date"
+              formControlName="startDate"
+              class="shareholders__input"
+              [disabled]="isSubmitting()"
+            />
+          </div>
+
+          <div class="shareholders__form-group">
+            <label>End Date (For Temporary)</label>
+            <input
+              type="date"
+              formControlName="endDate"
+              class="shareholders__input"
+              [disabled]="isSubmitting()"
+            />
+          </div>
+        </div>
+
+        <div class="shareholders__buttons">
+          <button
+            type="submit"
+            class="shareholders__button shareholders__button--primary"
+            [disabled]="!shareholderForm.valid || isSubmitting()"
+          >
+            Add Shareholder
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Shareholders List -->
+    <div class="shareholders__list-container">
+      <h2>All Shareholders</h2>
+      @if (isLoading()) {
+        <p>Loading shareholders...</p>
+      } @else if (shareholders().length === 0) {
+        <p class="shareholders__empty">No shareholders yet.</p>
+      } @else {
+        <div class="shareholders__table-wrapper">
+          <table class="shareholders__table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Type</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (shareholder of shareholders(); track shareholder.id) {
+                <tr>
+                  <td>{{ shareholder.name }}</td>
+                  <td>{{ shareholder.email }}</td>
+                  <td>
+                    <span class="type-badge" [class.permanent]="shareholder.participantType === 'permanent'">
+                      {{ shareholder.participantType | uppercase }}
+                    </span>
+                  </td>
+                  <td>{{ formatDate(shareholder.startDate) }}</td>
+                  <td>{{ shareholder.endDate ? formatDate(shareholder.endDate) : '-' }}</td>
+                  <td>
+                    <span class="status-badge" [class.active]="shareholder.isActive">
+                      {{ shareholder.isActive ? 'Active' : 'Inactive' }}
+                    </span>
+                  </td>
+                  <td>
+                    <button
+                      class="shareholders__delete-btn"
+                      (click)="removeShareholder(shareholder.id)"
+                    >
+                      Remove
+                    </button>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </div>
+  </div>
+</div>
