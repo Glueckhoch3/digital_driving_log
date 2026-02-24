@@ -1,0 +1,195 @@
+<div class="costs">
+  <div class="costs__container">
+    <h1 class="costs__title">Expense Management</h1>
+
+    @if (successMessage()) {
+      <div class="costs__alert costs__alert--success">
+        {{ successMessage() }}
+      </div>
+    }
+
+    <!-- New Cost Form -->
+    <div class="costs__form-container">
+      <h2>Record New Cost</h2>
+      <form [formGroup]="costForm" (ngSubmit)="onSubmit()" class="costs__form">
+        <div class="costs__form-row">
+          <div class="costs__form-group">
+            <label>Cost Type *</label>
+            <select formControlName="type" class="costs__input">
+              <option value="fixed">Fixed Cost (Insurance, Registration)</option>
+              <option value="variable">Variable Cost (Maintenance, Repair)</option>
+            </select>
+          </div>
+
+          <div class="costs__form-group">
+            <label>Amount (€) *</label>
+            <input
+              type="number"
+              formControlName="amount"
+              placeholder="0.00"
+              class="costs__input"
+              step="0.01"
+              [disabled]="isSubmitting()"
+            />
+          </div>
+
+          <div class="costs__form-group">
+            <label>Shareholder *</label>
+            <input
+              type="text"
+              formControlName="shareholder"
+              placeholder="Name"
+              class="shareholder__input"
+              [disabled]="isSubmitting()"
+            />
+          </div>
+        </div>
+
+        <div class="costs__form-row">
+        <div class="costs__form-group">
+          <label>Date *</label>
+          <input
+            type="date"
+            formControlName="date"
+            class="costs__input"
+            [disabled]="isSubmitting()"
+          />
+        </div>
+
+          <div class="costs__form-group">
+            <label>Description *</label>
+            <input
+              type="text"
+              formControlName="description"
+              placeholder="e.g., Winter Tires"
+              class="costs__input"
+              [disabled]="isSubmitting()"
+            />
+          </div>
+
+          <div class="costs__form-group">
+            <label>Category</label>
+            <input
+              type="text"
+              formControlName="category"
+              placeholder="e.g., Maintenance"
+              class="costs__input"
+              [disabled]="isSubmitting()"
+            />
+          </div>
+        </div>
+
+        <div class="costs__buttons">
+          <button
+            type="submit"
+            class="costs__button costs__button--primary"
+            [disabled]="!costForm.valid || isSubmitting()"
+          >
+            Record Cost
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Cost Summary -->
+    @if (costSummary()) {
+      <div class="costs__summary">
+        <div class="summary-card">
+          <h3>Fixed Costs</h3>
+          <p class="summary-card__value">€{{ costSummary()!.totalFixed.toFixed(2) }}</p>
+        </div>
+        <div class="summary-card">
+          <h3>Variable Costs</h3>
+          <p class="summary-card__value">€{{ costSummary()!.totalVariable.toFixed(2) }}</p>
+        </div>
+        <div class="summary-card">
+          <h3>Fuel Costs</h3>
+          <p class="summary-card__value">€{{ costSummary()!.totalFuel.toFixed(2) }}</p>
+        </div>
+        <div class="summary-card summary-card--highlight">
+          <h3>Total Costs</h3>
+          <p class="summary-card__value">€{{ costSummary()!.totalCosts.toFixed(2) }}</p>
+        </div>
+      </div>
+
+      <!-- Cost Distribution -->
+      <div class="costs__distribution">
+        <h2>Cost Distribution</h2>
+        <div class="distribution-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Shareholder</th>
+                <th>Total Owed</th>
+                <th>Fixed</th>
+                <th>Variable</th>
+                <th>Fuel</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (dist of costSummary()!.distributions; track dist.shareholder) {
+                <tr>
+                  <td>{{ dist.shareholder }}</td>
+                  <td class="amount">€{{ dist.totalOwed.toFixed(2) }}</td>
+                  <td>€{{ dist.fixedCosts.toFixed(2) }}</td>
+                  <td>€{{ dist.variableCosts.toFixed(2) }}</td>
+                  <td>€{{ dist.fuelCosts.toFixed(2) }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    }
+
+    <!-- Costs List -->
+    <div class="costs__list-container">
+      <h2>All Costs</h2>
+      @if (isLoading()) {
+        <p>Loading costs...</p>
+      } @else if (costs().length === 0) {
+        <p class="costs__empty">No costs recorded yet.</p>
+      } @else {
+        <div class="costs__table-wrapper">
+          <table class="costs__table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Type</th>
+                <th>Amount</th>
+                <th>Shareholder</th>
+                <th>Description</th>
+                <th>Category</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (cost of costs(); track cost.id) {
+                <tr>
+                  <td>{{ formatDate(cost.date) }}</td>
+                  <td>
+                    <span class="cost-badge" [class.fixed]="cost.type === 'fixed'">
+                      {{ cost.type | uppercase }}
+                    </span>
+                  </td>
+                  <td>€{{ cost.amount.toFixed(2) }}</td>
+                  <td>{{ cost.shareholder }}</td>
+                  <td>{{ cost.description }}</td>
+                  <td>{{ cost.category || '-' }}</td>
+                  <td>
+                    <button
+                      class="costs__delete-btn"
+                      (click)="deleteCost(cost.id)"
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </div>
+  </div>
+</div>

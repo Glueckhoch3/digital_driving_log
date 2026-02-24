@@ -1,0 +1,57 @@
+<header class="header">
+  <div class="header__container">
+    <div class="header__logo">
+      <h1>Digital Driving Log</h1>
+    </div>
+
+    <!-- Mobile burger menu button -->
+    <button
+      class="header__burger"
+      (click)="toggleMenu()"
+      [attr.aria-expanded]="isMenuOpen()"
+      aria-label="Toggle navigation menu"
+    >
+      <span class="header__burger-line"></span>
+      <span class="header__burger-line"></span>
+      <span class="header__burger-line"></span>
+    </button>
+
+    <!-- Desktop Navigation -->
+    <nav class="header__nav header__nav--desktop">
+      <a
+        *ngFor="let item of menuItems"
+        [routerLink]="item.route"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: false }"
+        class="header__nav-link"
+      >
+        {{ item.label }}
+      </a>
+    </nav>
+  </div>
+
+  <!-- Mobile Navigation Menu -->
+  @if (isMenuOpen()) {
+    <nav class="header__nav header__nav--mobile">
+      <div class="header__mobile-close">
+        <button
+          class="header__mobile-close-btn"
+          (click)="closeMenu()"
+          aria-label="Close navigation menu"
+        >
+          ✕
+        </button>
+      </div>
+      <a
+        *ngFor="let item of menuItems"
+        [routerLink]="item.route"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: false }"
+        class="header__nav-link"
+        (click)="closeMenu()"
+      >
+        {{ item.label }}
+      </a>
+    </nav>
+  }
+</header>
