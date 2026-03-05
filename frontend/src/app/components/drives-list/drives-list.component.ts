@@ -2,16 +2,17 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DriveService } from '../../services/drive.service';
 import { Drive } from '../../models/drive.model';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-drives-list',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TranslateModule],
   templateUrl: './drives-list.component.html',
   styleUrl: './drives-list.component.scss'
 })
 export class DrivesListComponent implements OnInit {
-  private driveService = inject(DriveService);
+  private readonly driveService = inject(DriveService);
 
   drives = signal<Drive[]>([]);
   isLoading = signal(true);
