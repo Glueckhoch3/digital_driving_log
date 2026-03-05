@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { CostService } from '../../services/cost.service';
 import { Cost, CostSummary } from '../../models/cost.model';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-costs',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, TranslateModule],
   templateUrl: './costs.component.html',
   styleUrl: './costs.component.scss'
 })

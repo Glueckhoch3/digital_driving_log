@@ -22,6 +22,7 @@
     "labels": {
       "date": "Date *",
       "driver": "Driver Name *",
+      "refueler": "Refueler Name *",
       "distance": "Distance (km) *",
       "fuelVolume": "Fuelvolume (l) *",
       "cost": "Cost (€) *",
@@ -85,7 +86,8 @@
       "title": "Record New Cost",
       "labels": {
         "costType": "Cost Type *",
-        "amount": "Amount (€) *",
+        "price": "Price (€) *",
+        "amount": "Amount *",
         "shareholder": "Shareholder *",
         "date": "Date *",
         "description": "Description *",
@@ -96,6 +98,7 @@
         "variable": "Variable Cost (Maintenance, Repair)"
       },
       "placeholders": {
+        "price": "0.00",
         "amount": "0.00",
         "shareholder": "Name",
         "description": "e.g., Winter Tires",
@@ -136,6 +139,10 @@
       },
       "actions": {
         "delete": "Delete"
+      },
+      "type": {
+        "fixed": "FIXED",
+        "variable": "VARIABLE"
       }
     }
   },

@@ -14,7 +14,7 @@
 
   <form [formGroup]="driveForm" (ngSubmit)="onSubmit()" class="drive-form__form">
     <div class="drive-form__group">
-      <label for="distance" class="drive-form__label">Distance (km) *</label>
+      <label for="distance" class="drive-form__label">{{ 'driveForm.labels.distance' | translate }}</label>
       <input
         type="number"
         id="distance"
@@ -25,7 +25,7 @@
         [disabled]="isSubmitting()"
       />
       @if (driveForm.get('distance')?.invalid && driveForm.get('distance')?.touched) {
-        <span class="drive-form__error">Distance must be greater than 0</span>
+        <span class="drive-form__error">{{ 'driveForm.errors.distanceRequired' | translate }}</span>
       }
     </div>
     
@@ -45,7 +45,7 @@
     </div>
 
     <div class="drive-form__group">
-      <label for="date" class="drive-form__label">Date *</label>
+      <label for="date" class="drive-form__label">{{ 'driveForm.labels.date' | translate }}</label>
       <input
         type="date"
         id="date"
@@ -54,7 +54,7 @@
         [disabled]="isSubmitting()"
       />
       @if (driveForm.get('date')?.invalid && driveForm.get('date')?.touched) {
-        <span class="drive-form__error">Date is required</span>
+        <span class="drive-form__error">{{ 'driveForm.errors.dateRequired' | translate }}</span>
       }
     </div>
 
@@ -94,12 +94,12 @@
               [disabled]="isSubmitting()"
             />
             @if (driveForm.get('cost')?.invalid && driveForm.get('cost')?.touched) {
-              <span class="drive-form__error">Cost must be greater than 0</span>
+              <span class="drive-form__error">{{ 'driveForm.errors.costRequired' | translate }}</span>
             }
           </div>
 
           <div class="drive-form__group">
-            <label for="driver" class="drive-form__label">Driver Name *</label>
+            <label for="driver" class="drive-form__label">{{ 'driveForm.labels.refueler' | translate }}</label>
             <input
               type="text"
               id="refillname"
@@ -109,7 +109,7 @@
               [disabled]="isSubmitting()"
             />
             @if (driveForm.get('driver')?.invalid && driveForm.get('driver')?.touched) {
-              <span class="drive-form__error">Driver name is required (minimum 2 characters)</span>
+              <span class="drive-form__error">{{ 'driveForm.errors.driverRequired' | translate }}</span>
             }
           </div>
 

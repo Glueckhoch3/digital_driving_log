@@ -96,6 +96,7 @@
         "variable": "Variable Cost (Maintenance, Repair)"
       },
       "placeholders": {
+        "price": "0.00",
         "amount": "0.00",
         "shareholder": "Name",
         "description": "e.g., Winter Tires",
@@ -136,6 +137,10 @@
       },
       "actions": {
         "delete": "Delete"
+      },
+      "type": {
+        "fixed": "FIXED",
+        "variable": "VARIABLE"
       }
     }
   },
