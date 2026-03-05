@@ -69,8 +69,9 @@ export class DriveFormComponent implements OnInit {
           if (this.showRefill()) {
             const costRequest: CreateCostRequest = {
               type: 'variable',
-              amount: formValue.cost,
-              shareholder: formValue.driver,
+              price: formValue.amount,
+              amount: formValue.liters,
+              shareholder: formValue.refillname,
               date: new Date(formValue.refilldate),
               description: 'Fuel refill',
               category: 'Fuel'
@@ -109,13 +110,14 @@ export class DriveFormComponent implements OnInit {
 
   resetForm(): void {
     this.driveForm.reset({
-      date: new Date().toISOString().split('T')[0],
-      driver: '',
       distance: 0,
+      driver: '',
+      date: new Date().toISOString().split('T')[0],
       notes: '',
-      refilldate: new Date().toISOString().split('T')[0],
+      refillname: '',
       liters: 0,
-      cost: 0
+      cost: 0,
+      refilldate: new Date().toISOString().split('T')[0]
     });
     this.errorMessage.set('');
     this.successMessage.set('');

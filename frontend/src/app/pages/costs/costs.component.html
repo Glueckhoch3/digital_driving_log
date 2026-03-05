@@ -22,7 +22,21 @@
           </div>
 
           <div class="costs__form-group">
-            <label>Amount (€) *</label>
+            <label>Price (€) *</label>
+            <input
+              type="number"
+              formControlName="price"
+              placeholder="0.00"
+              class="costs__input"
+              step="0.01"
+              [disabled]="isSubmitting()"
+            />
+          </div>
+        </div>
+
+        <div class="costs__form-row">
+          <div class="costs__form-group">
+            <label>Amount *</label>
             <input
               type="number"
               formControlName="amount"
@@ -39,22 +53,22 @@
               type="text"
               formControlName="shareholder"
               placeholder="Name"
-              class="shareholder__input"
+              class="costs__input"
               [disabled]="isSubmitting()"
             />
           </div>
         </div>
 
         <div class="costs__form-row">
-        <div class="costs__form-group">
-          <label>Date *</label>
-          <input
-            type="date"
-            formControlName="date"
-            class="costs__input"
-            [disabled]="isSubmitting()"
-          />
-        </div>
+          <div class="costs__form-group">
+            <label>Date *</label>
+            <input
+              type="date"
+              formControlName="date"
+              class="costs__input"
+              [disabled]="isSubmitting()"
+            />
+          </div>
 
           <div class="costs__form-group">
             <label>Description *</label>

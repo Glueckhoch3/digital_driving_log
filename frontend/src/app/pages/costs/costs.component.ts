@@ -31,10 +31,11 @@ export class CostsComponent implements OnInit {
   private initializeForm(): void {
     this.costForm = this.fb.group({
       type: ['fixed', Validators.required],
-      amount: [0, [Validators.required, Validators.min(0.01)]],
+      price: [0, [Validators.required, Validators.min(0)]],
+      amount: [0, [Validators.required, Validators.min(0)]],
       shareholder: ['', [Validators.required, Validators.minLength(2)]],
       date: [new Date().toISOString().split('T')[0], Validators.required],
-      description: ['', [Validators.required, Validators.minLength(3)]],
+      description: ['', [Validators.required, Validators.minLength(2)]],
       category: [''],
       affectedPeriod: ['']
     });
@@ -70,6 +71,7 @@ export class CostsComponent implements OnInit {
           this.loadCostSummary();
           this.costForm.reset({
             type: 'fixed',
+            price: 0,
             amount: 0,
             date: new Date().toISOString().split('T')[0],
             description: '',

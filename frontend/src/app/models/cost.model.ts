@@ -3,6 +3,7 @@ export type CostType = 'fixed' | 'variable';
 export interface Cost {
   id?: string;
   type: CostType;
+  price: number;
   amount: number;
   shareholder: string;
   date: Date;
@@ -41,6 +42,7 @@ export interface CostSummary {
 
 export interface CreateCostRequest {
   type: CostType;
+  price: number;
   amount: number;
   shareholder: string;
   date: Date;
