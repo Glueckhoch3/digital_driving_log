@@ -10,7 +10,8 @@ export class CostService {
     {
       id: '1',
       type: 'fixed',
-      amount: 500,
+      price: 500,
+      amount: 1,
       shareholder: 'Jane Smith',
       date: new Date(2026, 0, 1),
       description: 'Car Insurance',

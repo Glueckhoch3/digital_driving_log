@@ -14,7 +14,7 @@
       <form [formGroup]="costForm" (ngSubmit)="onSubmit()" class="costs__form">
         <div class="costs__form-row">
           <div class="costs__form-group">
-            <label>Cost Type *</label>
+            <label for="cost_type" class="cost-form">Cost Type *</label>
             <select formControlName="type" class="costs__input">
               <option value="fixed">Fixed Cost (Insurance, Registration)</option>
               <option value="variable">Variable Cost (Maintenance, Repair)</option>
@@ -22,7 +22,21 @@
           </div>
 
           <div class="costs__form-group">
-            <label>Amount (€) *</label>
+            <label for="price" class="cost-form">Price (€) *</label>
+            <input
+              type="number"
+              formControlName="price"
+              placeholder="0.00"
+              class="costs__input"
+              step="0.01"
+              [disabled]="isSubmitting()"
+            />
+          </div>
+        </div>
+
+        <div class="costs__form-row">
+          <div class="costs__form-group">
+            <label for="amount" class="cost-form">Amount *</label>
             <input
               type="number"
               formControlName="amount"
@@ -34,30 +48,30 @@
           </div>
 
           <div class="costs__form-group">
-            <label>Shareholder *</label>
+            <label for="shareholder" class="cost-form">Shareholder *</label>
             <input
               type="text"
               formControlName="shareholder"
               placeholder="Name"
-              class="shareholder__input"
+              class="costs__input"
               [disabled]="isSubmitting()"
             />
           </div>
         </div>
 
         <div class="costs__form-row">
-        <div class="costs__form-group">
-          <label>Date *</label>
-          <input
-            type="date"
-            formControlName="date"
-            class="costs__input"
-            [disabled]="isSubmitting()"
-          />
-        </div>
+          <div class="costs__form-group">
+            <label for="date" class="cost-form">Date *</label>
+            <input
+              type="date"
+              formControlName="date"
+              class="costs__input"
+              [disabled]="isSubmitting()"
+            />
+          </div>
 
           <div class="costs__form-group">
-            <label>Description *</label>
+            <label for="description" class="cost-form">Description *</label>
             <input
               type="text"
               formControlName="description"
@@ -68,7 +82,7 @@
           </div>
 
           <div class="costs__form-group">
-            <label>Category</label>
+            <label for="category" class="cost-form">Category</label>
             <input
               type="text"
               formControlName="category"
