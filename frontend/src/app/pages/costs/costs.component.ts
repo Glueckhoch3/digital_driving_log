@@ -12,8 +12,8 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
   styleUrl: './costs.component.scss'
 })
 export class CostsComponent implements OnInit {
-  private costService = inject(CostService);
-  private fb = inject(FormBuilder);
+  private readonly costService = inject(CostService);
+  private readonly fb = inject(FormBuilder);
 
   costs = signal<Cost[]>([]);
   costSummary = signal<CostSummary | null>(null);
