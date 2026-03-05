@@ -4,11 +4,12 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, FormsModule , Validators }
 import { DriveService } from '../../services/drive.service';
 import { CostService } from '../../services/cost.service';
 import { CreateCostRequest } from '../../models/cost.model';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-drive-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, TranslateModule],
   templateUrl: './drive-form.component.html',
   styleUrl: './drive-form.component.scss'
 })
