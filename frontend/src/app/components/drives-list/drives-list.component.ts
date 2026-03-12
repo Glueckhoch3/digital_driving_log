@@ -24,9 +24,9 @@ export class DrivesListComponent implements OnInit {
 
   private loadDrives(): void {
     this.isLoading.set(true);
-    this.driveService.getDrives().subscribe({
-      next: drives => {
-        this.drives.set(drives);
+    this.driveService.getDriveById("1").subscribe({
+      next: drive => {
+        this.drives.set(drive ? [drive] : []);
         this.isLoading.set(false);
       }
     });

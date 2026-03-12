@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, FormsModule , Validators } from '@angular/forms';
 import { DriveService } from '../../services/drive.service';
 import { CostService } from '../../services/cost.service';
-import { CreateCostRequest } from '../../models/costs';
+import { CostRequest } from '../../models/costs';
 import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
@@ -60,6 +60,7 @@ export class DriveFormComponent implements OnInit {
       const formValue = this.driveForm.value;
       const driveRequest = {
         date: new Date(formValue.date),
+        carId: "1", // Placeholder, replace with actual car ID logic
         driver: formValue.driver,
         distance: Number.parseFloat(formValue.distance),
         notes: formValue.notes || undefined
@@ -68,7 +69,7 @@ export class DriveFormComponent implements OnInit {
       this.driveService.createDrive(driveRequest).subscribe({
         next: () => {
           if (this.showRefill()) {
-            const costRequest: CreateCostRequest = {
+            const costRequest: CostRequest = {
               type: 'variable',
               price: formValue.amount,
               amount: formValue.liters,
@@ -77,7 +78,7 @@ export class DriveFormComponent implements OnInit {
               description: 'Fuel refill',
               category: 'Fuel'
             };
-            this.costService.createCost(costRequest).subscribe({
+            this.costService.createCost("1",costRequest).subscribe({
               next: () => {
                 this.successMessage.set('Drive and fuel cost recorded successfully!');
                 this.resetForm();

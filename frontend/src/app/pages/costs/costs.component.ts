@@ -44,7 +44,7 @@ export class CostsComponent implements OnInit {
 
   private loadCosts(): void {
     this.isLoading.set(true);
-    this.costService.getCostsForCar(1).subscribe({ //Change carId:1 when multiple cars implemented
+    this.costService.getCostsForCar("1").subscribe({ //Change carId:1 when multiple cars implemented
       next: costs => {
         this.costs.set(costs);
         this.isLoading.set(false);
@@ -65,7 +65,7 @@ export class CostsComponent implements OnInit {
       this.isSubmitting.set(true);
       const formValue = this.costForm.value;
 
-      this.costService.createCost(1,formValue).subscribe({  //Change carId:1 when multiple cars implemented
+      this.costService.createCost("1",formValue).subscribe({  //Change carId:1 when multiple cars implemented
         next: () => {
           this.successMessage.set('Cost recorded successfully!');
           this.loadCosts();
