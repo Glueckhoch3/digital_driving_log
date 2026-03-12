@@ -71,12 +71,13 @@ public class DriveService {
     private DriveDto convertToDto(Drive drive) {
         return new DriveDto(
                 drive.getDriveId(),
-                drive.getCar() != null ? drive.getCar().getCarId() : null,
+                drive.getCar().getCarId(),
                 drive.getCar() != null ? drive.getCar().getName() : null,
                 drive.getDistance(),
-                drive.getDriver() != null ? drive.getDriver().getUserId() : null,
+                drive.getDriver().getUserId(),
                 drive.getDriver() != null ? drive.getDriver().getFirstname() + " " + drive.getDriver().getLastname() : null,
-                drive.getCreatedAt()
+                drive.getDriveDate(),
+                drive.getNotes() != null ? drive.getNotes() : null
         );
     }
 }

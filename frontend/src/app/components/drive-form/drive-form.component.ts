@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, FormsModule , Validators } from '@angular/forms';
 import { DriveService } from '../../services/drive.service';
 import { CostService } from '../../services/cost.service';
-import { CreateCostRequest } from '../../models/cost.model';
+import { CreateCostRequest } from '../../models/costs';
 import { TranslateModule } from '@ngx-translate/core';
 
 @Component({

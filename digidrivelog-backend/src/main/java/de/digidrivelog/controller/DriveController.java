@@ -18,6 +18,7 @@ public class DriveController {
 
     private final DriveService driveService;
 
+    // Maybe just get the car options
     @GetMapping
     public ResponseEntity<List<DriveDto>> getAllDrives() {
         List<DriveDto> drives = driveService.getAllDrives();

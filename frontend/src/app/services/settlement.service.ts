@@ -1,12 +1,18 @@
 import { Injectable, signal } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { Observable, of, BehaviorSubject } from 'rxjs';
-import { Settlement, SettlementReport } from '../models/settlement.model';
+import { Settlement, SettlementReport } from '../models/settlements';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SettlementService {
-  private settlements = signal<Settlement[]>([
+  private readonly apiUrl = `${environment.apiUrl}/articles`;
+
+  constructor(private readonly http: HttpClient) {}
+
+  private readonly settlements = signal<Settlement[]>([
     {
       id: '1',
       period: '2025',
@@ -25,7 +31,7 @@ export class SettlementService {
     }
   ]);
 
-  private settlements$ = new BehaviorSubject<Settlement[]>(this.settlements());
+  private readonly settlements$ = new BehaviorSubject<Settlement[]>(this.settlements());
 
   getSettlements(): Observable<Settlement[]> {
     return this.settlements$;

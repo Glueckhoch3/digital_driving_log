@@ -5,8 +5,15 @@ export interface Drive {
   distance: number;
   notes?: string;
   fuelRefills?: FuelRefill[];
-  createdAt?: Date;
-  updatedAt?: Date;
+}
+
+export interface DriveResponse {
+  id?: string;
+  date: Date;
+  driver: string;
+  distance: number;
+  notes?: string;
+  fuelRefills?: FuelRefill[];
 }
 
 export interface FuelRefill {
@@ -17,21 +24,12 @@ export interface FuelRefill {
   cost: number;
   fuelType: string;
   costPerLiter?: number;
-  createdAt?: Date;
-  updatedAt?: Date;
 }
 
-export interface CreateDriveRequest {
+export interface DriveRequest {
+  carId: string;
   date: Date;
   driver: string;
   distance: number;
   notes?: string;
-}
-
-export interface CreateFuelRefillRequest {
-  driveId: string;
-  date: Date;
-  liters: number;
-  cost: number;
-  fuelType: string;
 }

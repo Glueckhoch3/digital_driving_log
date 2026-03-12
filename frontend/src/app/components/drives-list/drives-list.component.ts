@@ -1,7 +1,7 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DriveService } from '../../services/drive.service';
-import { Drive } from '../../models/drive.model';
+import { Drive } from '../../models/drives';
 import { TranslateModule } from '@ngx-translate/core';
 
 @Component({

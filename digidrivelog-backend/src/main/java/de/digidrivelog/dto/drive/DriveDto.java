@@ -3,7 +3,8 @@ package de.digidrivelog.dto.drive;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
-import java.time.LocalDateTime;
+
+import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
@@ -15,5 +16,6 @@ public class DriveDto {
     private Integer distance;
     private Long driverId;
     private String driverName;
-    private LocalDateTime createdAt;
+    private LocalDate driveDate;
+    private String notes;
 }

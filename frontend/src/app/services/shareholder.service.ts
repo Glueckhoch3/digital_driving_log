@@ -1,16 +1,22 @@
 import { Injectable, signal } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { Observable, of, BehaviorSubject } from 'rxjs';
+import { environment } from '../../environments/environment';
 import {
   Shareholder,
   CreateShareholderRequest,
   ShareholderBalance
-} from '../models/shareholder.model';
+} from '../models/shareholders';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ShareholderService {
-  private shareholders = signal<Shareholder[]>([
+  private readonly apiUrl = `${environment.apiUrl}/articles`;
+
+  constructor(private readonly http: HttpClient) {}
+
+  private readonly shareholders = signal<Shareholder[]>([
     {
       id: '1',
       name: 'John Doe',
@@ -33,7 +39,7 @@ export class ShareholderService {
     }
   ]);
 
-  private shareholders$ = new BehaviorSubject<Shareholder[]>(this.shareholders());
+  private readonly shareholders$ = new BehaviorSubject<Shareholder[]>(this.shareholders());
 
   getShareholders(): Observable<Shareholder[]> {
     return this.shareholders$;
