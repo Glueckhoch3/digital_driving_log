@@ -1,10 +1,13 @@
 Table Car [headercolor: #6a2b94] {
 	carId bigint [ pk, increment, not null, unique ]
+	brand varchar(50) [ not null ]
 	name varchar(50) [ not null ]
 	platenumber varchar(15) [ not null ]
 	userId bigint [ note: '''owner
 ''' ]
 	data jsonb
+	createdAt timestamp [ not null ]
+	updatedAt timestamp [ not null ]
 }
 
 Table Drive [headercolor: #175e7a] {
@@ -12,17 +15,24 @@ Table Drive [headercolor: #175e7a] {
 	carId bigint [ not null ]
 	distance integer [ not null ]
 	userId bigint [ not null, note: 'driver' ]
+	driveDay date [ not null ]
+	notes text
 	createdAt timestamp [ not null ]
+	updatedAt timestamp [ not null ]
 }
 
 Table Transaktion [headercolor: #175e7a] {
 	id bigint [ pk, increment, not null, unique ]
 	carId bigint [ not null ]
-	userId bigint [ not null, note: 'buyer' ]
-	transactionObject varchar(127) [ not null ]
-	price money [ not null ]
-	dayOfTransaction date [ not null ]
 	costType char(1) [ not null ]
+	price money [ not null ]
+	amount integer [ not null ]
+	userId bigint [ not null, note: 'buyer' ]
+	dayOfTransaction date [ not null ]
+	goodname varchar(127) [ not null ]
+	notes text
+	createdAt timestamp [ not null ]
+	updatedAt timestamp [ not null ]
 }
 
 Table User [headercolor: #177a1b] {
@@ -31,6 +41,8 @@ Table User [headercolor: #177a1b] {
 	lastname varchar(63) [ not null ]
 	driverLicense boolean [ not null ]
 	brithday date [ not null ]
+	createdAt timestamp [ not null ]
+	updatedAt timestamp [ not null ]
 }
 
 Ref fk_Car_userId_User {

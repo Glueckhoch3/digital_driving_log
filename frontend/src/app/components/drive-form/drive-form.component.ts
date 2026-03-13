@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, FormsModule , Validators } from '@angular/forms';
 import { DriveService } from '../../services/drive.service';
 import { CostService } from '../../services/cost.service';
-import { CostRequest } from '../../models/costs';
+import { Cost } from '../../models/costs';
 import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
@@ -69,7 +69,7 @@ export class DriveFormComponent implements OnInit {
       this.driveService.createDrive(driveRequest).subscribe({
         next: () => {
           if (this.showRefill()) {
-            const costRequest: CostRequest = {
+            const costRequest: Cost = {
               type: 'variable',
               price: formValue.amount,
               amount: formValue.liters,

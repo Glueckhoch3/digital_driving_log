@@ -1,7 +1,7 @@
 import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of, BehaviorSubject, catchError } from 'rxjs';
-import { Cost, CostResponse, CostSummary, CostRequest } from '../models/costs';
+import { Cost, CostSummary } from '../models/costs';
 import { environment } from '../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
@@ -25,8 +25,8 @@ export class CostService {
 
   private readonly costs$ = new BehaviorSubject<Cost[]>(this.costs());
 
-  getCostsForCar(carId: string): Observable<CostResponse[]> {
-    return this.http.get<CostResponse[]>(`${this.apiUrl}/costs/${carId}`).pipe(
+  getCostsForCar(carId: string): Observable<Cost[]> {
+    return this.http.get<Cost[]>(`${this.apiUrl}/costs/${carId}`).pipe(
       catchError(() => {
         // Fallback to mock data if API is not available
         return this.costs$;
@@ -38,8 +38,8 @@ export class CostService {
     return of(this.costs().find(c => c.id === id));
   }
 
-  createCost(carId: string, costRequest: CostRequest): Observable<CostResponse> {
-    return this.http.post<CostResponse>(`${this.apiUrl}/costs/${carId}`, costRequest).pipe(
+  createCost(carId: string, costRequest: Cost): Observable<Cost> {
+    return this.http.post<Cost>(`${this.apiUrl}/costs/${carId}`, costRequest).pipe(
           catchError(() => {
             // Fallback to mock data if API is not available
             const newCost: Cost = {

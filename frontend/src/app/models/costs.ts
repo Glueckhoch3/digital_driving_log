@@ -9,19 +9,6 @@ export interface Cost {
   date: Date;
   description: string;
   category?: string;
-  affectedPeriod?: string;
-}
-
-export interface CostResponse {
-  id?: string;
-  type: CostType;
-  price: number;
-  amount: number;
-  shareholder: string;
-  date: Date;
-  description: string;
-  category?: string;
-  affectedPeriod?: string;
 }
 
 export interface FixedCost extends Cost {
@@ -30,15 +17,6 @@ export interface FixedCost extends Cost {
 
 export interface VariableCost extends Cost {
   type: 'variable';
-  affectedPeriod: string;
-}
-
-export interface CreateFuelRefillRequest {
-  driveId: string;
-  date: Date;
-  liters: number;
-  cost: number;
-  fuelType: string;
 }
 
 export interface CostDistribution {
@@ -58,13 +36,3 @@ export interface CostSummary {
   distributions: CostDistribution[];
 }
 
-export interface CostRequest {
-  type: CostType;
-  price: number;
-  amount: number;
-  shareholder: string;
-  date: Date;
-  description: string;
-  category?: string;
-  affectedPeriod?: string;
-}

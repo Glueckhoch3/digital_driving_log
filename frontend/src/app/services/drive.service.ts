@@ -1,8 +1,7 @@
 import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of, BehaviorSubject, catchError } from 'rxjs';
-import { Drive, FuelRefill, DriveResponse, DriveRequest } from '../models/drives';
-import { CreateFuelRefillRequest } from '../models/costs';
+import { FuelRefill, Drive } from '../models/drives';
 import { environment } from '../../environments/environment';
 
 @Injectable({
@@ -25,8 +24,8 @@ export class DriveService {
 
   private readonly drives$ = new BehaviorSubject<Drive[]>(this.drives());
 
-  getDrivesForCar(carID: string): Observable<DriveResponse[]> {
-    return this.http.get<DriveResponse[]>(`${this.apiUrl}/drives/${carID}`).pipe(
+  getDrivesForCar(carID: string): Observable<Drive[]> {
+    return this.http.get<Drive[]>(`${this.apiUrl}/drives/${carID}`).pipe(
       catchError(() => {
         // Fallback to mock data if API is not available
         return this.drives$;
@@ -38,14 +37,13 @@ export class DriveService {
     return of(this.drives().find(d => d.id === id));
   }
 
-  createDrive(driveRequest: DriveRequest): Observable<Drive> {
+  createDrive(driveRequest: Drive): Observable<Drive> {
     return this.http.post<Drive>(`${this.apiUrl}/drives`, driveRequest).pipe(
       catchError(() => {
         // Fallback to mock data if API is not available
         const newDrive: Drive = {
           id: Date.now().toString(),
-          ...driveRequest,
-          fuelRefills: []
+          ...driveRequest
         };
 
         const currentDrives = this.drives();
@@ -82,40 +80,12 @@ export class DriveService {
     return of(void 0);
   }
 
-  addFuelRefill(driveId: string, request: CreateFuelRefillRequest): Observable<FuelRefill> {
+  addFuelRefill(driveId: string, request: FuelRefill): Observable<FuelRefill> {
     const newRefill: FuelRefill = {
       id: Date.now().toString(),
-      ...request,
-      costPerLiter: request.cost / request.liters
+      ...request
     };
 
-    const currentDrives = this.drives();
-    const driveIndex = currentDrives.findIndex(d => d.id === driveId);
-
-    if (driveIndex !== -1) {
-      if (!currentDrives[driveIndex].fuelRefills) {
-        currentDrives[driveIndex].fuelRefills = [];
-      }
-      currentDrives[driveIndex].fuelRefills?.push(newRefill);
-      this.drives.set([...currentDrives]);
-      this.drives$.next(this.drives());
-    }
-
     return of(newRefill);
-  }
-
-  removeFuelRefill(driveId: string, refillId: string): Observable<void> {
-    const currentDrives = this.drives();
-    const driveIndex = currentDrives.findIndex(d => d.id === driveId);
-
-    if (driveIndex !== -1 && currentDrives[driveIndex].fuelRefills) {
-      currentDrives[driveIndex].fuelRefills = currentDrives[driveIndex].fuelRefills?.filter(
-        f => f.id !== refillId
-      );
-      this.drives.set([...currentDrives]);
-      this.drives$.next(this.drives());
-    }
-
-    return of(void 0);
   }
 }
