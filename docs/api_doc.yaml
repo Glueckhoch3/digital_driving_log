@@ -23,7 +23,7 @@ tags:
     description: Access for Cost data creation and retrieval.
 
 paths:
-  /drives/{carId}:
+  /drives/vehicle/{carId}:
     get:
       tags:
         - drives
@@ -46,7 +46,6 @@ paths:
                   $ref: '#/components/schemas/Drive'
         '404':
           description: Car not found
-  /drives:
     post:
       tags:
         - drives
@@ -110,34 +109,7 @@ paths:
           description: Drive deleted
         '404':
           description: Drive not found
-  /drives/{driveId}/fuel:
-    post:
-      tags:
-        - drives
-      summary: Add fuel refill to a drive
-      description: Add a fuel refill entry to an existing drive
-      parameters:
-        - name: driveId
-          in: path
-          required: true
-          schema:
-            type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/FuelRefill'
-      responses:
-        '201':
-          description: Fuel refill added
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/FuelRefill'
-        '404':
-          description: Drive not found
-  /costs/{carId}:
+  /costs/vehicles/{carId}:
     get:
       tags:
         - costs
