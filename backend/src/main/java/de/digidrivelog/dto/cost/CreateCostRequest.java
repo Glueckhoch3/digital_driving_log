@@ -11,9 +11,11 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class CreateCostRequest {
     private Long carId;
-    private Long buyerId;
-    private String transactionObject;
-    private BigDecimal price;
-    private LocalDate dayOfTransaction;
     private String costType;
+    private BigDecimal price;
+    private Integer amount;
+    private Long shareholderId;
+    private LocalDate date;
+    private String description;
+    private String note;
 }

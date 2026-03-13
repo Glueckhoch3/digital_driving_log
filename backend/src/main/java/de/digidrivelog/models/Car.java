@@ -36,5 +36,5 @@ public class Car {
     private List<Drive> drives;
 
     @OneToMany(mappedBy = "car", cascade = CascadeType.ALL)
-    private List<Transaction> transactions;
+    private List<Cost> transactions;
 }

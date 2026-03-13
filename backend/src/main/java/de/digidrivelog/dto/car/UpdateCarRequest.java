@@ -11,5 +11,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 public class UpdateCarRequest {
     private String name;
     private String plateNumber;
+    private Long ownerId;
+    private String ownerName;
     private JsonNode data;
 }

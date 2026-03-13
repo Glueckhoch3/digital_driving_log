@@ -6,6 +6,9 @@ import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 import java.util.List;
 
+import de.digidrivelog.dto.cost.*;
+import de.digidrivelog.services.CostService;
+
 @RestController
 @RequestMapping("/api/costs")
 @RequiredArgsConstructor

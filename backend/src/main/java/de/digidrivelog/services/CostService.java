@@ -4,10 +4,10 @@ import de.digidrivelog.dto.cost.CostDto;
 import de.digidrivelog.dto.cost.CreateCostRequest;
 import de.digidrivelog.dto.cost.UpdateCostRequest;
 import de.digidrivelog.models.Car;
-import de.digidrivelog.models.Transaction;
+import de.digidrivelog.models.Cost;
 import de.digidrivelog.models.User;
 import de.digidrivelog.repositories.CarRepository;
-import de.digidrivelog.repositories.TransactionRepository;
+import de.digidrivelog.repositories.CostRepository;
 import de.digidrivelog.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,18 +17,18 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CostService {
 
-    private final TransactionRepository transactionRepository;
+    private final CostRepository costRepository;
     private final CarRepository carRepository;
     private final UserRepository userRepository;
 
     public List<CostDto> getAllTransactions() {
-        return transactionRepository.findAll().stream()
+        return costRepository.findAll().stream()
                 .map(this::convertToDto)
                 .toList();
     }
 
     public CostDto getTransactionById(Long id) {
-        Transaction transaction = transactionRepository.findById(id)
+        Cost transaction = costRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Transaction not found"));
         return convertToDto(transaction);
     }
@@ -39,7 +39,7 @@ public class CostService {
         User buyer = userRepository.findById(request.getBuyerId())
                 .orElseThrow(() -> new RuntimeException("Buyer not found"));
 
-        Transaction transaction = new Transaction();
+        Cost transaction = new Cost();
         transaction.setCar(car);
         transaction.setBuyer(buyer);
         transaction.setTransactionObject(request.getTransactionObject());
@@ -47,12 +47,12 @@ public class CostService {
         transaction.setDayOfTransaction(request.getDayOfTransaction());
         transaction.setCostType(request.getCostType());
 
-        Transaction savedTransaction = transactionRepository.save(transaction);
+        Cost savedTransaction = costRepository.save(transaction);
         return convertToDto(savedTransaction);
     }
 
     public CostDto updateTransaction(Long id, UpdateCostRequest request) {
-        Transaction transaction = transactionRepository.findById(id)
+        Cost transaction = costRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Transaction not found"));
 
         transaction.setTransactionObject(request.getTransactionObject());
@@ -60,18 +60,18 @@ public class CostService {
         transaction.setDayOfTransaction(request.getDayOfTransaction());
         transaction.setCostType(request.getCostType());
 
-        Transaction updatedTransaction = transactionRepository.save(transaction);
+        Cost updatedTransaction = costRepository.save(transaction);
         return convertToDto(updatedTransaction);
     }
 
     public void deleteTransaction(Long id) {
-        if (!transactionRepository.existsById(id)) {
+        if (!costRepository.existsById(id)) {
             throw new RuntimeException("Transaction not found");
         }
-        transactionRepository.deleteById(id);
+        costRepository.deleteById(id);
     }
 
-    private CostDto convertToDto(Transaction transaction) {
+    private CostDto convertToDto(Cost transaction) {
         return new CostDto(
                 transaction.getId(),
                 transaction.getCar() != null ? transaction.getCar().getCarId() : null,

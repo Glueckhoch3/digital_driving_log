@@ -10,8 +10,12 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UpdateCostRequest {
-    private String transactionObject;
-    private BigDecimal price;
-    private LocalDate dayOfTransaction;
+    private Long carId;
     private String costType;
+    private BigDecimal price;
+    private Integer amount;
+    private Long shareholderId;
+    private LocalDate date;
+    private String description;
+    private String note;
 }

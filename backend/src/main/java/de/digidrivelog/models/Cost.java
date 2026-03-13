@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Transaction {
+public class Cost {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

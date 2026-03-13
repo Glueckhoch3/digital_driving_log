@@ -12,5 +12,6 @@ public class CreateCarRequest {
     private String name;
     private String plateNumber;
     private Long ownerId;
+    private String ownerName;
     private JsonNode data;
 }

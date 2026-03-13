@@ -12,11 +12,11 @@ import java.time.LocalDate;
 public class CostDto {
     private Long id;
     private Long carId;
-    private String carName;
-    private Long buyerId;
-    private String buyerName;
-    private String transactionObject;
-    private BigDecimal price;
-    private LocalDate dayOfTransaction;
     private String costType;
+    private BigDecimal price;
+    private Integer amount;
+    private Long shareholderId;
+    private LocalDate date;
+    private String description;
+    private String note;
 }
