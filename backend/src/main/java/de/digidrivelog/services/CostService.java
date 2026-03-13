@@ -1,8 +1,8 @@
 package de.digidrivelog.services;
 
-import de.digidrivelog.dto.transaction.TransactionDto;
-import de.digidrivelog.dto.transaction.CreateTransactionRequest;
-import de.digidrivelog.dto.transaction.UpdateTransactionRequest;
+import de.digidrivelog.dto.cost.CostDto;
+import de.digidrivelog.dto.cost.CreateCostRequest;
+import de.digidrivelog.dto.cost.UpdateCostRequest;
 import de.digidrivelog.models.Car;
 import de.digidrivelog.models.Transaction;
 import de.digidrivelog.models.User;
@@ -15,25 +15,25 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class TransactionService {
+public class CostService {
 
     private final TransactionRepository transactionRepository;
     private final CarRepository carRepository;
     private final UserRepository userRepository;
 
-    public List<TransactionDto> getAllTransactions() {
+    public List<CostDto> getAllTransactions() {
         return transactionRepository.findAll().stream()
                 .map(this::convertToDto)
                 .toList();
     }
 
-    public TransactionDto getTransactionById(Long id) {
+    public CostDto getTransactionById(Long id) {
         Transaction transaction = transactionRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Transaction not found"));
         return convertToDto(transaction);
     }
 
-    public TransactionDto createTransaction(CreateTransactionRequest request) {
+    public CostDto createTransaction(CreateCostRequest request) {
         Car car = carRepository.findById(request.getCarId())
                 .orElseThrow(() -> new RuntimeException("Car not found"));
         User buyer = userRepository.findById(request.getBuyerId())
@@ -51,7 +51,7 @@ public class TransactionService {
         return convertToDto(savedTransaction);
     }
 
-    public TransactionDto updateTransaction(Long id, UpdateTransactionRequest request) {
+    public CostDto updateTransaction(Long id, UpdateCostRequest request) {
         Transaction transaction = transactionRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Transaction not found"));
 
@@ -71,8 +71,8 @@ public class TransactionService {
         transactionRepository.deleteById(id);
     }
 
-    private TransactionDto convertToDto(Transaction transaction) {
-        return new TransactionDto(
+    private CostDto convertToDto(Transaction transaction) {
+        return new CostDto(
                 transaction.getId(),
                 transaction.getCar() != null ? transaction.getCar().getCarId() : null,
                 transaction.getCar() != null ? transaction.getCar().getName() : null,

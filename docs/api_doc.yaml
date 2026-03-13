@@ -23,6 +23,86 @@ tags:
     description: Access for Cost data creation and retrieval.
 
 paths:
+  /drives:
+    get:
+      tags:
+        - drives
+      summary: Get all drives
+      description: Retrieve a list of all drives
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Drive'
+        '404':
+          description: No drives found
+  /drives/{id}:
+    get:
+      tags:
+        - drives
+      summary: Get a drive by ID
+      description: Retrieve a specific drive by its ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Drive'
+        '404':
+          description: Drive not found
+    put:
+      tags:
+        - drives
+      summary: Update a drive
+      description: Update an existing drive by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Drive'
+      responses:
+        '200':
+          description: Drive updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Drive'
+        '404':
+          description: Drive not found
+    delete:
+      tags:
+        - drives
+      summary: Delete a drive
+      description: Delete a drive by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Drive deleted
+        '404':
+          description: Drive not found
   /drives/vehicle/{carId}:
     get:
       tags:
@@ -66,12 +146,47 @@ paths:
                 $ref: '#/components/schemas/Drive'
         '400':
           description: Invalid input
-  /drives/{id}:
+  /costs:
+    get:
+      tags:
+        - costs
+      summary: Get all costs
+      description: Retrieve all costs
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cost'
+        '404':
+          description: No costs found
+  /costs/{id}:
+    get:
+      tags:
+        - costs
+      summary: Get a cost by ID
+      description: Retrieve a specific cost by its ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cost'
+        '404':
+          description: Cost not found
     put:
       tags:
-        - drives
-      summary: Update a drive
-      description: Update an existing drive by ID
+        - costs
+      summary: Update a cost
+      description: Update an existing cost by ID
       parameters:
         - name: id
           in: path
@@ -83,21 +198,21 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Drive'
+              $ref: '#/components/schemas/Cost'
       responses:
         '200':
-          description: Drive updated
+          description: Cost updated
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Drive'
+                $ref: '#/components/schemas/Cost'
         '404':
-          description: Drive not found
+          description: Cost not found
     delete:
       tags:
-        - drives
-      summary: Delete a drive
-      description: Delete a drive by ID
+        - costs
+      summary: Delete a cost
+      description: Delete a cost by ID
       parameters:
         - name: id
           in: path
@@ -106,9 +221,9 @@ paths:
             type: string
       responses:
         '204':
-          description: Drive deleted
+          description: Cost deleted
         '404':
-          description: Drive not found
+          description: Cost not found
   /costs/vehicles/{carId}:
     get:
       tags:
@@ -158,49 +273,6 @@ paths:
                 $ref: '#/components/schemas/Cost'
         '400':
           description: Invalid input
-  /costs/{id}:
-    put:
-      tags:
-        - costs
-      summary: Update a cost
-      description: Update an existing cost by ID
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Cost'
-      responses:
-        '200':
-          description: Cost updated
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Cost'
-        '404':
-          description: Cost not found
-    delete:
-      tags:
-        - costs
-      summary: Delete a cost
-      description: Delete a cost by ID
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        '204':
-          description: Cost deleted
-        '404':
-          description: Cost not found
 
 components:
   schemas:
@@ -222,20 +294,6 @@ components:
         - date
         - driver
         - distance
-    FuelRefill:
-      allOf:
-        - $ref: '#/components/schemas/Cost'
-        - type: object
-          properties:
-            type:
-              type: string
-              enum: [variable]
-            description:
-              type: string
-              enum: ['Fuel Refill']
-            category:
-              type: string
-              enum: ['Fuel']
     Cost:
       type: object
       properties:
@@ -264,49 +322,6 @@ components:
         - shareholder
         - date
         - description
-    CostDistribution:
-      type: object
-      properties:
-        shareholder:
-          type: string
-        totalOwed:
-          type: number
-        fixedCosts:
-          type: number
-        variableCosts:
-          type: number
-        fuelCosts:
-          type: number
-        distance:
-          type: number
-      required:
-        - shareholder
-        - totalOwed
-        - fixedCosts
-        - variableCosts
-        - fuelCosts
-        - distance
-    CostSummary:
-      type: object
-      properties:
-        totalFixed:
-          type: number
-        totalVariable:
-          type: number
-        totalFuel:
-          type: number
-        totalCosts:
-          type: number
-        distributions:
-          type: array
-          items:
-            $ref: '#/components/schemas/CostDistribution'
-      required:
-        - totalFixed
-        - totalVariable
-        - totalFuel
-        - totalCosts
-        - distributions
     Error:
       type: object
       properties:

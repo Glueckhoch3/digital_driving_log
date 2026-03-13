@@ -13,12 +13,11 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/drives")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "http://localhost:3000")
 public class DriveController {
 
     private final DriveService driveService;
 
-    // Maybe just get the car options
     @GetMapping
     public ResponseEntity<List<DriveDto>> getAllDrives() {
         List<DriveDto> drives = driveService.getAllDrives();
@@ -31,21 +30,27 @@ public class DriveController {
         return ResponseEntity.ok(drive);
     }
 
-    @PostMapping
-    public ResponseEntity<DriveDto> createDrive(@Valid @RequestBody CreateDriveRequest request) {
-        DriveDto createdDrive = driveService.createDrive(request);
-        return ResponseEntity.ok(createdDrive);
-    }
-
     @PutMapping("/{id}")
-    public ResponseEntity<DriveDto> updateDrive(@PathVariable Long id, @Valid @RequestBody UpdateDriveRequest request) {
-        DriveDto updatedDrive = driveService.updateDrive(id, request);
+    public ResponseEntity<DriveDto> updateDriveWithId(@PathVariable Long id, @Valid @RequestBody UpdateDriveRequest request) {
+        DriveDto updatedDrive = driveService.updateDriveWithId(id, request);
         return ResponseEntity.ok(updatedDrive);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteDrive(@PathVariable Long id) {
-        driveService.deleteDrive(id);
+    public ResponseEntity<Void> deleteDriveWithId(@PathVariable Long id) {
+        driveService.deleteDriveWithId(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/vehicles/{carId}")
+    public ResponseEntity<List<DriveDto>> getAllDrivesByVehicle(@PathVariable Long carId) {
+        List<DriveDto> drives = driveService.getAllDrivesByVehicle(carId);
+        return ResponseEntity.ok(drives);
+    }
+
+    @PostMapping("/vehicles/{carId}")
+    public ResponseEntity<DriveDto> createDrive(@Valid @RequestBody CreateDriveRequest request, @PathVariable Long carId) {
+        DriveDto createdDrive = driveService.createDrive(request, carId);
+        return ResponseEntity.ok(createdDrive);
     }
 }

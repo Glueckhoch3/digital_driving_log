@@ -9,7 +9,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/costs")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "http://localhost:3000")
 public class CostController {
     private final CostService costService;
 
@@ -19,27 +19,33 @@ public class CostController {
         return ResponseEntity.ok(costs);    
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<CostDto> getCostById(@PathVariable Long id) {
-        CostDto cost = costService.getCostById(id);
+    @GetMapping("/{costId}")
+    public ResponseEntity<CostDto> getCostById(@PathVariable Long costId) {
+        CostDto cost = costService.getCostById(costId);
         return ResponseEntity.ok(cost);
     }
 
-    @PostMapping
-    public ResponseEntity<CostDto> createCost(@Valid @RequestBody CreateCostRequest request ) {
-        CostDto createdCost = costService.createCost(request);
-        return ResponseEntity.ok(createdCost);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<CostDto> updateCost(@PathVariable Long id, @Valid @RequestBody UpdateCostRequest request) {
-        CostDto updatedCost = costService.updateCost(id, request);
+    @PutMapping("/{costId}")
+    public ResponseEntity<CostDto> updateCost(@PathVariable Long costId, @Valid @RequestBody UpdateCostRequest request) {
+        CostDto updatedCost = costService.updateCost(costId, request);
         return ResponseEntity.ok(updatedCost);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCost(@PathVariable Long id) {
-        costService.deleteCost(id);
+    @DeleteMapping("/{costId}")
+    public ResponseEntity<Void> deleteCost(@PathVariable Long costId) {
+        costService.deleteCost(costId);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/vehicles/{carId}")
+    public  ResponseEntity<List<CostDto>> getAllCostsByVehicle(@PathVariable Long carId) {
+        List<CostDto> costs = costService.getAllCostsByVehicle(carId);
+        return ResponseEntity.ok(costs);    
+    }
+
+    @PostMapping("/vehicles/{carId}")
+    public ResponseEntity<CostDto> createCost(@Valid @RequestBody CreateCostRequest request ) {
+        CostDto createdCost = costService.createCost(request);
+        return ResponseEntity.ok(createdCost);
     }
 }
