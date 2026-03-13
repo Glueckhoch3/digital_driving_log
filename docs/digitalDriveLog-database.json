@@ -3,8 +3,8 @@
     {
       "id": "Du8LnnCGV8EAZX1JfUtmg",
       "name": "Car",
-      "x": -386.99999999999994,
-      "y": -323.0000000000001,
+      "x": -434,
+      "y": -322.0000000000001,
       "locked": true,
       "fields": [
         {
@@ -19,6 +19,20 @@
           "comment": "",
           "id": "iQyZDIHNdpVOa7tyjQp_f",
           "size": "",
+          "values": []
+        },
+        {
+          "id": "XR2_c7ZXmO7akKJDOQhHd",
+          "name": "brand",
+          "type": "VARCHAR",
+          "default": "",
+          "check": "",
+          "primary": false,
+          "unique": false,
+          "notNull": true,
+          "increment": false,
+          "comment": "",
+          "size": 50,
           "values": []
         },
         {
@@ -74,6 +88,34 @@
           "comment": "",
           "size": "",
           "values": []
+        },
+        {
+          "id": "2TSK4Oe4w_0LGrj3MfK0O",
+          "name": "createdAt",
+          "type": "TIMESTAMP",
+          "default": "",
+          "check": "",
+          "primary": false,
+          "unique": false,
+          "notNull": true,
+          "increment": false,
+          "comment": "",
+          "size": "",
+          "values": []
+        },
+        {
+          "id": "KxscEsZ9_lmE4xAMEPqtS",
+          "name": "updatedAt",
+          "type": "TIMESTAMP",
+          "default": "",
+          "check": "",
+          "primary": false,
+          "unique": false,
+          "notNull": true,
+          "increment": false,
+          "comment": "",
+          "size": "",
+          "values": []
         }
       ],
       "comment": "",
@@ -88,7 +130,7 @@
       "id": "Z2hnn_9YZdo1hHwQI1pXm",
       "name": "Drive",
       "x": 114.99999999999989,
-      "y": -208.00000000000003,
+      "y": -219.00000000000003,
       "locked": true,
       "fields": [
         {
@@ -148,8 +190,50 @@
           "values": []
         },
         {
+          "id": "Aqp3mZGZrgHgQ6R1w1xuj",
+          "name": "driveDay",
+          "type": "DATE",
+          "default": "",
+          "check": "",
+          "primary": false,
+          "unique": false,
+          "notNull": true,
+          "increment": false,
+          "comment": "",
+          "size": "",
+          "values": []
+        },
+        {
+          "id": "LvtuB9Ok760K2DGjfoI8Z",
+          "name": "notes",
+          "type": "TEXT",
+          "default": "",
+          "check": "",
+          "primary": false,
+          "unique": false,
+          "notNull": false,
+          "increment": false,
+          "comment": "",
+          "size": "",
+          "values": []
+        },
+        {
           "id": "LozagaOhyu0RUePSmhZS_",
           "name": "createdAt",
+          "type": "TIMESTAMP",
+          "default": "",
+          "check": "",
+          "primary": false,
+          "unique": false,
+          "notNull": true,
+          "increment": false,
+          "comment": "",
+          "size": "",
+          "values": []
+        },
+        {
+          "id": "qGXVAJ5aNkIzzhXsu2Lo9",
+          "name": "updatedAt",
           "type": "TIMESTAMP",
           "default": "",
           "check": "",
@@ -173,8 +257,8 @@
     {
       "id": "qspGeetLnBcu9or_WxVl-",
       "name": "Transaktion",
-      "x": 114.99999999999989,
-      "y": 117,
+      "x": 113.99999999999989,
+      "y": 156,
       "locked": true,
       "fields": [
         {
@@ -206,23 +290,9 @@
           "values": []
         },
         {
-          "id": "JW3Iub7WHTBCfEl6_LXbJ",
-          "name": "userId",
-          "type": "BIGINT",
-          "default": "",
-          "check": "",
-          "primary": false,
-          "unique": false,
-          "notNull": true,
-          "increment": false,
-          "comment": "buyer",
-          "size": "",
-          "values": []
-        },
-        {
-          "id": "9UMTGQrmzUrVG7sb8qaPQ",
-          "name": "transactionObject",
-          "type": "VARCHAR",
+          "id": "NOqr36xnGYoAMec_shyNg",
+          "name": "costType",
+          "type": "CHAR",
           "default": "",
           "check": "",
           "primary": false,
@@ -230,7 +300,7 @@
           "notNull": true,
           "increment": false,
           "comment": "",
-          "size": 127
+          "size": 1
         },
         {
           "id": "jppv3Ap5ntnq7raI7DBUM",
@@ -243,6 +313,34 @@
           "notNull": true,
           "increment": false,
           "comment": "",
+          "values": []
+        },
+        {
+          "id": "_dLri74ijzVytB6bsX_SS",
+          "name": "amount",
+          "type": "INTEGER",
+          "default": "",
+          "check": "",
+          "primary": false,
+          "unique": false,
+          "notNull": true,
+          "increment": false,
+          "comment": "",
+          "size": "",
+          "values": []
+        },
+        {
+          "id": "JW3Iub7WHTBCfEl6_LXbJ",
+          "name": "userId",
+          "type": "BIGINT",
+          "default": "",
+          "check": "",
+          "primary": false,
+          "unique": false,
+          "notNull": true,
+          "increment": false,
+          "comment": "buyer",
+          "size": "",
           "values": []
         },
         {
@@ -260,9 +358,9 @@
           "values": []
         },
         {
-          "id": "NOqr36xnGYoAMec_shyNg",
-          "name": "costType",
-          "type": "CHAR",
+          "id": "9UMTGQrmzUrVG7sb8qaPQ",
+          "name": "goodname",
+          "type": "VARCHAR",
           "default": "",
           "check": "",
           "primary": false,
@@ -270,7 +368,49 @@
           "notNull": true,
           "increment": false,
           "comment": "",
-          "size": 1
+          "size": 127
+        },
+        {
+          "id": "unmDvBaDaQ9847wQH1z_m",
+          "name": "notes",
+          "type": "TEXT",
+          "default": "",
+          "check": "",
+          "primary": false,
+          "unique": false,
+          "notNull": false,
+          "increment": false,
+          "comment": "",
+          "size": "",
+          "values": []
+        },
+        {
+          "id": "_FS_ubsYCARvzIysxxI0w",
+          "name": "createdAt",
+          "type": "TIMESTAMP",
+          "default": "",
+          "check": "",
+          "primary": false,
+          "unique": false,
+          "notNull": true,
+          "increment": false,
+          "comment": "",
+          "size": "",
+          "values": []
+        },
+        {
+          "id": "tUkR-X_IbE0yWkBXVKwPN",
+          "name": "updatedAt",
+          "type": "TIMESTAMP",
+          "default": "",
+          "check": "",
+          "primary": false,
+          "unique": false,
+          "notNull": true,
+          "increment": false,
+          "comment": "",
+          "size": "",
+          "values": []
         }
       ],
       "comment": "",
@@ -284,8 +424,8 @@
     {
       "id": "I2C52BXoMStmZkm0UCxAM",
       "name": "User",
-      "x": -748,
-      "y": 43.99999999999994,
+      "x": -742,
+      "y": 105.99999999999994,
       "locked": true,
       "fields": [
         {
@@ -346,6 +486,34 @@
           "id": "67-tLBvH2A-XzQogeRKcS",
           "name": "brithday",
           "type": "DATE",
+          "default": "",
+          "check": "",
+          "primary": false,
+          "unique": false,
+          "notNull": true,
+          "increment": false,
+          "comment": "",
+          "size": "",
+          "values": []
+        },
+        {
+          "id": "tAK2_aK9Kt--_J9kiNPzs",
+          "name": "createdAt",
+          "type": "TIMESTAMP",
+          "default": "",
+          "check": "",
+          "primary": false,
+          "unique": false,
+          "notNull": true,
+          "increment": false,
+          "comment": "",
+          "size": "",
+          "values": []
+        },
+        {
+          "id": "4iP4aOF6YSE0PuJ12Zlf_",
+          "name": "updatedAt",
+          "type": "TIMESTAMP",
           "default": "",
           "check": "",
           "primary": false,

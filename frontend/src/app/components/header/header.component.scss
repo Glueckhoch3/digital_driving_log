@@ -136,9 +136,39 @@
     opacity: 0;
     transform: translateY(-10px);
   }
-
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+.header {
+  &__language-selector {
+    margin-left: auto;
+    margin-right: 1rem;
+  }
+
+  &__language-select {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+    padding: 0.5rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+
+    &:focus {
+      outline: 2px solid #3498db;
+      outline-offset: 2px;
+    }
+
+    option {
+      background-color: #2c3e50;
+      color: white;
+    }
   }
 }

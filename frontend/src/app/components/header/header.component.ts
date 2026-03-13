@@ -1,16 +1,24 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, RouterLink, RouterLinkActive],
+  imports: [CommonModule, RouterLink, RouterLinkActive, TranslateModule],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
 })
 export class HeaderComponent {
   isMenuOpen = signal(false);
+  currentLang = signal('en');
+
+  private readonly translate = inject(TranslateService);
+
+  constructor() {
+    this.currentLang.set(this.translate.getCurrentLang() || 'en');
+  }
 
   toggleMenu(): void {
     this.isMenuOpen.update(value => !value);
@@ -20,13 +28,20 @@ export class HeaderComponent {
     this.isMenuOpen.set(false);
   }
 
+  changeLang(event: Event): void {
+    const target = event.target as HTMLSelectElement;
+    const lang = target.value;
+    this.translate.use(lang);
+    this.currentLang.set(lang);
+  }
+
   readonly menuItems = [
-    { label: 'Record Drive', route: '/drives' },
-    { label: 'Driving History', route: '/history' },
-    { label: 'Costs', route: '/costs' },
-    { label: 'Fuel Tracking', route: '/fuel' },
-    { label: 'Shareholders', route: '/shareholders' },
-    { label: 'Reports', route: '/reports' },
-    { label: 'Settlements', route: '/settlements' }
+    { labelKey: 'header.menu.recordDrive', route: '/drives' },
+    { labelKey: 'header.menu.drivingHistory', route: '/history' },
+    { labelKey: 'header.menu.costs', route: '/costs' },
+    { labelKey: 'header.menu.fuelTracking', route: '/fuel' },
+    { labelKey: 'header.menu.shareholders', route: '/shareholders' },
+    { labelKey: 'header.menu.reports', route: '/reports' },
+    { labelKey: 'header.menu.settlements', route: '/settlements' }
   ];
 }

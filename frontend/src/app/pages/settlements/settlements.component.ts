@@ -1,7 +1,7 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SettlementService } from '../../services/settlement.service';
-import { Settlement, SettlementReport } from '../../models/settlement.model';
+import { Settlement, SettlementReport } from '../../models/settlements';
 
 @Component({
   selector: 'app-settlements',

@@ -1,13 +1,14 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CostService } from '../../services/cost.service';
-import { Cost, CostSummary } from '../../models/cost.model';
+import { Cost, CostSummary } from '../../models/costs';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-costs',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, TranslateModule],
   templateUrl: './costs.component.html',
   styleUrl: './costs.component.scss'
 })
@@ -43,7 +44,7 @@ export class CostsComponent implements OnInit {
 
   private loadCosts(): void {
     this.isLoading.set(true);
-    this.costService.getCosts().subscribe({
+    this.costService.getCostsForCar("1").subscribe({ //Change carId:1 when multiple cars implemented
       next: costs => {
         this.costs.set(costs);
         this.isLoading.set(false);
@@ -64,7 +65,7 @@ export class CostsComponent implements OnInit {
       this.isSubmitting.set(true);
       const formValue = this.costForm.value;
 
-      this.costService.createCost(formValue).subscribe({
+      this.costService.createCost("1",formValue).subscribe({  //Change carId:1 when multiple cars implemented
         next: () => {
           this.successMessage.set('Cost recorded successfully!');
           this.loadCosts();

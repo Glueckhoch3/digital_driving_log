@@ -1,7 +1,7 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ShareholderService } from '../../services/shareholder.service';
-import { Shareholder, ShareholderBalance } from '../../models/shareholder.model';
+import { Shareholder, ShareholderBalance } from '../../models/shareholders';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({

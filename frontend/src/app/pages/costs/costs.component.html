@@ -1,6 +1,6 @@
 <div class="costs">
   <div class="costs__container">
-    <h1 class="costs__title">Expense Management</h1>
+    <h1 class="costs__title">{{ 'costs.title' | translate }}</h1>
 
     @if (successMessage()) {
       <div class="costs__alert costs__alert--success">
@@ -10,23 +10,23 @@
 
     <!-- New Cost Form -->
     <div class="costs__form-container">
-      <h2>Record New Cost</h2>
+      <h2>{{ 'costs.form.title' | translate }}</h2>
       <form [formGroup]="costForm" (ngSubmit)="onSubmit()" class="costs__form">
         <div class="costs__form-row">
           <div class="costs__form-group">
-            <label for="cost_type" class="cost-form">Cost Type *</label>
+            <label for="cost_type" class="cost-form">{{ 'costs.form.labels.costType' | translate }}</label>
             <select formControlName="type" class="costs__input">
-              <option value="fixed">Fixed Cost (Insurance, Registration)</option>
-              <option value="variable">Variable Cost (Maintenance, Repair)</option>
+              <option value="fixed">{{ 'costs.form.options.fixed' | translate }}</option>
+              <option value="variable">{{ 'costs.form.options.variable' | translate }}</option>
             </select>
           </div>
 
           <div class="costs__form-group">
-            <label for="price" class="cost-form">Price (€) *</label>
+            <label for="price" class="cost-form">{{ 'costs.form.labels.price' | translate }}</label>
             <input
               type="number"
               formControlName="price"
-              placeholder="0.00"
+              placeholder="{{ 'costs.form.placeholders.price' | translate }}"
               class="costs__input"
               step="0.01"
               [disabled]="isSubmitting()"
@@ -36,11 +36,11 @@
 
         <div class="costs__form-row">
           <div class="costs__form-group">
-            <label for="amount" class="cost-form">Amount *</label>
+            <label for="amount" class="cost-form">{{ 'costs.form.labels.amount' | translate }}</label>
             <input
               type="number"
               formControlName="amount"
-              placeholder="0.00"
+              placeholder="{{ 'costs.form.placeholders.amount' | translate }}"
               class="costs__input"
               step="0.01"
               [disabled]="isSubmitting()"
@@ -48,11 +48,11 @@
           </div>
 
           <div class="costs__form-group">
-            <label for="shareholder" class="cost-form">Shareholder *</label>
+            <label for="shareholder" class="cost-form">{{ 'costs.form.labels.shareholder' | translate }}</label>
             <input
               type="text"
               formControlName="shareholder"
-              placeholder="Name"
+              placeholder="{{ 'costs.form.placeholders.shareholder' | translate }}"
               class="costs__input"
               [disabled]="isSubmitting()"
             />
@@ -61,7 +61,7 @@
 
         <div class="costs__form-row">
           <div class="costs__form-group">
-            <label for="date" class="cost-form">Date *</label>
+            <label for="date" class="cost-form">{{ 'costs.form.labels.date' | translate }}</label>
             <input
               type="date"
               formControlName="date"
@@ -71,18 +71,18 @@
           </div>
 
           <div class="costs__form-group">
-            <label for="description" class="cost-form">Description *</label>
+            <label for="description" class="cost-form">{{ 'costs.form.labels.description' | translate }}</label>
             <input
               type="text"
               formControlName="description"
-              placeholder="e.g., Winter Tires"
+              placeholder="{{ 'costs.form.placeholders.description' | translate }}"
               class="costs__input"
               [disabled]="isSubmitting()"
             />
           </div>
 
           <div class="costs__form-group">
-            <label for="category" class="cost-form">Category</label>
+            <label for="category" class="cost-form">{{ 'costs.form.labels.category' | translate }}</label>
             <input
               type="text"
               formControlName="category"

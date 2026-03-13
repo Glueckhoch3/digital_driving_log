@@ -1,11 +1,15 @@
 import { Injectable, signal } from '@angular/core';
-import { Observable, of, BehaviorSubject } from 'rxjs';
-import { Cost, CostSummary, CreateCostRequest } from '../models/cost.model';
+import { HttpClient } from '@angular/common/http';
+import { Observable, of, BehaviorSubject, catchError } from 'rxjs';
+import { Cost, CostSummary } from '../models/costs';
+import { environment } from '../../environments/environment';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class CostService {
+  private readonly apiUrl = `${environment.apiUrl}/costs`;
+
+  constructor(private readonly http: HttpClient) { }
+
   private readonly costs = signal<Cost[]>([
     {
       id: '1',
@@ -15,35 +19,41 @@ export class CostService {
       shareholder: 'Jane Smith',
       date: new Date(2026, 0, 1),
       description: 'Car Insurance',
-      category: 'Insurance',
-      createdAt: new Date(),
-      updatedAt: new Date()
+      category: 'Insurance'
     }
   ]);
 
   private readonly costs$ = new BehaviorSubject<Cost[]>(this.costs());
 
-  getCosts(): Observable<Cost[]> {
-    return this.costs$;
+  getCostsForCar(carId: string): Observable<Cost[]> {
+    return this.http.get<Cost[]>(`${this.apiUrl}/costs/${carId}`).pipe(
+      catchError(() => {
+        // Fallback to mock data if API is not available
+        return this.costs$;
+      })
+    );
   }
 
   getCostById(id: string): Observable<Cost | undefined> {
     return of(this.costs().find(c => c.id === id));
   }
 
-  createCost(request: CreateCostRequest): Observable<Cost> {
-    const newCost: Cost = {
-      id: Date.now().toString(),
-      ...request,
-      createdAt: new Date(),
-      updatedAt: new Date()
-    };
+  createCost(carId: string, costRequest: Cost): Observable<Cost> {
+    return this.http.post<Cost>(`${this.apiUrl}/costs/${carId}`, costRequest).pipe(
+          catchError(() => {
+            // Fallback to mock data if API is not available
+            const newCost: Cost = {
+              id: Date.now().toString(),
+              ...costRequest
+            };
 
-    const currentCosts = this.costs();
-    this.costs.set([...currentCosts, newCost]);
-    this.costs$.next(this.costs());
+            const currentCosts = this.costs();
+            this.costs.set([...currentCosts, newCost]);
+            this.costs$.next(this.costs());
 
-    return of(newCost);
+            return of(newCost);
+          })
+        );
   }
 
   updateCost(id: string, cost: Partial<Cost>): Observable<Cost> {
@@ -53,8 +63,7 @@ export class CostService {
     if (index !== -1) {
       const updated = {
         ...currentCosts[index],
-        ...cost,
-        updatedAt: new Date()
+        ...cost
       };
       currentCosts[index] = updated;
       this.costs.set([...currentCosts]);

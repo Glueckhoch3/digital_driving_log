@@ -1,13 +1,13 @@
 <div class="drives-list">
   <div class="drives-list__header">
-    <h2 class="drives-list__title">Driving History</h2>
+    <h2 class="drives-list__title">{{ 'drivingHistory.title' | translate }}</h2>
     <div class="drives-list__stats">
       <div class="stat">
-        <span class="stat__label">Total Distance:</span>
+        <span class="stat__label">{{ 'drivingHistory.stats.totalDistance' | translate }}</span>
         <span class="stat__value">{{ getTotalDistance() }} km</span>
       </div>
       <div class="stat">
-        <span class="stat__label">Total Drives:</span>
+        <span class="stat__label">{{ 'drivingHistory.stats.totalDrives' | translate }}</span>
         <span class="stat__value">{{ drives().length }}</span>
       </div>
     </div>
@@ -15,36 +15,36 @@
 
   @if (isLoading()) {
     <div class="drives-list__loading">
-      <p>Loading drives...</p>
+      <p>{{ 'drivingHistory.messages.loading' | translate }}</p>
     </div>
   } @else if (drives().length === 0) {
     <div class="drives-list__empty">
-      <p>No drives recorded yet. Start by recording your first drive!</p>
+      <p>{{ 'drivingHistory.messages.empty' | translate }}</p>
     </div>
   } @else {
     <div class="drives-list__controls">
-      <label class="drives-list__sort-label">Sort by:</label>
+      <label class="drives-list__sort-label">{{ 'drivingHistory.sort.label' | translate }}</label>
       <div class="drives-list__sort-buttons">
         <button
           class="drives-list__sort-btn"
           [class.active]="sortBy() === 'date'"
           (click)="setSortBy('date')"
         >
-          Date
+          {{ 'drivingHistory.sort.date' | translate }}
         </button>
         <button
           class="drives-list__sort-btn"
           [class.active]="sortBy() === 'driver'"
           (click)="setSortBy('driver')"
         >
-          Driver
+          {{ 'drivingHistory.sort.driver' | translate }}
         </button>
         <button
           class="drives-list__sort-btn"
           [class.active]="sortBy() === 'distance'"
           (click)="setSortBy('distance')"
         >
-          Distance
+          {{ 'drivingHistory.sort.distance' | translate }}
         </button>
       </div>
     </div>
@@ -53,11 +53,11 @@
       <table class="drives-list__table">
         <thead class="drives-list__thead">
           <tr>
-            <th>Date</th>
-            <th>Driver</th>
-            <th>Distance (km)</th>
-            <th>Notes</th>
-            <th>Actions</th>
+            <th>{{ 'drivingHistory.table.headers.date' | translate }}</th>
+            <th>{{ 'drivingHistory.table.headers.driver' | translate }}</th>
+            <th>{{ 'drivingHistory.table.headers.distance' | translate }}</th>
+            <th>{{ 'drivingHistory.table.headers.notes' | translate }}</th>
+            <th>{{ 'drivingHistory.table.headers.actions' | translate }}</th>
           </tr>
         </thead>
         <tbody class="drives-list__tbody">
@@ -73,9 +73,9 @@
                 <button
                   class="drives-list__action-btn drives-list__action-btn--delete"
                   (click)="deleteDrive(drive.id)"
-                  title="Delete drive"
+                  title="{{ 'drivingHistory.table.actions.deleteTitle' | translate }}"
                 >
-                  Delete
+                  {{ 'drivingHistory.table.actions.delete' | translate }}
                 </button>
               </td>
             </tr>
