@@ -5,7 +5,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import com.fasterxml.jackson.databind.JsonNode;
+import java.time.LocalDateTime;
 import java.util.List;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
 @Table(name = "Car")
@@ -22,14 +25,17 @@ public class Car {
     @Column(name = "name", nullable = false, length = 50)
     private String name;
 
+    @Column(name = "brand", nullable = false, length = 50)
+    private String brand;
+
     @Column(name = "platenumber", nullable = false, length = 15)
     private String plateNumber;
 
     @ManyToOne
-    @JoinColumn(name = "userId")
+    @JoinColumn(name = "userId", nullable = true)
     private User owner;
 
-    @Column(name = "data", columnDefinition = "jsonb")
+    @Column(name = "data", columnDefinition = "jsonb", nullable = true)
     private JsonNode data;
 
     @OneToMany(mappedBy = "car", cascade = CascadeType.ALL)
@@ -37,4 +43,12 @@ public class Car {
 
     @OneToMany(mappedBy = "car", cascade = CascadeType.ALL)
     private List<Cost> transactions;
+
+    @CreationTimestamp
+    @Column(name = "createdAt", nullable = false, updatable = false)
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    @Column(name = "updatedAt", nullable = false)
+    private LocalDateTime updatedAt;
 }

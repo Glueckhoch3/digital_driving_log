@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import java.math.BigDecimal;
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.LocalDate;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -38,8 +38,8 @@ public class Cost {
     private User buyer;
 
     @NotNull
-    @Size(max = 127)
-    @Column(name = "goodname", nullable = false, length = 127)
+    @Size(max = 63)
+    @Column(name = "transactionObject", nullable = false, length = 63)
     private String transactionObject;
 
     @NotNull
@@ -64,11 +64,11 @@ public class Cost {
 
     @CreationTimestamp
     @Column(name = "createdAt", nullable = false, updatable = false)
-    private Instant createdAt;
+    private LocalDateTime createdAt;
 
     @UpdateTimestamp
     @Column(name = "updatedAt", nullable = false)
-    private Instant updatedAt;
+    private LocalDateTime updatedAt;
 }
 
 public enum CostType {

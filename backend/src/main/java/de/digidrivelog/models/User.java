@@ -5,7 +5,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
 @Table(name = "User")
@@ -28,7 +31,7 @@ public class User {
     @Column(name = "driverLicense", nullable = false)
     private Boolean driverLicense;
 
-    @Column(name = "brithday", nullable = false)
+    @Column(name = "birthday", nullable = false)
     private LocalDate birthday;
 
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
@@ -39,4 +42,12 @@ public class User {
 
     @OneToMany(mappedBy = "buyer", cascade = CascadeType.ALL)
     private List<Cost> transactions;
+
+    @CreationTimestamp
+    @Column(name = "createdAt", nullable = false, updatable = false)
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    @Column(name = "updatedAt", nullable = false)
+    private LocalDateTime updatedAt;
 }
