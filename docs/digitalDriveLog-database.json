@@ -359,7 +359,7 @@
         },
         {
           "id": "9UMTGQrmzUrVG7sb8qaPQ",
-          "name": "goodname",
+          "name": "transactionObject",
           "type": "VARCHAR",
           "default": "",
           "check": "",
@@ -368,7 +368,7 @@
           "notNull": true,
           "increment": false,
           "comment": "",
-          "size": 127
+          "size": 63
         },
         {
           "id": "unmDvBaDaQ9847wQH1z_m",

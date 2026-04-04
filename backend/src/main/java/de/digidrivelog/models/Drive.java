@@ -45,25 +45,11 @@ public class Drive {
     @Column(name = "notes", nullable = true, columnDefinition = "TEXT")
     private String notes;
 
+    @CreationTimestamp
     @Column(name = "createdAt", nullable = false)
     private LocalDateTime createdAt;
 
+    @UpdateTimestamp
     @Column(name = "updatedAt", nullable = false)
     private LocalDateTime updatedAt;
-
-    @PrePersist
-    protected void onCreate() {
-        LocalDateTime now = LocalDateTime.now();
-        if (createdAt == null) {
-            this.createdAt = now;
-        }
-        if (updatedAt == null) {
-            this.updatedAt = now;
-        }
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        this.updatedAt = LocalDateTime.now();
-    }
 }
