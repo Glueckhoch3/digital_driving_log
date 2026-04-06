@@ -16,16 +16,11 @@ Canonical JPA/Lombok patterns, validation, and persistence choices for the backe
 
 ## Core Conventions
 - Entity header: use `@Entity` and `@Table(name = "...")`.
-- Primary key: `@Id` + `@GeneratedValue(strategy = GenerationType.IDENTITY)`.
 - Lombok: prefer explicit annotations (`@Getter`, `@Setter`, `@NoArgsConstructor`, `@AllArgsConstructor`) — do NOT use `@Data` on entities.
-- Equals / HashCode: `@EqualsAndHashCode(onlyExplicitlyIncluded = true)`; include only the primary key with `@EqualsAndHashCode.Include`.
-- ToString: avoid including collections. If using Lombok `@ToString`, set `onlyExplicitlyIncluded = true` and include only safe scalar fields (IDs, names).
 - Relations: prefer `@ManyToOne(fetch = FetchType.LAZY, optional = false)` for required references and annotate with `@JoinColumn(name = "...", nullable = false)`.
 - Validation: use `jakarta.validation` (`@NotNull`, `@Size(max = N)`, `@Email` etc.) on DTOs and request models.
-- Enums: persist with `@Enumerated(EnumType.STRING)` and set a sensible `length` on the column.
 - Timestamps: project standard is `LocalDateTime` for `createdAt`/`updatedAt` with `@CreationTimestamp` and `@UpdateTimestamp`.
 - Monetary values: use `BigDecimal` with explicit precision/scale: e.g. `@Column(precision = 12, scale = 2)` for prices.
-- JSON fields: use `com.fasterxml.jackson.databind.JsonNode` and `@Column(columnDefinition = "jsonb")` for PostgreSQL JSONB storage; keep schema expectations documented.
 - Naming: prefer English table/column names and explicitly set `@Column(name = "...")`.
 
 ## Patterns & Examples
@@ -92,6 +87,17 @@ private CostType costType;
 2. Review entity `equals`/`toString` for accidental collection inclusion.
 
 ## Recorded Decisions
-- Timestamp choice: `LocalDateTime` (project standard).
-- Lombok policy: avoid `@Data` on entities; use explicit Lombok annotations.
+- Referenced ADRs
+
+- [ADR-001: Project timestamps — LocalDateTime](.github/decisions/ADR-001-timestamp-choice.md)
+- [ADR-002: Lombok usage policy for JPA entities](.github/decisions/ADR-002-lombok-entity-policy.md)
+- [ADR-003: Primary key generation strategy](.github/decisions/ADR-003-id-generation-strategy.md)
+- [ADR-004: Equals/HashCode inclusion rules](.github/decisions/ADR-004-equals-hashcode-pattern.md)
+- [ADR-005: ToString policy for entities](.github/decisions/ADR-005-toString-policy.md)
+- [ADR-006: Relation mapping defaults](.github/decisions/ADR-006-relation-mapping-policy.md)
+- [ADR-007: Persist enums as strings](.github/decisions/ADR-007-enum-persistence.md)
+- [ADR-008: Monetary values — BigDecimal precision/scale](.github/decisions/ADR-008-monetary-values-format.md)
+- [ADR-009: JSONB storage for JSON fields](.github/decisions/ADR-009-jsonb-storage-policy.md)
+- [ADR-010: Naming conventions for tables/columns](.github/decisions/ADR-010-naming-conventions.md)
+
 
