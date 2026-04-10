@@ -1,5 +1,8 @@
 package de.digidrivelog.mappers;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
+
 import de.digidrivelog.dto.cost.*;
 import de.digidrivelog.models.Cost;
 import de.digidrivelog.models.Car;
@@ -13,9 +16,9 @@ public final class CostMapper {
     public static CostDto toDto(Cost c) {
         if (c == null) return null;
         return new CostDto(
-                c.getId(),
-                c.getCar() != null ? c.getCar().getCarId() : null,
-                c.getBuyer() != null ? c.getBuyer().getUserId() : null,
+                c.getCostId(),
+                c.getCarId() != null ? c.getCarId().getCarId() : null,
+                c.getBuyerId() != null ? c.getBuyerId().getUserId() : null,
                 c.getTransactionObject(),
                 c.getPrice(),
                 c.getDayOfTransaction(),
@@ -25,11 +28,11 @@ public final class CostMapper {
         );
     }
 
-    public static Cost fromCreate(CreateCostRequest r, Car car, User buyer) {
+    public static Cost fromCreate(CreateCostRequest r, Car carId, User buyerId) {
         if (r == null) return null;
         Cost c = new Cost();
-        c.setCar(car);
-        c.setBuyer(buyer);
+        c.setCarId(carId);
+        c.setBuyerId(buyerId);
         c.setTransactionObject(r.getTransactionObject());
         c.setPrice(r.getPrice());
         c.setAmount(r.getAmount());
@@ -38,17 +41,17 @@ public final class CostMapper {
         if (r.getCostType() != null) {
             try {
                 c.setCostType(CostType.valueOf(r.getCostType().toUpperCase()));
-            } catch (IllegalArgumentException ignored) {
-                // leave null if unknown
+            } catch (IllegalArgumentException handled) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid cost type: " + r.getCostType());
             }
         }
         return c;
     }
 
-    public static void applyUpdate(UpdateCostRequest r, Cost existing, Car car, User buyer) {
+    public static void applyUpdate(UpdateCostRequest r, Cost existing, Car carId, User buyerId) {
         if (r == null || existing == null) return;
-        if (r.getCarId() != null && car != null) existing.setCar(car);
-        if (r.getBuyerId() != null && buyer != null) existing.setBuyer(buyer);
+        if (r.getCarId() != null && carId != null) existing.setCarId(carId);
+        if (r.getBuyerId() != null && buyerId != null) existing.setBuyerId(buyerId);
         if (r.getTransactionObject() != null) existing.setTransactionObject(r.getTransactionObject());
         if (r.getPrice() != null) existing.setPrice(r.getPrice());
         if (r.getAmount() != null) existing.setAmount(r.getAmount());
@@ -56,7 +59,8 @@ public final class CostMapper {
         if (r.getCostType() != null) {
             try {
                 existing.setCostType(CostType.valueOf(r.getCostType().toUpperCase()));
-            } catch (IllegalArgumentException ignored) {
+            } catch (IllegalArgumentException handled) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid cost type: " + r.getCostType());
             }
         }
         if (r.getNotes() != null) existing.setNotes(r.getNotes());

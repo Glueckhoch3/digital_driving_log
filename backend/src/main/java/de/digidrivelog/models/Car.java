@@ -26,16 +26,13 @@ public class Car {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "carId")
+    @Column(name = "carId", nullable = false)
     @EqualsAndHashCode.Include
     @ToString.Include
     private Long carId;
 
     @Column(name = "name", nullable = false, length = 50)
     private String name;
-
-    @Column(name = "brand", nullable = false, length = 50)
-    private String brand;
 
     @Column(name = "platenumber", nullable = false, length = 15)
     private String plateNumber;

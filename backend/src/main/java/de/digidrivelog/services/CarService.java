@@ -27,12 +27,11 @@ public class CarService {
     }
 
     public CarDto createCar(CreateCarRequest request) {
-        User owner = userRepository.findById(request.getOwnerId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Owner user not found"));
+        User ownerId = userRepository.findById(request.getOwnerId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Owner user not found"));
         Car car = new Car();
         car.setName(request.getName());
         car.setPlateNumber(request.getPlateNumber());
-        car.setOwner(owner);
-        car.setBrand(request.getBrand() != null ? request.getBrand() : "");
+        car.setOwner(ownerId);
         car.setData(request.getData());
         Car saved = carRepository.save(car);
         return CarMapper.toDto(saved);
@@ -45,11 +44,10 @@ public class CarService {
 
     public CarDto updateCar(Long carId, UpdateCarRequest request) {
         Car car = carRepository.findById(carId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Car not found"));
-        User owner = userRepository.findById(request.getOwnerId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Owner user not found"));
+        User ownerId = userRepository.findById(request.getOwnerId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Owner user not found"));
         car.setName(request.getName());
         car.setPlateNumber(request.getPlateNumber());
-        car.setOwner(owner);
-        car.setBrand(request.getBrand() != null ? request.getBrand() : car.getBrand());
+        car.setOwner(ownerId);
         car.setData(request.getData());
         Car saved = carRepository.save(car);
         return CarMapper.toDto(saved);

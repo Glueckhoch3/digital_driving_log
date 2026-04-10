@@ -29,13 +29,6 @@ paths:
         - drives
       summary: Create a new drive
       description: Create a new drive entry
-      parameters:
-        - name: carId
-          in: path
-          required: true
-          schema:
-            type: number
-            format: int64
       requestBody:
         required: true
         content:
@@ -52,7 +45,7 @@ paths:
         '400':
           description: Invalid input
 
-  /drives/{id}:
+  /drives/{driveId}:
     get:
       tags:
         - drives
@@ -60,12 +53,6 @@ paths:
       description: Retrieve a specific drive by its ID
       parameters:
         - name: driveId
-          in: path
-          required: true
-          schema:
-            type: number
-            format: int64
-        - name: carId
           in: path
           required: true
           schema:
@@ -87,12 +74,6 @@ paths:
       description: Update an existing drive by ID
       parameters:
         - name: driveId
-          in: path
-          required: true
-          schema:
-            type: number
-            format: int64
-        - name: carId
           in: path
           required: true
           schema:
@@ -269,9 +250,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/RetrieveCar'
+                $ref: '#/components/schemas/RetrieveCar'
         '404':
           description: Car not found
     put:
@@ -331,7 +310,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RetrieveCost'
+                type: array
+                items:
+                  $ref: '#/components/schemas/RetrieveCost'
         '404':
           description: No costs found
     post:
@@ -587,7 +568,7 @@ components:
           type: string
         plateNumber:
           type: string
-        owner:
+        ownerId:
           type: number
           format: int64
         brand:
@@ -595,9 +576,9 @@ components:
         data:
           type: string
       required:
-         - name,
-         - plateNumber,
-         - owner
+         - name
+         - plateNumber
+         - ownerId
 
     RetrieveCar:
       type: object
@@ -609,7 +590,7 @@ components:
           type: string
         plateNumber:
           type: string
-        owner:
+        ownerId:
           type: number
           format: int64
         brand:
@@ -617,10 +598,10 @@ components:
         data:
           type: string
       required:
-         - carId,
-         - name,
-         - plateNumber,
-         - owner
+         - carId
+         - name
+         - plateNumber
+         - ownerId
 
     PutCar:
       type: object
@@ -629,7 +610,7 @@ components:
           type: string
         plateNumber:
           type: string
-        owner:
+        ownerId:
           type: number
           format: int64
         brand:
@@ -637,17 +618,17 @@ components:
         data:
           type: string
       required:
-         - name,
-         - plateNumber,
-         - owner
+         - name
+         - plateNumber
+         - ownerId
 
     CreateCost:
       type: object
       properties:
-        car:
+        carId:
           type: number
           format: int64
-        buyer:
+        buyerId:
           type: number
           format: int64
         transactionObject:
@@ -664,12 +645,12 @@ components:
         notes:
           type: string
       required:
-         - car,
-         - buyer,
-         - transactionObject,
-         - price,
-         - dayOfTransaction,
-         - costType,
+         - carId
+         - buyerId
+         - transactionObject
+         - price
+         - dayOfTransaction
+         - costType
          - amount
 
     RetrieveCost:
@@ -678,10 +659,10 @@ components:
         costId:
           type: number
           format: int64
-        car:
+        carId:
           type: number
           format: int64
-        buyer:
+        buyerId:
           type: number
           format: int64
         transactionObject:
@@ -698,22 +679,22 @@ components:
         notes:
           type: string
       required:
-         - costId,
-         - car,
-         - buyer,
-         - transactionObject,
-         - price,
-         - dayOfTransaction,
-         - costType,
+         - costId
+         - carId
+         - buyerId
+         - transactionObject
+         - price
+         - dayOfTransaction
+         - costType
          - amount
 
     PutCost:
       type: object
       properties:
-        car:
+        carId:
           type: number
           format: int64
-        buyer:
+        buyerId:
           type: number
           format: int64
         transactionObject:
@@ -730,18 +711,18 @@ components:
         notes:
           type: string
       required:
-         - car,
-         - buyer,
-         - transactionObject,
-         - price,
-         - dayOfTransaction,
-         - costType,
+         - carId
+         - buyerId
+         - transactionObject
+         - price
+         - dayOfTransaction
+         - costType
          - amount
 
     CreateDrive:
       type: object
       properties:
-        car:
+        carId:
           type: number
           format: int64
         driveDate:
@@ -749,16 +730,16 @@ components:
           format: date-time
         distance:
           type: number
-        driver:
+        driverId:
           type: number
           format: int64
         notes:
           type: string
       required:
-        - car
+        - carId
         - driveDate
         - distance
-        - driver
+        - driverId
 
     RetrieveDrive:
       type: object
@@ -766,7 +747,7 @@ components:
         driveId:
           type: number
           format: int64
-        car:
+        carId:
           type: number
           format: int64
         driveDate:
@@ -774,22 +755,22 @@ components:
           format: date-time
         distance:
           type: number
-        driver:
+        driverId:
           type: number
           format: int64
         notes:
           type: string
       required:
         - driveId
-        - car
+        - carId
         - driveDate
         - distance
-        - driver
+        - driverId
 
     PutDrive:
       type: object
       properties:
-        car:
+        carId:
           type: number
           format: int64
         driveDate:
@@ -797,16 +778,16 @@ components:
           format: date-time
         distance:
           type: number
-        driver:
+        driverId:
           type: number
           format: int64
         notes:
           type: string
       required:
-        - car
+        - carId
         - driveDate
         - distance
-        - driver
+        - driverId
 
     CreateUser:
       type: object
@@ -821,8 +802,8 @@ components:
           type: string
           format: date
       required:
-        - firstname,
-        - lastname,
+        - firstname
+        - lastname
         - driverLicense
 
     RetrieveUser:
@@ -841,9 +822,9 @@ components:
           type: string
           format: date
       required:
-         - userId,
-         - firstname,
-         - lastname,
+         - userId
+         - firstname
+         - lastname
          - driverLicense
 
     PutUser:
@@ -859,8 +840,8 @@ components:
           type: string
           format: date
       required:
-        - firstname,
-        - lastname,
+        - firstname
+        - lastname
         - driverLicense
 
     Error:

@@ -26,7 +26,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "userId")
+    @Column(name = "userId", nullable = false)
     @EqualsAndHashCode.Include
     @ToString.Include
     private Long userId;

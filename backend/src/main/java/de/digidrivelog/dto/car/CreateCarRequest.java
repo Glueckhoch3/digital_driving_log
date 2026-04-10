@@ -19,7 +19,5 @@ public class CreateCarRequest {
     @NotNull
     private Long ownerId;
 
-    private String brand;
-
     private String data;
 }

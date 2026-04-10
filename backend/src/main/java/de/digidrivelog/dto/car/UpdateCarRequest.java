@@ -19,7 +19,5 @@ public class UpdateCarRequest {
     @NotNull
     private Long ownerId;
 
-    private String brand;
-
     private String data;
 }

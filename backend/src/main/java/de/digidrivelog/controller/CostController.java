@@ -11,9 +11,9 @@ import de.digidrivelog.dto.cost.*;
 import de.digidrivelog.services.CostService;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/ddl/api")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*")
 public class CostController {
     private final CostService costService;
 

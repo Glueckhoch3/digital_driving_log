@@ -11,7 +11,7 @@ import jakarta.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/vehicles")
+@RequestMapping("/ddl/api/vehicles")
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*")
 public class CarController {

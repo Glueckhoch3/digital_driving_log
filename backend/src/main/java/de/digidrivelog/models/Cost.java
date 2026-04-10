@@ -25,17 +25,17 @@ public class Cost {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "costId", nullable = false)
     @EqualsAndHashCode.Include
-    private Long id;
+    private Long costId;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "carId", nullable = false)
-    private Car car;
+    private Car carId;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "userId", nullable = false)
-    private User buyer;
+    private User buyerId;
 
     @NotNull
     @Size(max = 63)

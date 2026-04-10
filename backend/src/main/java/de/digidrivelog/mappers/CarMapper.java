@@ -15,28 +15,25 @@ public final class CarMapper {
                 c.getName(),
                 c.getPlateNumber(),
                 c.getOwner() != null ? c.getOwner().getUserId() : null,
-                c.getBrand(),
                 c.getData()
         );
     }
 
-    public static Car fromCreate(CreateCarRequest r, User owner) {
+    public static Car fromCreate(CreateCarRequest r, User ownerId) {
         if (r == null) return null;
         Car c = new Car();
         c.setName(r.getName());
         c.setPlateNumber(r.getPlateNumber());
-        c.setBrand(r.getBrand());
-        c.setOwner(owner);
+        c.setOwner(ownerId);
         c.setData(r.getData());
         return c;
     }
 
-    public static void applyUpdate(UpdateCarRequest r, Car existing, User owner) {
+    public static void applyUpdate(UpdateCarRequest r, Car existing, User ownerId) {
         if (r == null || existing == null) return;
         if (r.getName() != null) existing.setName(r.getName());
         if (r.getPlateNumber() != null) existing.setPlateNumber(r.getPlateNumber());
-        if (r.getBrand() != null) existing.setBrand(r.getBrand());
         if (r.getData() != null) existing.setData(r.getData());
-        if (owner != null) existing.setOwner(owner);
+        if (ownerId != null) existing.setOwner(ownerId);
     }
 }
