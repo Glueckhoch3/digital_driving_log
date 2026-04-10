@@ -5,11 +5,15 @@ import de.digidrivelog.dto.car.CreateCarRequest;
 import de.digidrivelog.dto.car.UpdateCarRequest;
 import de.digidrivelog.models.Car;
 import de.digidrivelog.models.User;
+import de.digidrivelog.mappers.CarMapper;
 import de.digidrivelog.repositories.CarRepository;
 import de.digidrivelog.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.stream.Collectors;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @RequiredArgsConstructor
@@ -19,58 +23,43 @@ public class CarService {
     private final UserRepository userRepository;
 
     public List<CarDto> getAllCars() {
-        return carRepository.findAll().stream()
-                .map(this::convertToDto)
-                .toList();
-    }
-
-    public CarDto getCarById(Long id) {
-        Car car = carRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Car not found"));
-        return convertToDto(car);
+        return carRepository.findAll().stream().map(CarMapper::toDto).collect(Collectors.toList());
     }
 
     public CarDto createCar(CreateCarRequest request) {
-        User owner = userRepository.findById(request.getOwnerId())
-                .orElseThrow(() -> new RuntimeException("Owner not found"));
-
+        User ownerId = userRepository.findById(request.getOwnerId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Owner user not found"));
         Car car = new Car();
         car.setName(request.getName());
         car.setPlateNumber(request.getPlateNumber());
-        car.setOwner(owner);
+        car.setOwner(ownerId);
         car.setData(request.getData());
-
-        Car savedCar = carRepository.save(car);
-        return convertToDto(savedCar);
+        Car saved = carRepository.save(car);
+        return CarMapper.toDto(saved);
     }
 
-    public CarDto updateCar(Long id, UpdateCarRequest request) {
-        Car car = carRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Car not found"));
+    public CarDto getCarById(Long carId) {
+        Car car = carRepository.findById(carId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Car not found"));
+        return CarMapper.toDto(car);
+    }
 
+    public CarDto updateCar(Long carId, UpdateCarRequest request) {
+        Car car = carRepository.findById(carId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Car not found"));
+        User ownerId = userRepository.findById(request.getOwnerId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Owner user not found"));
         car.setName(request.getName());
         car.setPlateNumber(request.getPlateNumber());
+        car.setOwner(ownerId);
         car.setData(request.getData());
-
-        Car updatedCar = carRepository.save(car);
-        return convertToDto(updatedCar);
+        Car saved = carRepository.save(car);
+        return CarMapper.toDto(saved);
     }
 
-    public void deleteCar(Long id) {
-        if (!carRepository.existsById(id)) {
-            throw new RuntimeException("Car not found");
+    public void deleteCar(Long carId) {
+        if (!carRepository.existsById(carId)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Car not found");
         }
-        carRepository.deleteById(id);
+        carRepository.deleteById(carId);
     }
 
-    private CarDto convertToDto(Car car) {
-        return new CarDto(
-                car.getCarId(),
-                car.getName(),
-                car.getPlateNumber(),
-                car.getOwner() != null ? car.getOwner().getUserId() : null,
-                car.getOwner() != null ? car.getOwner().getFirstname() + " " + car.getOwner().getLastname() : null,
-                car.getData()
-        );
-    }
+    
+
 }

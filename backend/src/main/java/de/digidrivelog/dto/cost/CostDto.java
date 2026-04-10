@@ -1,4 +1,4 @@
-package de.digidrivelog.dto.transaction;
+package de.digidrivelog.dto.cost;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,9 +9,14 @@ import java.time.LocalDate;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UpdateTransactionRequest {
+public class CostDto {
+    private Long costId;
+    private Long carId;
+    private Long buyerId;
     private String transactionObject;
     private BigDecimal price;
     private LocalDate dayOfTransaction;
     private String costType;
+    private Integer amount;
+    private String notes;
 }

@@ -29,7 +29,7 @@ Table Transaktion [headercolor: #175e7a] {
 	amount integer [ not null ]
 	userId bigint [ not null, note: 'buyer' ]
 	dayOfTransaction date [ not null ]
-	goodname varchar(127) [ not null ]
+	transactionObject varchar(63) [ not null ]
 	notes text
 	createdAt timestamp [ not null ]
 	updatedAt timestamp [ not null ]

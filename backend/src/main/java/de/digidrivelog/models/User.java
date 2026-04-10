@@ -1,22 +1,34 @@
 package de.digidrivelog.models;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
 @Table(name = "User")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString(onlyExplicitlyIncluded = true)
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "userId")
+    @Column(name = "userId", nullable = false)
+    @EqualsAndHashCode.Include
+    @ToString.Include
     private Long userId;
 
     @Column(name = "firstname", nullable = false, length = 63)
@@ -28,15 +40,26 @@ public class User {
     @Column(name = "driverLicense", nullable = false)
     private Boolean driverLicense;
 
-    @Column(name = "brithday", nullable = false)
+    @Column(name = "birthday", nullable = true)
     private LocalDate birthday;
 
-    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Car> ownedCars;
 
-    @OneToMany(mappedBy = "driver", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "driver", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Drive> drives;
 
-    @OneToMany(mappedBy = "buyer", cascade = CascadeType.ALL)
-    private List<Transaction> transactions;
+    @OneToMany(mappedBy = "buyerId", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<Cost> transactions;
+
+    @CreationTimestamp
+    @Column(name = "createdAt", nullable = false, updatable = false)
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    @Column(name = "updatedAt", nullable = false)
+    private LocalDateTime updatedAt;
 }

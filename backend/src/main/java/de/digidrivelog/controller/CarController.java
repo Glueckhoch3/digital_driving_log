@@ -11,7 +11,7 @@ import jakarta.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/cars")
+@RequestMapping("/ddl/api/vehicles")
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*")
 public class CarController {
@@ -24,27 +24,27 @@ public class CarController {
         return ResponseEntity.ok(cars);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<CarDto> getCarById(@PathVariable Long id) {
-        CarDto car = carService.getCarById(id);
-        return ResponseEntity.ok(car);
-    }
-
     @PostMapping
     public ResponseEntity<CarDto> createCar(@Valid @RequestBody CreateCarRequest request) {
         CarDto createdCar = carService.createCar(request);
-        return ResponseEntity.ok(createdCar);
+        return ResponseEntity.status(org.springframework.http.HttpStatus.CREATED).body(createdCar);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<CarDto> updateCar(@PathVariable Long id, @Valid @RequestBody UpdateCarRequest request) {
-        CarDto updatedCar = carService.updateCar(id, request);
+    @GetMapping("/{carId}")
+    public ResponseEntity<CarDto> getCarById(@PathVariable Long carId) {
+        CarDto car = carService.getCarById(carId);
+        return ResponseEntity.ok(car);
+    }
+
+    @PutMapping("/{carId}")
+    public ResponseEntity<CarDto> updateCar(@PathVariable Long carId, @Valid @RequestBody UpdateCarRequest request) {
+        CarDto updatedCar = carService.updateCar(carId, request);
         return ResponseEntity.ok(updatedCar);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCar(@PathVariable Long id) {
-        carService.deleteCar(id);
+    @DeleteMapping("/{carId}")
+    public ResponseEntity<Void> deleteCar(@PathVariable Long carId) {
+        carService.deleteCar(carId);
         return ResponseEntity.noContent().build();
     }
 }

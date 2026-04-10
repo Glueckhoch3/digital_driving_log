@@ -1,48 +1,57 @@
 package de.digidrivelog.models;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
 @Table(name = "Drive")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString(onlyExplicitlyIncluded = true)
 public class Drive {
 
     @Id
+    @EqualsAndHashCode.Include
+    @ToString.Include
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "driveId", nullable = false)
     private Long driveId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "carId", nullable = false)
     private Car car;
 
-    @Column (name = "driveDate", nullable = false)
+    @Column(name = "driveDay", nullable = false)
     private LocalDate driveDate;
 
     @Column(name = "distance", nullable = false)
     private Integer distance;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "userId", nullable = false)
     private User driver;
 
-    @Column (name = "notes", nullable = true)
+    @Column(name = "notes", nullable = true, columnDefinition = "TEXT")
     private String notes;
 
-    @Column(name = "createdAt", nullable = false)
+    @CreationTimestamp
+    @Column(name = "createdAt", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    @PrePersist
-    protected void onCreate() {
-        if (createdAt == null) {
-            this.createdAt = LocalDateTime.now();
-        }
-    }
+    @UpdateTimestamp
+    @Column(name = "updatedAt", nullable = false)
+    private LocalDateTime updatedAt;
 }
