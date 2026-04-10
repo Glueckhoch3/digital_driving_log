@@ -10,13 +10,13 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CostDto {
-    private Long id;
+    private Long costId;
     private Long carId;
-    private String costType;
+    private Long buyerId;
+    private String transactionObject;
     private BigDecimal price;
+    private LocalDate dayOfTransaction;
+    private String costType;
     private Integer amount;
-    private Long shareholderId;
-    private LocalDate date;
-    private String description;
-    private String note;
+    private String notes;
 }

@@ -12,10 +12,8 @@ import java.time.LocalDate;
 public class DriveDto {
     private Long driveId;
     private Long carId;
-    private String carName;
+    private LocalDate driveDate;
     private Integer distance;
     private Long driverId;
-    private String driverName;
-    private LocalDate driveDate;
     private String notes;
 }
