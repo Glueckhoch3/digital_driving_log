@@ -11,9 +11,9 @@ info:
   license:
     name: License MIT
     url: https://github.com/Glueckhoch3/digital_driving_log/blob/main/LICENSE
-  version: 0.0.1
+  version: 0.0.2
 servers:
-  - url: https://localhost:8080/api
+  - url: https://localhost:8080/ddl/api
 
 tags:
   - name: drives
@@ -24,22 +24,34 @@ tags:
 
 paths:
   /drives:
-    get:
+    post:
       tags:
         - drives
-      summary: Get all drives
-      description: Retrieve a list of all drives
+      summary: Create a new drive
+      description: Create a new drive entry
+      parameters:
+        - name: carId
+          in: path
+          required: true
+          schema:
+            type: number
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateDrive'
       responses:
-        '200':
-          description: Successful operation
+        '201':
+          description: Drive created
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Drive'
-        '404':
-          description: No drives found
+                $ref: '#/components/schemas/RetrieveDrive'
+        '400':
+          description: Invalid input
+
   /drives/{id}:
     get:
       tags:
@@ -47,18 +59,25 @@ paths:
       summary: Get a drive by ID
       description: Retrieve a specific drive by its ID
       parameters:
-        - name: id
+        - name: driveId
           in: path
           required: true
           schema:
-            type: string
+            type: number
+            format: int64
+        - name: carId
+          in: path
+          required: true
+          schema:
+            type: number
+            format: int64
       responses:
         '200':
           description: Successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Drive'
+                $ref: '#/components/schemas/RetrieveDrive'
         '404':
           description: Drive not found
     put:
@@ -67,24 +86,31 @@ paths:
       summary: Update a drive
       description: Update an existing drive by ID
       parameters:
-        - name: id
+        - name: driveId
           in: path
           required: true
           schema:
-            type: string
+            type: number
+            format: int64
+        - name: carId
+          in: path
+          required: true
+          schema:
+            type: number
+            format: int64
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Drive'
+              $ref: '#/components/schemas/PutDrive'
       responses:
         '200':
           description: Drive updated
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Drive'
+                $ref: '#/components/schemas/RetrieveDrive'
         '404':
           description: Drive not found
     delete:
@@ -93,28 +119,31 @@ paths:
       summary: Delete a drive
       description: Delete a drive by ID
       parameters:
-        - name: id
+        - name: driveId
           in: path
           required: true
           schema:
-            type: string
+            type: number
+            format: int64
       responses:
         '204':
           description: Drive deleted
         '404':
           description: Drive not found
-  /drives/vehicle/{carId}:
+
+  /vehicles/{carId}/drives:
     get:
       tags:
         - drives
-      summary: Get drives for a car
-      description: Retrieve all drives for a specific car
+      summary: Get all drives
+      description: Retrieve a list of all drives
       parameters:
         - name: carId
           in: path
           required: true
           schema:
-            type: string
+            type: number
+            format: int64
       responses:
         '200':
           description: Successful operation
@@ -123,29 +152,173 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Drive'
+                  $ref: '#/components/schemas/RetrieveDrive'
         '404':
-          description: Car not found
-    post:
+          description: No drives found
+
+  /users/{userId}/drives:
+    get:
       tags:
         - drives
-      summary: Create a new drive
-      description: Create a new drive entry
+      summary: Get all drives by user ID
+      description: Retrieve all drives by user ID
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: number
+            format: int64
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RetrieveDrive'
+        '404':
+          description: Drive not found
+
+  /vehicles/{carId}/users/{userId}/drives:
+    get:
+      tags:
+        - drives
+      summary: Get all drives by user and vehicle ID
+      description: Retrieve all drives by user and vehicle ID
+      parameters:
+        - name: carId
+          in: path
+          required: true
+          schema:
+            type: number
+            format: int64
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: number
+            format: int64
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RetrieveDrive'
+        '404':
+          description: Drive not found
+
+  /vehicles:
+    get:
+      tags:
+        - vehicles
+      summary: Get all vehicles
+      description: Retrieve a list of all vehicles
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RetrieveCar'
+        '404':
+          description: No vehicles found
+    post:
+      tags:
+        - vehicles
+      summary: Create a new vehicle
+      description: Create a new vehicle entry
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Drive'
+              $ref: '#/components/schemas/CreateCar'
       responses:
         '201':
-          description: Drive created
+          description: Vehicle created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Drive'
+                $ref: '#/components/schemas/RetrieveCar'
         '400':
           description: Invalid input
+
+  /vehicles/{carId}:
+    get:
+      tags:
+        - vehicles
+      summary: Get a vehicle by ID
+      description: Retrieve a specific vehicle by its ID
+      parameters:
+        - name: carId
+          in: path
+          required: true
+          schema:
+            type: number
+            format: int64
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RetrieveCar'
+        '404':
+          description: Car not found
+    put:
+      tags:
+        - vehicles
+      summary: Update a vehicle
+      description: Update an existing vehicle by ID
+      parameters:
+        - name: carId
+          in: path
+          required: true
+          schema:
+            type: number
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PutCar'
+      responses:
+        '200':
+          description: Vehicle updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RetrieveCar'
+        '404':
+          description: Vehicle not found
+    delete:
+      tags:
+        - vehicles
+      summary: Delete a vehicle
+      description: Delete a vehicle by ID
+      parameters:
+        - name: carId
+          in: path
+          required: true
+          schema:
+            type: number
+            format: int64
+      responses:
+        '204':
+          description: Vehicle deleted
+        '404':
+          description: Vehicle not found
+
   /costs:
     get:
       tags:
@@ -158,28 +331,51 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Cost'
+                $ref: '#/components/schemas/RetrieveCost'
         '404':
           description: No costs found
-  /costs/{id}:
+    post:
+      tags:
+        - costs
+      summary: Create a new cost
+      description: Create a new cost entry
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCost'
+      responses:
+        '201':
+          description: Cost created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RetrieveCost'
+        '400':
+          description: Invalid input
+
+
+  /costs/{costId}:
     get:
       tags:
         - costs
       summary: Get a cost by ID
       description: Retrieve a specific cost by its ID
       parameters:
-        - name: id
+        - name: costId
           in: path
           required: true
           schema:
-            type: string
+            type: number
+            format: int64
       responses:
         '200':
           description: Successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Cost'
+                $ref: '#/components/schemas/RetrieveCost'
         '404':
           description: Cost not found
     put:
@@ -188,24 +384,25 @@ paths:
       summary: Update a cost
       description: Update an existing cost by ID
       parameters:
-        - name: id
+        - name: costId
           in: path
           required: true
           schema:
-            type: string
+            type: number
+            format: int64
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Cost'
+              $ref: '#/components/schemas/PutCost'
       responses:
         '200':
           description: Cost updated
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Cost'
+                $ref: '#/components/schemas/RetrieveCost'
         '404':
           description: Cost not found
     delete:
@@ -214,28 +411,31 @@ paths:
       summary: Delete a cost
       description: Delete a cost by ID
       parameters:
-        - name: id
+        - name: costId
           in: path
           required: true
           schema:
-            type: string
+            type: number
+            format: int64
       responses:
         '204':
           description: Cost deleted
         '404':
           description: Cost not found
-  /costs/vehicles/{carId}:
+
+  /vehicles/{carId}/costs:
     get:
       tags:
         - costs
-      summary: Get costs for a car
-      description: Retrieve all costs for a specific car
+      summary: Get all costs for a vehicle
+      description: Retrieve all costs associated with a specific vehicle
       parameters:
         - name: carId
           in: path
           required: true
           schema:
-            type: string
+            type: number
+            format: int64
       responses:
         '200':
           description: Successful operation
@@ -244,84 +444,336 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Cost'
+                  $ref: '#/components/schemas/RetrieveCost'
         '404':
-          description: Car not found
-    post:
+          description: Vehicle not found
+
+  /users/{userId}/costs:
+    get:
       tags:
         - costs
-      summary: Create a new cost
-      description: Create a new cost entry for a car
+      summary: Get all costs for a user
+      description: Retrieve all costs associated with a specific user
       parameters:
-        - name: carId
+        - name: userId
           in: path
           required: true
           schema:
-            type: string
+            type: number
+            format: int64
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RetrieveCost'
+        '404':
+          description: User not found
+
+  /users:
+    get:
+      tags:
+        - users
+      summary: Get all users
+      description: Retrieve a list of all users
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RetrieveUser'
+        '404':
+          description: No users found
+    post:
+      tags:
+        - users
+      summary: Create a new user
+      description: Create a new user entry
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Cost'
+              $ref: '#/components/schemas/CreateUser'
       responses:
         '201':
-          description: Cost created
+          description: User created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Cost'
+                $ref: '#/components/schemas/RetrieveUser'
         '400':
           description: Invalid input
 
+  /users/{userId}:
+    get:
+      tags:
+        - users
+      summary: Get a user by ID
+      description: Retrieve a specific user by their ID
+      parameters:
+        - name: userId  
+          in: path
+          required: true
+          schema:
+            type: number
+            format: int64
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/RetrieveUser'
+        '404':
+          description: User not found
+    put:
+      tags:
+        - users
+      summary: Update a user
+      description: Update an existing user by ID
+      parameters:
+        - name: userId  
+          in: path
+          required: true
+          schema:
+            type: number
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PutUser'
+      responses:
+        '200':
+          description: User updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RetrieveUser'
+        '404':
+          description: User not found
+    delete:
+      tags:
+        - users
+      summary: Delete a user
+      description: Delete a user by ID
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: number
+            format: int64
+      responses:
+        '204':
+          description: User deleted
+        '404':
+          description: User not found
+
 components:
   schemas:
-    Drive:
+    CreateCar:
       type: object
       properties:
-        id:
+        name:
           type: string
-        date:
+        plateNumber:
+          type: string
+        owner:
+          type: number
+          format: int64
+        brand:
+          type: string
+        data:
+          type: string
+      required:
+         - name,
+         - plateNumber,
+         - owner
+
+    RetrieveCar:
+      type: object
+      properties:
+        carId:
+          type: number
+          format: int64
+        name:
+          type: string
+        plateNumber:
+          type: string
+        owner:
+          type: number
+          format: int64
+        brand:
+          type: string
+        data:
+          type: string
+      required:
+         - carId,
+         - name,
+         - plateNumber,
+         - owner
+
+    CreateCost:
+      type: object
+      properties:
+        car:
+          type: number
+          format: int64
+        buyer:
+          type: number
+          format: int64
+        transactionObject:
+          type: string
+        price:
+          type: number
+        dayOfTransaction:
           type: string
           format: date-time
-        driver:
+        costType:
           type: string
-        distance:
+        amount:
           type: number
         notes:
           type: string
       required:
-        - date
-        - driver
-        - distance
-    Cost:
+         - car,
+         - buyer,
+         - transactionObject,
+         - price,
+         - dayOfTransaction,
+         - costType,
+         - amount
+
+    RetrieveCost:
       type: object
       properties:
-        id:
+        costId:
+          type: number
+          format: int64
+        car:
+          type: number
+          format: int64
+        buyer:
+          type: number
+          format: int64
+        transactionObject:
           type: string
-        type:
-          type: string
-          enum: [fixed, variable]
         price:
           type: number
-        amount:
-          type: number
-        shareholder:
-          type: string
-        date:
+        dayOfTransaction:
           type: string
           format: date-time
-        description:
+        costType:
           type: string
-        category:
+        amount:
+          type: number
+        notes:
           type: string
       required:
-        - type
-        - price
-        - amount
-        - shareholder
-        - date
-        - description
+         - costId,
+         - car,
+         - buyer,
+         - transactionObject,
+         - price,
+         - dayOfTransaction,
+         - costType,
+         - amount
+
+    CreateDrive:
+      type: object
+      properties:
+        car:
+          type: number
+          format: int64
+        driveDate:
+          type: string
+          format: date-time
+        distance:
+          type: number
+        driver:
+          type: number
+          format: int64
+        notes:
+          type: string
+      required:
+        - car
+        - driveDate
+        - distance
+        - driver
+
+    RetrieveDrive:
+      type: object
+      properties:
+        driveId:
+          type: number
+          format: int64
+        car:
+          type: number
+          format: int64
+        driveDate:
+          type: string
+          format: date-time
+        distance:
+          type: number
+        driver:
+          type: number
+          format: int64
+        notes:
+          type: string
+      required:
+        - driveId
+        - car
+        - driveDate
+        - distance
+        - driver
+
+    CreateUser:
+      type: object
+      properties:
+        firstname:
+          type: string
+        lastname:
+          type: string
+        driverLicense:
+          type: boolean
+        birthday:
+          type: string
+          format: date
+      required:
+        - firstname,
+        - lastname,
+        - driverLicense
+
+    RetrieveUser:
+      type: object
+      properties:
+        userId:
+          type: number
+          format: int64
+        firstname:
+          type: string
+        lastname:
+          type: string
+        driverLicense:
+          type: boolean
+        birthday:
+          type: string
+          format: date
+      required:
+         - userId,
+         - firstname,
+         - lastname,
+         - driverLicense
+
     Error:
       type: object
       properties:

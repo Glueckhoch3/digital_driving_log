@@ -40,7 +40,7 @@ public class User {
     @Column(name = "driverLicense", nullable = false)
     private Boolean driverLicense;
 
-    @Column(name = "birthday", nullable = false)
+    @Column(name = "birthday", nullable = true)
     private LocalDate birthday;
 
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
