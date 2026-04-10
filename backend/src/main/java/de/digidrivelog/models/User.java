@@ -51,7 +51,7 @@ public class User {
     @JsonIgnore
     private List<Drive> drives;
 
-    @OneToMany(mappedBy = "buyer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "buyerId", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Cost> transactions;
 

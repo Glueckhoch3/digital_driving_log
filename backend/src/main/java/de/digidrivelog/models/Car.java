@@ -48,7 +48,7 @@ public class Car {
     @JsonIgnore
     private List<Drive> drives;
 
-    @OneToMany(mappedBy = "car", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "carId", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Cost> transactions;
 

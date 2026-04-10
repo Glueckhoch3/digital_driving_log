@@ -12,7 +12,6 @@ import de.digidrivelog.repositories.UserRepository;
 import de.digidrivelog.mappers.CostMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
-import java.util.stream.Collectors;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,7 +25,7 @@ public class CostService {
     private final UserRepository userRepository;
 
     public List<CostDto> getAllCosts() {
-        return costRepository.findAll().stream().map(CostMapper::toDto).collect(Collectors.toList());
+        return costRepository.findAll().stream().map(CostMapper::toDto).toList();
     }
 
     public CostDto createCost(CreateCostRequest request) {
@@ -59,11 +58,11 @@ public class CostService {
     }
 
     public List<CostDto> getAllCostsByVehicle(Long carId) {
-        return costRepository.findByCarCarId(carId).stream().map(CostMapper::toDto).collect(Collectors.toList());
+        return costRepository.findByCarIdCarId(carId).stream().map(CostMapper::toDto).toList();
     }
 
     public List<CostDto> getAllCostsByUser(Long userId) {
-        return costRepository.findByBuyerUserId(userId).stream().map(CostMapper::toDto).collect(Collectors.toList());
+        return costRepository.findByBuyerIdUserId(userId).stream().map(CostMapper::toDto).toList();
     }
 
 }
