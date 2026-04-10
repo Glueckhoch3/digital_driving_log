@@ -10,17 +10,12 @@ import de.digidrivelog.repositories.CarRepository;
 import de.digidrivelog.repositories.DriveRepository;
 import de.digidrivelog.repositories.UserRepository;
 import de.digidrivelog.mappers.DriveMapper;
-import de.digidrivelog.dto.drive.DriveDto;
-import de.digidrivelog.dto.drive.CreateDriveRequest;
-import de.digidrivelog.dto.drive.UpdateDriveRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 import java.util.stream.Collectors;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor

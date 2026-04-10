@@ -1,7 +1,6 @@
 package de.digidrivelog.models;
 
 import jakarta.persistence.*;
-import jakarta.persistence.Convert;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.NoArgsConstructor;
