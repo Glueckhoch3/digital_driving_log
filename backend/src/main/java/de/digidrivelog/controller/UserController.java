@@ -24,27 +24,27 @@ public class UserController {
         return ResponseEntity.ok(users);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<UserDto> getUserById(@PathVariable Long id) {
-        UserDto user = userService.getUserById(id);
-        return ResponseEntity.ok(user);
-    }
-
     @PostMapping
     public ResponseEntity<UserDto> createUser(@Valid @RequestBody CreateUserRequest request) {
         UserDto createdUser = userService.createUser(request);
-        return ResponseEntity.ok(createdUser);
+        return ResponseEntity.status(org.springframework.http.HttpStatus.CREATED).body(createdUser);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<UserDto> updateUser(@PathVariable Long id, @Valid @RequestBody UpdateUserRequest request) {
-        UserDto updatedUser = userService.updateUser(id, request);
+    @GetMapping("/{userId}")
+    public ResponseEntity<UserDto> getUserById(@PathVariable Long userId) {
+        UserDto user = userService.getUserById(userId);
+        return ResponseEntity.ok(user);
+    }
+
+    @PutMapping("/{userId}")
+    public ResponseEntity<UserDto> updateUser(@PathVariable Long userId, @Valid @RequestBody UpdateUserRequest request) {
+        UserDto updatedUser = userService.updateUser(userId, request);
         return ResponseEntity.ok(updatedUser);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
-        userService.deleteUser(id);
+    @DeleteMapping("/{userId}")
+    public ResponseEntity<Void> deleteUser(@PathVariable Long userId) {
+        userService.deleteUser(userId);
         return ResponseEntity.noContent().build();
     }
 }
