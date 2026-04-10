@@ -15,12 +15,12 @@ public final class CostMapper {
         return new CostDto(
                 c.getId(),
                 c.getCar() != null ? c.getCar().getCarId() : null,
-                c.getCostType() != null ? c.getCostType().name() : null,
-                c.getPrice(),
-                c.getAmount(),
                 c.getBuyer() != null ? c.getBuyer().getUserId() : null,
-                c.getDayOfTransaction(),
                 c.getTransactionObject(),
+                c.getPrice(),
+                c.getDayOfTransaction(),
+                c.getCostType() != null ? c.getCostType().name() : null,
+                c.getAmount(),
                 c.getNotes()
         );
     }

@@ -9,6 +9,11 @@ import de.digidrivelog.models.User;
 import de.digidrivelog.repositories.CarRepository;
 import de.digidrivelog.repositories.CostRepository;
 import de.digidrivelog.repositories.UserRepository;
+import de.digidrivelog.mappers.CostMapper;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
+import java.util.stream.Collectors;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -21,67 +26,45 @@ public class CostService {
     private final CarRepository carRepository;
     private final UserRepository userRepository;
 
-    public List<CostDto> getAllTransactions() {
-        return costRepository.findAll().stream()
-                .map(this::convertToDto)
-                .toList();
+    public List<CostDto> getAllCosts() {
+        return costRepository.findAll().stream().map(CostMapper::toDto).collect(Collectors.toList());
     }
 
-    public CostDto getTransactionById(Long id) {
-        Cost transaction = costRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Transaction not found"));
-        return convertToDto(transaction);
+    public CostDto createCost(CreateCostRequest request) {
+        Car car = carRepository.findById(request.getCarId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Car not found"));
+        User buyer = userRepository.findById(request.getBuyerId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Buyer user not found"));
+        Cost c = CostMapper.fromCreate(request, car, buyer);
+        Cost saved = costRepository.save(c);
+        return CostMapper.toDto(saved);
     }
 
-    public CostDto createTransaction(CreateCostRequest request) {
-        Car car = carRepository.findById(request.getCarId())
-                .orElseThrow(() -> new RuntimeException("Car not found"));
-        User buyer = userRepository.findById(request.getBuyerId())
-                .orElseThrow(() -> new RuntimeException("Buyer not found"));
-
-        Cost transaction = new Cost();
-        transaction.setCar(car);
-        transaction.setBuyer(buyer);
-        transaction.setTransactionObject(request.getTransactionObject());
-        transaction.setPrice(request.getPrice());
-        transaction.setDayOfTransaction(request.getDayOfTransaction());
-        transaction.setCostType(request.getCostType());
-
-        Cost savedTransaction = costRepository.save(transaction);
-        return convertToDto(savedTransaction);
+    public CostDto getCostById(Long costId) {
+        Cost c = costRepository.findById(costId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cost not found"));
+        return CostMapper.toDto(c);
     }
 
-    public CostDto updateTransaction(Long id, UpdateCostRequest request) {
-        Cost transaction = costRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Transaction not found"));
-
-        transaction.setTransactionObject(request.getTransactionObject());
-        transaction.setPrice(request.getPrice());
-        transaction.setDayOfTransaction(request.getDayOfTransaction());
-        transaction.setCostType(request.getCostType());
-
-        Cost updatedTransaction = costRepository.save(transaction);
-        return convertToDto(updatedTransaction);
+    public CostDto updateCost(Long costId, UpdateCostRequest request) {
+        Cost existing = costRepository.findById(costId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cost not found"));
+        Car car = carRepository.findById(request.getCarId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Car not found"));
+        User buyer = userRepository.findById(request.getBuyerId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Buyer user not found"));
+        CostMapper.applyUpdate(request, existing, car, buyer);
+        Cost saved = costRepository.save(existing);
+        return CostMapper.toDto(saved);
     }
 
-    public void deleteTransaction(Long id) {
-        if (!costRepository.existsById(id)) {
-            throw new RuntimeException("Transaction not found");
+    public void deleteCost(Long costId) {
+        if (!costRepository.existsById(costId)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cost not found");
         }
-        costRepository.deleteById(id);
+        costRepository.deleteById(costId);
     }
 
-    private CostDto convertToDto(Cost transaction) {
-        return new CostDto(
-                transaction.getId(),
-                transaction.getCar() != null ? transaction.getCar().getCarId() : null,
-                transaction.getCar() != null ? transaction.getCar().getName() : null,
-                transaction.getBuyer() != null ? transaction.getBuyer().getUserId() : null,
-                transaction.getBuyer() != null ? transaction.getBuyer().getFirstname() + " " + transaction.getBuyer().getLastname() : null,
-                transaction.getTransactionObject(),
-                transaction.getPrice(),
-                transaction.getDayOfTransaction(),
-                transaction.getCostType()
-        );
+    public List<CostDto> getAllCostsByVehicle(Long carId) {
+        return costRepository.findByCarCarId(carId).stream().map(CostMapper::toDto).collect(Collectors.toList());
     }
+
+    public List<CostDto> getAllCostsByUser(Long userId) {
+        return costRepository.findByBuyerUserId(userId).stream().map(CostMapper::toDto).collect(Collectors.toList());
+    }
+
 }

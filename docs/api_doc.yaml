@@ -622,6 +622,25 @@ components:
          - plateNumber,
          - owner
 
+    PutCar:
+      type: object
+      properties:
+        name:
+          type: string
+        plateNumber:
+          type: string
+        owner:
+          type: number
+          format: int64
+        brand:
+          type: string
+        data:
+          type: string
+      required:
+         - name,
+         - plateNumber,
+         - owner
+
     CreateCost:
       type: object
       properties:
@@ -688,6 +707,37 @@ components:
          - costType,
          - amount
 
+    PutCost:
+      type: object
+      properties:
+        car:
+          type: number
+          format: int64
+        buyer:
+          type: number
+          format: int64
+        transactionObject:
+          type: string
+        price:
+          type: number
+        dayOfTransaction:
+          type: string
+          format: date-time
+        costType:
+          type: string
+        amount:
+          type: number
+        notes:
+          type: string
+      required:
+         - car,
+         - buyer,
+         - transactionObject,
+         - price,
+         - dayOfTransaction,
+         - costType,
+         - amount
+
     CreateDrive:
       type: object
       properties:
@@ -736,6 +786,28 @@ components:
         - distance
         - driver
 
+    PutDrive:
+      type: object
+      properties:
+        car:
+          type: number
+          format: int64
+        driveDate:
+          type: string
+          format: date-time
+        distance:
+          type: number
+        driver:
+          type: number
+          format: int64
+        notes:
+          type: string
+      required:
+        - car
+        - driveDate
+        - distance
+        - driver
+
     CreateUser:
       type: object
       properties:
@@ -773,6 +845,23 @@ components:
          - firstname,
          - lastname,
          - driverLicense
+
+    PutUser:
+      type: object
+      properties:
+        firstname:
+          type: string
+        lastname:
+          type: string
+        driverLicense:
+          type: boolean
+        birthday:
+          type: string
+          format: date
+      required:
+        - firstname,
+        - lastname,
+        - driverLicense
 
     Error:
       type: object

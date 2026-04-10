@@ -5,26 +5,22 @@ import de.digidrivelog.dto.user.CreateUserRequest;
 import de.digidrivelog.dto.user.UpdateUserRequest;
 import de.digidrivelog.models.User;
 import de.digidrivelog.repositories.UserRepository;
+import de.digidrivelog.mappers.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.stream.Collectors;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
-
+    
     public List<UserDto> getAllUsers() {
-        return userRepository.findAll().stream()
-                .map(this::convertToDto)
-                .toList();
-    }
-
-    public UserDto getUserById(Long id) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-        return convertToDto(user);
+        return userRepository.findAll().stream().map(UserMapper::toDto).collect(Collectors.toList());
     }
 
     public UserDto createUser(CreateUserRequest request) {
@@ -33,38 +29,31 @@ public class UserService {
         user.setLastname(request.getLastname());
         user.setDriverLicense(request.getDriverLicense());
         user.setBirthday(request.getBirthday());
-
-        User savedUser = userRepository.save(user);
-        return convertToDto(savedUser);
+        User saved = userRepository.save(user);
+        return UserMapper.toDto(saved);
     }
 
-    public UserDto updateUser(Long id, UpdateUserRequest request) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+    public UserDto getUserById(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+        return UserMapper.toDto(user);
+    }
 
+    public UserDto updateUser(Long userId, UpdateUserRequest request) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
         user.setFirstname(request.getFirstname());
         user.setLastname(request.getLastname());
         user.setDriverLicense(request.getDriverLicense());
         user.setBirthday(request.getBirthday());
-
-        User updatedUser = userRepository.save(user);
-        return convertToDto(updatedUser);
+        User saved = userRepository.save(user);
+        return UserMapper.toDto(saved);
     }
 
-    public void deleteUser(Long id) {
-        if (!userRepository.existsById(id)) {
-            throw new RuntimeException("User not found");
+    public void deleteUser(Long userId) {
+        if (!userRepository.existsById(userId)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
         }
-        userRepository.deleteById(id);
+        userRepository.deleteById(userId);
     }
 
-    private UserDto convertToDto(User user) {
-        return new UserDto(
-                user.getUserId(),
-                user.getFirstname(),
-                user.getLastname(),
-                user.getDriverLicense(),
-                user.getBirthday()
-        );
-    }
+    
 }

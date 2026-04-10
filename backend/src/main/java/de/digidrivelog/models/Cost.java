@@ -15,7 +15,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
-@Table(name = "Transaktion")
+@Table(name = "Cost")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -69,9 +69,4 @@ public class Cost {
     @UpdateTimestamp
     @Column(name = "updatedAt", nullable = false)
     private LocalDateTime updatedAt;
-}
-
-public enum CostType {
-    VARIABLE,
-    FIXED
 }
