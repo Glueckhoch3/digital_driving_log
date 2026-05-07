@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 
 import java.time.LocalDate;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.Positive;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Data
@@ -17,8 +17,8 @@ public class CreateDriveRequest {
     private Long carId;
 
     @NotNull
-    @PositiveOrZero
-    private Integer currentMileage;
+    @Positive
+    private Integer distance;
 
     @NotNull
     private Long driverId;
