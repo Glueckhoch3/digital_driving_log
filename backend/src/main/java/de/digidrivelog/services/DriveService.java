@@ -13,9 +13,9 @@ import de.digidrivelog.repositories.UserRepository;
 import de.digidrivelog.mappers.DriveMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -66,7 +66,7 @@ public class DriveService {
 
     public List<DriveDto> getAllDrivesByUser(Long userId) {
         List<Drive> drives = driveRepository.findByDriverUserId(userId);
-        Map<Long, Integer> drivenDistanceByDriveId = findDrivenDistanceByDriveList(drives);
+        Map<Long, Integer> drivenDistanceByDriveId = findDrivenDistanceByUser(userId);
         return drives.stream()
                 .map(drive -> DriveMapper.toDto(drive, drivenDistanceByDriveId.get(drive.getDriveId())))
                 .toList();
@@ -81,28 +81,19 @@ public class DriveService {
     }
 
     private DriveDto toDtoWithDrivenDistance(Drive drive) {
-        Map<Long, Integer> drivenDistanceByDriveId = findDrivenDistanceByCar(drive.getCar().getCarId());
-        return DriveMapper.toDto(drive, drivenDistanceByDriveId.get(drive.getDriveId()));
+        DriveDistanceProjection distanceProjection = driveRepository.findDrivenDistanceByDriveId(drive.getDriveId());
+        Integer drivenDistance = distanceProjection != null ? distanceProjection.getDrivenDistance() : null;
+        return DriveMapper.toDto(drive, drivenDistance);
     }
 
-    private Map<Long, Integer> findDrivenDistanceByDriveList(List<Drive> drives) {
-        Map<Long, Integer> drivenDistanceByDriveId = new HashMap<>();
-        drives.stream()
-                .map(Drive::getCar)
-                .filter(car -> car != null && car.getCarId() != null)
-                .map(Car::getCarId)
-                .distinct()
-                .forEach(carId -> drivenDistanceByDriveId.putAll(findDrivenDistanceByCar(carId)));
-        return drivenDistanceByDriveId;
+    private Map<Long, Integer> findDrivenDistanceByUser(Long userId) {
+        return driveRepository.findDrivenDistanceByUserId(userId).stream()
+                .collect(Collectors.toMap(DriveDistanceProjection::getDriveId, DriveDistanceProjection::getDrivenDistance));
     }
 
     private Map<Long, Integer> findDrivenDistanceByCar(Long carId) {
-        List<DriveDistanceProjection> distances = driveRepository.findDrivenDistanceByCarId(carId);
-        Map<Long, Integer> drivenDistanceByDriveId = new HashMap<>();
-        for (DriveDistanceProjection distance : distances) {
-            drivenDistanceByDriveId.put(distance.getDriveId(), distance.getDrivenDistance());
-        }
-        return drivenDistanceByDriveId;
+        return driveRepository.findDrivenDistanceByCarId(carId).stream()
+                .collect(Collectors.toMap(DriveDistanceProjection::getDriveId, DriveDistanceProjection::getDrivenDistance));
     }
 
 }

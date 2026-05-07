@@ -25,4 +25,30 @@ public interface DriveRepository extends JpaRepository<Drive, Long> {
 			WHERE d.car.carId = :carId
 			""")
 	java.util.List<DriveDistanceProjection> findDrivenDistanceByCarId(@Param("carId") Long carId);
+
+	@Query("""
+			SELECT d.driveId AS driveId,
+			       (d.currentMileage - (
+			           SELECT MAX(d2.currentMileage)
+			           FROM Drive d2
+			           WHERE d2.car.carId = d.car.carId
+			             AND d2.currentMileage < d.currentMileage
+			       )) AS drivenDistance
+			FROM Drive d
+			WHERE d.driver.userId = :userId
+			""")
+	java.util.List<DriveDistanceProjection> findDrivenDistanceByUserId(@Param("userId") Long userId);
+
+	@Query("""
+			SELECT d.driveId AS driveId,
+			       (d.currentMileage - (
+			           SELECT MAX(d2.currentMileage)
+			           FROM Drive d2
+			           WHERE d2.car.carId = d.car.carId
+			             AND d2.currentMileage < d.currentMileage
+			       )) AS drivenDistance
+			FROM Drive d
+			WHERE d.driveId = :driveId
+			""")
+	DriveDistanceProjection findDrivenDistanceByDriveId(@Param("driveId") Long driveId);
 }
