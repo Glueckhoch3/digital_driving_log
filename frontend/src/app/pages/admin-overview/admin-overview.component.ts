@@ -66,19 +66,24 @@ export class AdminOverviewComponent implements OnInit {
               this.buildEntriesForCar(cars[index], result.drives, result.costs, userNameById)
             );
 
+            const timelineTypeOrder: Record<TimelineEntryType, number> = {
+              transaction: 0,
+              drive: 1
+            };
+
             entries.sort((left, right) => {
               const dateComparison = right.date.localeCompare(left.date);
               if (dateComparison !== 0) {
                 return dateComparison;
               }
-              return left.type.localeCompare(right.type);
+              return timelineTypeOrder[left.type] - timelineTypeOrder[right.type];
             });
 
             this.timelineEntries.set(entries);
             this.loading.set(false);
           },
           error: () => {
-            this.error.set('managementOverview.loadError');
+            this.error.set('managementOverview.timelineLoadError');
             this.loading.set(false);
           }
         });

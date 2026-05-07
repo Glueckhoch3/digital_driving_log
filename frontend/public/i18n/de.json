@@ -41,7 +41,8 @@
     "types": {
       "drive": "Fahrt",
       "transaction": "Transaktion"
-    }
+    },
+    "timelineLoadError": "Zeitleisten-Einträge konnten nicht geladen werden."
   },
   "carWorkspace": {
     "loading": "Fahrzeugdaten werden geladen...",

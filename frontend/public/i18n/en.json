@@ -41,7 +41,8 @@
     "types": {
       "drive": "Drive",
       "transaction": "Transaction"
-    }
+    },
+    "timelineLoadError": "Failed to load timeline entries."
   },
   "carWorkspace": {
     "loading": "Loading car data...",
