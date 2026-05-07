@@ -87,12 +87,15 @@ public class DriveService {
     }
 
     private Map<Long, Integer> findDrivenDistanceByUser(Long userId) {
-        return driveRepository.findDrivenDistanceByUserId(userId).stream()
-                .collect(Collectors.toMap(DriveDistanceProjection::getDriveId, DriveDistanceProjection::getDrivenDistance));
+        return toDriveDistanceMap(driveRepository.findDrivenDistanceByUserId(userId));
     }
 
     private Map<Long, Integer> findDrivenDistanceByCar(Long carId) {
-        return driveRepository.findDrivenDistanceByCarId(carId).stream()
+        return toDriveDistanceMap(driveRepository.findDrivenDistanceByCarId(carId));
+    }
+
+    private Map<Long, Integer> toDriveDistanceMap(List<DriveDistanceProjection> projections) {
+        return projections.stream()
                 .collect(Collectors.toMap(DriveDistanceProjection::getDriveId, DriveDistanceProjection::getDrivenDistance));
     }
 
