@@ -30,6 +30,11 @@ interface ManagementTimelineEntry {
   styleUrl: './admin-overview.component.scss'
 })
 export class AdminOverviewComponent implements OnInit {
+  private readonly timelineTypeOrder: Record<TimelineEntryType, number> = {
+    transaction: 0,
+    drive: 1
+  };
+
   private readonly carService = inject(CarService);
   private readonly driveService = inject(DriveService);
   private readonly costService = inject(CostService);
@@ -66,17 +71,12 @@ export class AdminOverviewComponent implements OnInit {
               this.buildEntriesForCar(cars[index], result.drives, result.costs, userNameById)
             );
 
-            const timelineTypeOrder: Record<TimelineEntryType, number> = {
-              transaction: 0,
-              drive: 1
-            };
-
             entries.sort((left, right) => {
               const dateComparison = right.date.localeCompare(left.date);
               if (dateComparison !== 0) {
                 return dateComparison;
               }
-              return timelineTypeOrder[left.type] - timelineTypeOrder[right.type];
+              return this.timelineTypeOrder[left.type] - this.timelineTypeOrder[right.type];
             });
 
             this.timelineEntries.set(entries);
@@ -116,7 +116,7 @@ export class AdminOverviewComponent implements OnInit {
       date: drive.driveDate,
       carName: car.name,
       plateNumber: car.plateNumber,
-      participantName: userNameById.get(drive.driverId) ?? String(drive.driverId),
+      participantName: userNameById.get(drive.driverId) ?? `Unknown user #${drive.driverId}`,
       details: `${drive.currentMileage} km (${drive.drivenDistance ?? '-'} km)`,
       valueLabel: drive.notes ?? ''
     }));
@@ -126,7 +126,7 @@ export class AdminOverviewComponent implements OnInit {
       date: cost.dayOfTransaction,
       carName: car.name,
       plateNumber: car.plateNumber,
-      participantName: userNameById.get(cost.buyerId) ?? String(cost.buyerId),
+      participantName: userNameById.get(cost.buyerId) ?? `Unknown user #${cost.buyerId}`,
       details: `${cost.transactionObject} (${cost.costType})`,
       valueLabel: `${Number(cost.price).toFixed(2)} € x ${cost.amount}`
     }));
