@@ -1,22 +1,44 @@
 <section class="admin-overview">
-  <h2>{{ 'adminOverview.title' | translate }}</h2>
+  <h2>{{ 'managementOverview.title' | translate }}</h2>
 
   @if (loading()) {
-    <p>{{ 'adminOverview.loading' | translate }}</p>
+    <p>{{ 'managementOverview.loading' | translate }}</p>
   } @else if (error()) {
     <p>{{ error() | translate }}</p>
-  } @else if (overviews().length === 0) {
-    <p>{{ 'adminOverview.empty' | translate }}</p>
+  } @else if (timelineEntries().length === 0) {
+    <p>{{ 'managementOverview.empty' | translate }}</p>
   } @else {
-    <div class="admin-overview__grid">
-      @for (overview of overviews(); track overview.car.carId) {
-        <article class="admin-overview__card">
-          <h3>{{ overview.car.name }} ({{ overview.car.plateNumber }})</h3>
-          <p>{{ 'adminOverview.stats.drives' | translate }}: {{ overview.drives.length }}</p>
-          <p>{{ 'adminOverview.stats.transactions' | translate }}: {{ overview.costs.length }}</p>
-          <p>{{ 'adminOverview.stats.totalCost' | translate }}: {{ totalCost(overview.costs) | number: '1.2-2' }} €</p>
-        </article>
-      }
+    <div class="admin-overview__table-wrapper">
+      <table class="admin-overview__table">
+        <thead>
+          <tr>
+            <th>{{ 'managementOverview.headers.date' | translate }}</th>
+            <th>{{ 'managementOverview.headers.car' | translate }}</th>
+            <th>{{ 'managementOverview.headers.type' | translate }}</th>
+            <th>{{ 'managementOverview.headers.participant' | translate }}</th>
+            <th>{{ 'managementOverview.headers.details' | translate }}</th>
+            <th>{{ 'managementOverview.headers.value' | translate }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (entry of timelineEntries(); track $index) {
+            <tr>
+              <td>{{ entry.date }}</td>
+              <td>{{ entry.carName }} ({{ entry.plateNumber }})</td>
+              <td>
+                @if (entry.type === 'drive') {
+                  {{ 'managementOverview.types.drive' | translate }}
+                } @else {
+                  {{ 'managementOverview.types.transaction' | translate }}
+                }
+              </td>
+              <td>{{ entry.participantName }}</td>
+              <td>{{ entry.details }}</td>
+              <td>{{ entry.valueLabel || '-' }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
     </div>
   }
 </section>

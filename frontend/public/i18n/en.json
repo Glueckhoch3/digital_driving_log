@@ -3,7 +3,7 @@
     "title": "Digital Driving Log",
     "menu": {
       "start": "Start",
-      "entryOverview": "Entry overview",
+      "entryOverview": "Management overview",
       "chooseCar": "Choose car"
     },
     "language": {
@@ -15,7 +15,7 @@
     "title": "Welcome",
     "description": "Choose your workflow for entries and overviews.",
     "actions": {
-      "entryOverview": "Entry overview",
+      "entryOverview": "Management overview",
       "chooseCar": "Choose car"
     }
   },
@@ -25,15 +25,22 @@
     "empty": "No cars available.",
     "loadError": "Failed to load cars."
   },
-  "adminOverview": {
-    "title": "All-cars administrative overview",
-    "loading": "Loading overview...",
-    "empty": "No car data available.",
-    "loadError": "Failed to load administrative overview.",
-    "stats": {
-      "drives": "Drives",
-      "transactions": "Transactions",
-      "totalCost": "Total cost"
+  "managementOverview": {
+    "title": "Management overview",
+    "loading": "Loading merged timeline...",
+    "empty": "No entries available.",
+    "loadError": "Failed to load management overview.",
+    "headers": {
+      "date": "Date",
+      "car": "Car",
+      "type": "Type",
+      "participant": "Participant",
+      "details": "Details",
+      "value": "Value"
+    },
+    "types": {
+      "drive": "Drive",
+      "transaction": "Transaction"
     }
   },
   "carWorkspace": {

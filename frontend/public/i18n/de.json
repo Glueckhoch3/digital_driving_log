@@ -3,7 +3,7 @@
     "title": "Digitales Fahrtenbuch",
     "menu": {
       "start": "Start",
-      "entryOverview": "Eingabeübersicht",
+      "entryOverview": "Managementübersicht",
       "chooseCar": "Auto auswählen"
     },
     "language": {
@@ -15,7 +15,7 @@
     "title": "Willkommen",
     "description": "Wähle deinen Ablauf für Einträge und Übersichten.",
     "actions": {
-      "entryOverview": "Eingabeübersicht",
+      "entryOverview": "Managementübersicht",
       "chooseCar": "Auto auswählen"
     }
   },
@@ -25,15 +25,22 @@
     "empty": "Keine Autos verfügbar.",
     "loadError": "Autos konnten nicht geladen werden."
   },
-  "adminOverview": {
-    "title": "Administrative Übersicht aller Autos",
-    "loading": "Übersicht wird geladen...",
-    "empty": "Keine Fahrzeugdaten verfügbar.",
-    "loadError": "Administrative Übersicht konnte nicht geladen werden.",
-    "stats": {
-      "drives": "Fahrten",
-      "transactions": "Transaktionen",
-      "totalCost": "Gesamtkosten"
+  "managementOverview": {
+    "title": "Managementübersicht",
+    "loading": "Zusammengeführte Zeitleiste wird geladen...",
+    "empty": "Keine Einträge verfügbar.",
+    "loadError": "Managementübersicht konnte nicht geladen werden.",
+    "headers": {
+      "date": "Datum",
+      "car": "Auto",
+      "type": "Typ",
+      "participant": "Beteiligte Person",
+      "details": "Details",
+      "value": "Wert"
+    },
+    "types": {
+      "drive": "Fahrt",
+      "transaction": "Transaktion"
     }
   },
   "carWorkspace": {
