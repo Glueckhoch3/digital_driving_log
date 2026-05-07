@@ -37,8 +37,8 @@ public class Drive {
     @Column(name = "driveDay", nullable = false)
     private LocalDate driveDate;
 
-    @Column(name = "distance", nullable = false)
-    private Integer distance;
+    @Column(name = "currentMileage", nullable = false)
+    private Integer currentMileage;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "userId", nullable = false)

@@ -13,7 +13,7 @@ Table Car [headercolor: #6a2b94] {
 Table Drive [headercolor: #175e7a] {
 	driveId bigint [ pk, not null ]
 	carId bigint [ not null ]
-	distance integer [ not null ]
+	currentMileage integer [ not null ]
 	userId bigint [ not null, note: 'driver' ]
 	driveDay date [ not null ]
 	notes text

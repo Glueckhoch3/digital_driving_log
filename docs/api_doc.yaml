@@ -728,7 +728,7 @@ components:
         driveDate:
           type: string
           format: date-time
-        distance:
+        currentMileage:
           type: number
         driverId:
           type: number
@@ -738,7 +738,7 @@ components:
       required:
         - carId
         - driveDate
-        - distance
+        - currentMileage
         - driverId
 
     RetrieveDrive:
@@ -753,8 +753,11 @@ components:
         driveDate:
           type: string
           format: date-time
-        distance:
+        currentMileage:
           type: number
+        drivenDistance:
+          type: number
+          nullable: true
         driverId:
           type: number
           format: int64
@@ -764,7 +767,7 @@ components:
         - driveId
         - carId
         - driveDate
-        - distance
+        - currentMileage
         - driverId
 
     PutDrive:
@@ -776,7 +779,7 @@ components:
         driveDate:
           type: string
           format: date-time
-        distance:
+        currentMileage:
           type: number
         driverId:
           type: number
@@ -786,7 +789,7 @@ components:
       required:
         - carId
         - driveDate
-        - distance
+        - currentMileage
         - driverId
 
     CreateUser:
