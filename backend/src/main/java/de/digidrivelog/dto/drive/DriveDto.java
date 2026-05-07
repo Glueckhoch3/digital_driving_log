@@ -13,7 +13,8 @@ public class DriveDto {
     private Long driveId;
     private Long carId;
     private LocalDate driveDate;
-    private Integer distance;
+    private Integer currentMileage;
+    private Integer drivenDistance;
     private Long driverId;
     private String notes;
 }
