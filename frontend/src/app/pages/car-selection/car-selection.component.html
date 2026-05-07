@@ -1,0 +1,19 @@
+<section class="car-selection">
+  <h2>{{ 'carSelection.title' | translate }}</h2>
+
+  @if (loading()) {
+    <p>{{ 'carSelection.loading' | translate }}</p>
+  } @else if (error()) {
+    <p>{{ error() | translate }}</p>
+  } @else if (cars().length === 0) {
+    <p>{{ 'carSelection.empty' | translate }}</p>
+  } @else {
+    <ul class="car-selection__list">
+      @for (car of cars(); track car.carId) {
+        <li class="car-selection__item">
+          <a [routerLink]="['/cars', car.carId]">{{ car.name }} ({{ car.plateNumber }})</a>
+        </li>
+      }
+    </ul>
+  }
+</section>

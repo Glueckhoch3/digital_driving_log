@@ -1,0 +1,17 @@
+.admin-overview {
+  max-width: 72rem;
+  margin: 2rem auto;
+  padding: 1rem;
+
+  &__grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+  }
+
+  &__card {
+    border: 1px solid #d9d9d9;
+    border-radius: 0.5rem;
+    padding: 1rem;
+  }
+}

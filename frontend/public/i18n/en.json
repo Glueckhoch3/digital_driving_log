@@ -2,291 +2,99 @@
   "header": {
     "title": "Digital Driving Log",
     "menu": {
-      "recordDrive": "Record Drive",
-      "drivingHistory": "Driving History",
-      "costs": "Costs",
-      "fuelTracking": "Fuel Tracking",
-      "shareholders": "Shareholders",
-      "reports": "Reports",
-      "settlements": "Settlements"
+      "start": "Start",
+      "entryOverview": "Entry overview",
+      "chooseCar": "Choose car"
     },
     "language": {
       "en": "English",
       "de": "Deutsch"
     }
   },
-  "drivingLog": {
-    "title": "Record New Drive"
-  },
-  "driveForm": {
-    "labels": {
-      "date": "Date *",
-      "driver": "Driver Name *",
-      "refueler": "Refueler Name *",
-      "distance": "Distance (km) *",
-      "fuelVolume": "Fuelvolume (l) *",
-      "cost": "Cost (€) *",
-      "notes": "Notes"
-    },
-    "placeholders": {
-      "driver": "Enter driver name",
-      "distance": "Enter distance in kilometers",
-      "fuelVolume": "Enter fuel in liters",
-      "cost": "Enter Cost in Euros",
-      "notes": "Add any notes about this drive"
-    },
-    "errors": {
-      "dateRequired": "Date is required",
-      "driverRequired": "Driver name is required (minimum 2 characters)",
-      "distanceRequired": "Distance must be greater than 0",
-      "fuelVolumeRequired": "Liters must be greater than 0",
-      "costRequired": "Cost must be greater than 0"
-    },
-    "buttons": {
-      "addRefill": "add refill",
-      "cancelRefill": "cancel refill",
-      "reset": "Reset",
-      "recording": "Recording...",
-      "recordDrive": "Record Drive"
+  "start": {
+    "title": "Welcome",
+    "description": "Choose your workflow for entries and overviews.",
+    "actions": {
+      "entryOverview": "Entry overview",
+      "chooseCar": "Choose car"
     }
   },
-  "drivingHistory": {
-    "title": "Driving History",
+  "carSelection": {
+    "title": "Choose a car",
+    "loading": "Loading cars...",
+    "empty": "No cars available.",
+    "loadError": "Failed to load cars."
+  },
+  "adminOverview": {
+    "title": "All-cars administrative overview",
+    "loading": "Loading overview...",
+    "empty": "No car data available.",
+    "loadError": "Failed to load administrative overview.",
     "stats": {
-      "totalDistance": "Total Distance:",
-      "totalDrives": "Total Drives:"
-    },
+      "drives": "Drives",
+      "transactions": "Transactions",
+      "totalCost": "Total cost"
+    }
+  },
+  "carWorkspace": {
+    "loading": "Loading car data...",
+    "loadError": "Failed to load car workspace data.",
     "messages": {
-      "loading": "Loading drives...",
-      "empty": "No drives recorded yet. Start by recording your first drive!"
+      "driveSaved": "Drive saved.",
+      "driveSaveFailed": "Failed to save drive.",
+      "driveAndFuelSaved": "Drive and fuel transaction saved.",
+      "fuelSaveFailed": "Drive saved, but fuel transaction failed.",
+      "transactionSaved": "Transaction saved.",
+      "transactionSaveFailed": "Failed to save transaction."
     },
-    "sort": {
-      "label": "Sort by:",
-      "date": "Date",
+    "driveForm": {
+      "title": "Drive entry",
+      "driveDate": "Drive date",
+      "currentMileage": "Current mileage",
       "driver": "Driver",
-      "distance": "Distance"
+      "notes": "Notes",
+      "includeFuel": "Add fuel transaction",
+      "fuelPrice": "Fuel total price",
+      "fuelAmount": "Fuel amount",
+      "fuelDate": "Fuel transaction date",
+      "fuelBuyer": "Fuel buyer",
+      "fuelNotes": "Fuel notes",
+      "submit": "Save drive"
     },
-    "table": {
+    "transactionForm": {
+      "title": "Transaction entry",
+      "date": "Transaction date",
+      "buyer": "Buyer",
+      "object": "Transaction object",
+      "type": "Cost type",
+      "variable": "Variable",
+      "fixed": "Fixed",
+      "price": "Price",
+      "amount": "Amount",
+      "notes": "Notes",
+      "submit": "Save transaction"
+    },
+    "drives": {
+      "title": "Drives",
+      "empty": "No drives for this car.",
       "headers": {
         "date": "Date",
         "driver": "Driver",
-        "distance": "Distance (km)",
-        "notes": "Notes",
-        "actions": "Actions"
-      },
-      "actions": {
-        "delete": "Delete",
-        "deleteTitle": "Delete drive"
-      }
-    }
-  },
-  "costs": {
-    "title": "Expense Management",
-    "form": {
-      "title": "Record New Cost",
-      "labels": {
-        "costType": "Cost Type *",
-        "price": "Price (€) *",
-        "amount": "Amount *",
-        "shareholder": "Shareholder *",
-        "date": "Date *",
-        "description": "Description *",
-        "category": "Category"
-      },
-      "options": {
-        "fixed": "Fixed Cost (Insurance, Registration)",
-        "variable": "Variable Cost (Maintenance, Repair)"
-      },
-      "placeholders": {
-        "price": "0.00",
-        "amount": "0.00",
-        "shareholder": "Name",
-        "description": "e.g., Winter Tires",
-        "category": "e.g., Maintenance"
-      },
-      "buttons": {
-        "recordCost": "Record Cost"
+        "currentMileage": "Current mileage",
+        "distance": "Driven distance"
       }
     },
-    "summary": {
-      "fixedCosts": "Fixed Costs",
-      "variableCosts": "Variable Costs",
-      "fuelCosts": "Fuel Costs",
-      "totalCosts": "Total Costs"
-    },
-    "distribution": {
-      "title": "Cost Distribution",
-      "headers": {
-        "shareholder": "Shareholder",
-        "totalOwed": "Total Owed",
-        "fixed": "Fixed",
-        "variable": "Variable",
-        "fuel": "Fuel"
-      }
-    },
-    "list": {
-      "title": "All Costs",
-      "loading": "Loading costs...",
-      "empty": "No costs recorded yet.",
+    "transactions": {
+      "title": "Transactions",
+      "empty": "No transactions for this car.",
       "headers": {
         "date": "Date",
-        "type": "Type",
+        "buyer": "Buyer",
+        "object": "Object",
+        "price": "Price",
         "amount": "Amount",
-        "shareholder": "Shareholder",
-        "description": "Description",
-        "category": "Category",
-        "actions": "Actions"
-      },
-      "actions": {
-        "delete": "Delete"
-      },
-      "type": {
-        "fixed": "FIXED",
-        "variable": "VARIABLE"
+        "type": "Type"
       }
-    }
-  },
-  "fuel": {
-    "title": "Fuel Tracking",
-    "info": {
-      "title": "Fuel Refill Management",
-      "description": "Track fuel refills for accurate fuel consumption and cost calculations. Fuel refills are associated with specific drives and help monitor fuel efficiency.",
-      "note": "Note:",
-      "noteText": "Fuel refills can be added through the Driving Log page by selecting a drive and recording the refill details."
-    },
-    "features": {
-      "title": "Features",
-      "list": {
-        "recordRefill": "Record fuel refill date, amount, and cost",
-        "costCalculation": "Automatic cost per liter calculation",
-        "linkRefills": "Link refills to specific drives",
-        "trackConsumption": "Track fuel consumption over time",
-        "monitorTrends": "Monitor fuel cost trends"
-      }
-    }
-  },
-  "shareholders": {
-    "title": "Shareholder Management",
-    "balances": {
-      "title": "Current Balances",
-      "labels": {
-        "totalBalance": "Total Balance:",
-        "owes": "Owes:",
-        "isOwed": "Is Owed:"
-      }
-    },
-    "form": {
-      "title": "Add New Shareholder",
-      "labels": {
-        "name": "Name *",
-        "email": "Email *",
-        "participantType": "Participant Type *",
-        "startDate": "Start Date *",
-        "endDate": "End Date (For Temporary)"
-      },
-      "placeholders": {
-        "name": "Full name",
-        "email": "Email address"
-      },
-      "options": {
-        "permanent": "Permanent",
-        "temporary": "Temporary"
-      },
-      "errors": {
-        "nameRequired": "Name is required",
-        "emailRequired": "Valid email is required"
-      },
-      "buttons": {
-        "addShareholder": "Add Shareholder"
-      }
-    },
-    "list": {
-      "title": "All Shareholders",
-      "loading": "Loading shareholders...",
-      "empty": "No shareholders yet.",
-      "headers": {
-        "name": "Name",
-        "email": "Email",
-        "type": "Type",
-        "startDate": "Start Date",
-        "endDate": "End Date",
-        "status": "Status",
-        "actions": "Actions"
-      },
-      "status": {
-        "active": "Active",
-        "inactive": "Inactive"
-      },
-      "actions": {
-        "remove": "Remove"
-      }
-    }
-  },
-  "settlements": {
-    "title": "Settlement Management",
-    "buttons": {
-      "triggerSettlement": "Trigger New Settlement"
-    },
-    "messages": {
-      "loading": "Loading settlements...",
-      "empty": "No settlements yet."
-    },
-    "details": {
-      "period": "Period:",
-      "totalDrives": "Total Drives:",
-      "totalDistance": "Total Distance:",
-      "totalCosts": "Total Costs:"
-    },
-    "actions": {
-      "viewReport": "View Report"
-    },
-    "report": {
-      "title": "Settlement Report -",
-      "costBreakdown": {
-        "title": "Cost Breakdown",
-        "fixedCosts": "Fixed Costs:",
-        "variableCosts": "Variable Costs:",
-        "fuelCosts": "Fuel Costs:",
-        "total": "Total:"
-      },
-      "shareholderSettlements": {
-        "title": "Shareholder Settlements",
-        "distance": "Distance:",
-        "fixedCostsShare": "Fixed Costs Share:",
-        "variableCostsShare": "Variable Costs Share:",
-        "fuelCostsShare": "Fuel Costs Share:",
-        "totalOwed": "Total Owed:"
-      },
-      "buttons": {
-        "close": "Close"
-      }
-    }
-  },
-  "reports": {
-    "title": "Reports & Analytics",
-    "info": {
-      "title": "Generate Reports",
-      "description": "Comprehensive reports and analytics about driving distances, fuel consumption, and cost distribution.",
-      "comingSoon": "Coming Soon:",
-      "comingSoonText": "Detailed reporting features will be available in future updates, including:"
-    },
-    "plannedReports": {
-      "title": "Planned Reports",
-      "list": {
-        "costBreakdown": "Cost breakdown reports by shareholder and time period",
-        "distanceSummary": "Distance summary and fuel efficiency analysis",
-        "settlementHistory": "Settlement history and payment tracking",
-        "exportFormats": "Export reports in PDF, CSV, and Excel formats",
-        "dateFiltering": "Custom date range filtering",
-        "costTrends": "Cost trend analysis"
-      }
-    },
-    "quickStats": {
-      "title": "Quick Statistics",
-      "totalDrives": "Total Drives",
-      "totalDistance": "Total Distance",
-      "totalCosts": "Total Costs",
-      "avgCostPerKm": "Avg Cost/km"
     }
   }
 }

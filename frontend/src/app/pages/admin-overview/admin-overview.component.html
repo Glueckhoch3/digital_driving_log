@@ -1,0 +1,22 @@
+<section class="admin-overview">
+  <h2>{{ 'adminOverview.title' | translate }}</h2>
+
+  @if (loading()) {
+    <p>{{ 'adminOverview.loading' | translate }}</p>
+  } @else if (error()) {
+    <p>{{ error() | translate }}</p>
+  } @else if (overviews().length === 0) {
+    <p>{{ 'adminOverview.empty' | translate }}</p>
+  } @else {
+    <div class="admin-overview__grid">
+      @for (overview of overviews(); track overview.car.carId) {
+        <article class="admin-overview__card">
+          <h3>{{ overview.car.name }} ({{ overview.car.plateNumber }})</h3>
+          <p>{{ 'adminOverview.stats.drives' | translate }}: {{ overview.drives.length }}</p>
+          <p>{{ 'adminOverview.stats.transactions' | translate }}: {{ overview.costs.length }}</p>
+          <p>{{ 'adminOverview.stats.totalCost' | translate }}: {{ totalCost(overview.costs) | number: '1.2-2' }} €</p>
+        </article>
+      }
+    </div>
+  }
+</section>

@@ -36,12 +36,8 @@ export class HeaderComponent {
   }
 
   readonly menuItems = [
-    { labelKey: 'header.menu.recordDrive', route: '/drives' },
-    { labelKey: 'header.menu.drivingHistory', route: '/history' },
-    { labelKey: 'header.menu.costs', route: '/costs' },
-    { labelKey: 'header.menu.fuelTracking', route: '/fuel' },
-    { labelKey: 'header.menu.shareholders', route: '/shareholders' },
-    { labelKey: 'header.menu.reports', route: '/reports' },
-    { labelKey: 'header.menu.settlements', route: '/settlements' }
+    { labelKey: 'header.menu.start', route: '/' },
+    { labelKey: 'header.menu.entryOverview', route: '/overview' },
+    { labelKey: 'header.menu.chooseCar', route: '/cars/select' }
   ];
 }
