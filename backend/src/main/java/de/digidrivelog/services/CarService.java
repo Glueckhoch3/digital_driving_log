@@ -11,7 +11,6 @@ import de.digidrivelog.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.http.HttpStatus;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.web.server.ResponseStatusException;
@@ -24,7 +23,7 @@ public class CarService {
     private final UserRepository userRepository;
 
     public List<CarDto> getAllCars() {
-        return carRepository.findAll().stream().map(CarMapper::toDto).collect(Collectors.toList());
+        return carRepository.findAll().stream().map(CarMapper::toDto).toList();
     }
 
     public CarDto createCar(CreateCarRequest request) {

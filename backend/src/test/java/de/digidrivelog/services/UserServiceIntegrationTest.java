@@ -5,8 +5,6 @@ import de.digidrivelog.dto.user.CreateUserRequest;
 import de.digidrivelog.dto.user.UpdateUserRequest;
 import de.digidrivelog.dto.user.UserDto;
 import de.digidrivelog.repositories.CarRepository;
-import de.digidrivelog.repositories.CostRepository;
-import de.digidrivelog.repositories.DriveRepository;
 import de.digidrivelog.repositories.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -37,16 +35,8 @@ class UserServiceIntegrationTest {
     @Autowired
     private CarRepository carRepository;
 
-    @Autowired
-    private DriveRepository driveRepository;
-
-    @Autowired
-    private CostRepository costRepository;
-
     @BeforeEach
     void cleanDatabase() {
-        costRepository.deleteAll();
-        driveRepository.deleteAll();
         carRepository.deleteAll();
         userRepository.deleteAll();
     }

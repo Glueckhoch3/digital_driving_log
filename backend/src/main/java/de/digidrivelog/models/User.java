@@ -15,7 +15,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
-@Table(name = "User")
+@Table(name = "app_user")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -43,15 +43,15 @@ public class User {
     @Column(name = "birthday", nullable = true)
     private LocalDate birthday;
 
-    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Car> ownedCars;
 
-    @OneToMany(mappedBy = "driver", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "driver", fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Drive> drives;
 
-    @OneToMany(mappedBy = "buyerId", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "buyerId", fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Cost> transactions;
 

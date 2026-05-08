@@ -9,7 +9,6 @@ import de.digidrivelog.mappers.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.http.HttpStatus;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.web.server.ResponseStatusException;
@@ -21,7 +20,7 @@ public class UserService {
     private final UserRepository userRepository;
     
     public List<UserDto> getAllUsers() {
-        return userRepository.findAll().stream().map(UserMapper::toDto).collect(Collectors.toList());
+        return userRepository.findAll().stream().map(UserMapper::toDto).toList();
     }
 
     public UserDto createUser(CreateUserRequest request) {
