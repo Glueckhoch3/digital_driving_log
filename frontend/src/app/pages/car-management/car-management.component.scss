@@ -1,0 +1,54 @@
+.car-management {
+  max-width: 80rem;
+  margin: 2rem auto;
+  padding: 1rem;
+
+  &__message {
+    color: #0a7d32;
+  }
+
+  &__error {
+    color: #b02020;
+  }
+
+  &__form {
+    border: 1px solid #d9d9d9;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    margin: 1rem 0;
+  }
+
+  &__form-actions,
+  &__row-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+  }
+
+  &__table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  &__table th,
+  &__table td {
+    border: 1px solid #e0e0e0;
+    padding: 0.5rem;
+    text-align: left;
+  }
+
+  label,
+  input,
+  select,
+  textarea,
+  button,
+  table {
+    width: 100%;
+    margin-top: 0.35rem;
+  }
+
+  .car-management__row-actions button,
+  .car-management__form-actions button {
+    width: auto;
+  }
+}

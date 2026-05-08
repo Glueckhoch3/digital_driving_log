@@ -4,7 +4,9 @@
     "menu": {
       "start": "Start",
       "entryOverview": "Managementübersicht",
-      "chooseCar": "Auto auswählen"
+      "chooseCar": "Auto auswählen",
+      "manageUsers": "Benutzer verwalten",
+      "manageCars": "Autos verwalten"
     },
     "language": {
       "en": "English",
@@ -16,7 +18,84 @@
     "description": "Wähle deinen Ablauf für Einträge und Übersichten.",
     "actions": {
       "entryOverview": "Managementübersicht",
-      "chooseCar": "Auto auswählen"
+      "chooseCar": "Auto auswählen",
+      "manageUsers": "Benutzerverwaltung",
+      "manageCars": "Autoverwaltung"
+    }
+  },
+  "common": {
+    "yes": "Ja",
+    "no": "Nein",
+    "edit": "Bearbeiten",
+    "delete": "Löschen"
+  },
+  "userManagement": {
+    "title": "Benutzerverwaltung",
+    "description": "Benutzer erstellen, bearbeiten und löschen.",
+    "loading": "Benutzer werden geladen...",
+    "empty": "Keine Benutzer verfügbar.",
+    "form": {
+      "createTitle": "Benutzer erstellen",
+      "editTitle": "Benutzer bearbeiten",
+      "firstname": "Vorname",
+      "lastname": "Nachname",
+      "birthday": "Geburtstag",
+      "driverLicense": "Hat Führerschein",
+      "create": "Benutzer erstellen",
+      "update": "Benutzer aktualisieren",
+      "cancel": "Abbrechen"
+    },
+    "table": {
+      "firstname": "Vorname",
+      "lastname": "Nachname",
+      "birthday": "Geburtstag",
+      "driverLicense": "Führerschein",
+      "actions": "Aktionen"
+    },
+    "messages": {
+      "loadFailed": "Benutzer konnten nicht geladen werden.",
+      "createSuccess": "Benutzer erstellt.",
+      "createFailed": "Benutzer konnte nicht erstellt werden.",
+      "updateSuccess": "Benutzer aktualisiert.",
+      "updateFailed": "Benutzer konnte nicht aktualisiert werden.",
+      "deleteSuccess": "Benutzer gelöscht.",
+      "deleteFailed": "Benutzer konnte nicht gelöscht werden.",
+      "deleteDependencyBlocked": "Benutzer kann nicht gelöscht werden, da verknüpfte Autos, Fahrten oder Kosten existieren."
+    }
+  },
+  "carManagement": {
+    "title": "Autoverwaltung",
+    "description": "Autos erstellen, bearbeiten und löschen.",
+    "loading": "Autos und Benutzer werden geladen...",
+    "empty": "Keine Autos verfügbar.",
+    "usersRequiredFirst": "Erstelle zuerst mindestens einen Benutzer, bevor du ein Auto anlegst.",
+    "form": {
+      "createTitle": "Auto erstellen",
+      "editTitle": "Auto bearbeiten",
+      "name": "Autoname",
+      "plateNumber": "Kennzeichen",
+      "owner": "Besitzer",
+      "data": "Zusätzliche Daten",
+      "create": "Auto erstellen",
+      "update": "Auto aktualisieren",
+      "cancel": "Abbrechen"
+    },
+    "table": {
+      "name": "Name",
+      "plateNumber": "Kennzeichen",
+      "owner": "Besitzer",
+      "actions": "Aktionen"
+    },
+    "messages": {
+      "loadFailed": "Autos oder Benutzer konnten nicht geladen werden.",
+      "usersRequiredFirst": "Erstelle zuerst mindestens einen Benutzer, bevor du ein Auto anlegst.",
+      "createSuccess": "Auto erstellt.",
+      "createFailed": "Auto konnte nicht erstellt werden.",
+      "updateSuccess": "Auto aktualisiert.",
+      "updateFailed": "Auto konnte nicht aktualisiert werden.",
+      "deleteSuccess": "Auto gelöscht.",
+      "deleteFailed": "Auto konnte nicht gelöscht werden.",
+      "deleteDependencyBlocked": "Auto kann nicht gelöscht werden, da verknüpfte Fahrten oder Kosten existieren."
     }
   },
   "carSelection": {

@@ -9,7 +9,7 @@ export interface CarDto {
 export interface CreateCarRequest {
   name: string;
   plateNumber: string;
-  ownerId: number | null;
+  ownerId: number;
   data?: string;
 }
 

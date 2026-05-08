@@ -1,0 +1,95 @@
+<section class="car-management">
+  <h2>{{ 'carManagement.title' | translate }}</h2>
+  <p>{{ 'carManagement.description' | translate }}</p>
+
+  @if (message()) {
+    <p class="car-management__message">{{ message() | translate }}</p>
+  }
+
+  @if (error()) {
+    <p class="car-management__error">{{ error() | translate }}</p>
+  }
+
+  @if (users().length === 0 && !loading()) {
+    <p>{{ 'carManagement.usersRequiredFirst' | translate }}</p>
+  }
+
+  <form class="car-management__form" [formGroup]="carForm" (ngSubmit)="submit()">
+    <h3>
+      @if (editingCarId()) {
+        {{ 'carManagement.form.editTitle' | translate }}
+      } @else {
+        {{ 'carManagement.form.createTitle' | translate }}
+      }
+    </h3>
+
+    <label>{{ 'carManagement.form.name' | translate }}</label>
+    <input type="text" formControlName="name" />
+
+    <label>{{ 'carManagement.form.plateNumber' | translate }}</label>
+    <input type="text" formControlName="plateNumber" />
+
+    <label>{{ 'carManagement.form.owner' | translate }}</label>
+    <select formControlName="ownerId">
+      @for (user of users(); track user.userId) {
+        <option [value]="user.userId">{{ user.firstname }} {{ user.lastname }}</option>
+      }
+    </select>
+
+    <label>{{ 'carManagement.form.data' | translate }}</label>
+    <textarea rows="3" formControlName="data"></textarea>
+
+    <div class="car-management__form-actions">
+      <button type="submit">
+        @if (editingCarId()) {
+          {{ 'carManagement.form.update' | translate }}
+        } @else {
+          {{ 'carManagement.form.create' | translate }}
+        }
+      </button>
+      @if (editingCarId()) {
+        <button type="button" (click)="cancelEdit()">{{ 'carManagement.form.cancel' | translate }}</button>
+      }
+    </div>
+  </form>
+
+  @if (loading()) {
+    <p>{{ 'carManagement.loading' | translate }}</p>
+  } @else if (cars().length === 0) {
+    <p>{{ 'carManagement.empty' | translate }}</p>
+  } @else {
+    <table class="car-management__table">
+      <thead>
+        <tr>
+          <th>{{ 'carManagement.table.name' | translate }}</th>
+          <th>{{ 'carManagement.table.plateNumber' | translate }}</th>
+          <th>{{ 'carManagement.table.owner' | translate }}</th>
+          <th>{{ 'carManagement.table.actions' | translate }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (car of cars(); track car.carId) {
+          <tr>
+            <td>{{ car.name }}</td>
+            <td>{{ car.plateNumber }}</td>
+            <td>
+              @if (car.ownerId) {
+                {{ ownerLabelById().get(car.ownerId) || car.ownerId }}
+              } @else {
+                -
+              }
+            </td>
+            <td>
+              <div class="car-management__row-actions">
+                <button type="button" (click)="edit(car)">{{ 'common.edit' | translate }}</button>
+                <button type="button" (click)="delete(car.carId)">
+                  {{ 'common.delete' | translate }}
+                </button>
+              </div>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+</section>
