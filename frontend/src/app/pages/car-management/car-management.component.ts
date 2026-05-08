@@ -52,7 +52,8 @@ export class CarManagementComponent implements OnInit {
       next: users => {
         this.users.set(users);
 
-        if (users.length > 0 && !this.carForm.value.ownerId) {
+        const ownerId = Number(this.carForm.value.ownerId ?? 0);
+        if (users.length > 0 && ownerId < 1) {
           this.carForm.patchValue({ ownerId: users[0].userId });
         }
 
