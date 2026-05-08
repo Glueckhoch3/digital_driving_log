@@ -3,5 +3,14 @@ export interface UserDto {
   firstname: string;
   lastname: string;
   driverLicense: boolean;
-  birthday: string;
+  birthday: string | null;
 }
+
+export interface CreateUserRequest {
+  firstname: string;
+  lastname: string;
+  driverLicense: boolean;
+  birthday?: string;
+}
+
+export interface UpdateUserRequest extends CreateUserRequest {}

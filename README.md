@@ -50,6 +50,7 @@
 - Support for temporary participants (variable costs only)
 - Automatic cost distribution based on participant type
 - Transparent cost breakdown per person
+- Dedicated user and car management pages for create/update/delete workflows
 
 ### Settlement & Reporting
 - Automatic year-end settlements
@@ -152,29 +153,20 @@ digital_driving_log/
 ### Prerequisites
 - **Java 21+** - [Download](https://www.oracle.com/java/technologies/downloads/)
 - **Node.js 18+** - [Download](https://nodejs.org/)
-- **PostgreSQL 12+** - *will be deployed as docker container; **tbd***
+- **Docker / Docker Compose** - for local database and full stack startup
 - **Git** - [Download](https://git-scm.com/)
 
-### Backend Setup (5 minutes)
+### Development Setup (Backend + Frontend with Docker PostgreSQL)
 
-1. **Create PostgreSQL Database**
+1. **Start PostgreSQL container**
    ```bash
-   psql -U postgres
-   CREATE DATABASE digital_driving_log;
-   \q
+   docker compose up -d postgres
    ```
 
-2. **Configure Database Connection**
+2. **Configure backend environment**
    ```bash
    cd backend
-   nano src/main/resources/application.properties
-   ```
-   Update with your PostgreSQL credentials:
-   ```properties
-   spring.datasource.url=jdbc:postgresql://localhost:5432/digital_driving_log
-   spring.datasource.username=postgres
-   spring.datasource.password=your_password
-   spring.jpa.hibernate.ddl-auto=update
+   cp .env.example .env
    ```
 
 3. **Build & Run**
@@ -213,7 +205,12 @@ docker-compose up -d
 This will start:
 - PostgreSQL (port 5432)
 - Backend API (port 8080)
-- Frontend (port 80)
+- Frontend (port 4200)
+
+### First-Run Data Flow
+- Create at least one user first in **User management** (`/manage/users`).
+- Then create and manage cars in **Car management** (`/manage/cars`).
+- Car deletion/user deletion is blocked when dependent drives/costs/cars exist.
 
 ---
 

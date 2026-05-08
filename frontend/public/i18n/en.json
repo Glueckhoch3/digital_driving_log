@@ -4,7 +4,9 @@
     "menu": {
       "start": "Start",
       "entryOverview": "Management overview",
-      "chooseCar": "Choose car"
+      "chooseCar": "Choose car",
+      "manageUsers": "Manage users",
+      "manageCars": "Manage cars"
     },
     "language": {
       "en": "English",
@@ -16,7 +18,84 @@
     "description": "Choose your workflow for entries and overviews.",
     "actions": {
       "entryOverview": "Management overview",
-      "chooseCar": "Choose car"
+      "chooseCar": "Choose car",
+      "manageUsers": "User management",
+      "manageCars": "Car management"
+    }
+  },
+  "common": {
+    "yes": "Yes",
+    "no": "No",
+    "edit": "Edit",
+    "delete": "Delete"
+  },
+  "userManagement": {
+    "title": "User management",
+    "description": "Create, update, and delete users.",
+    "loading": "Loading users...",
+    "empty": "No users available.",
+    "form": {
+      "createTitle": "Create user",
+      "editTitle": "Update user",
+      "firstname": "First name",
+      "lastname": "Last name",
+      "birthday": "Birthday",
+      "driverLicense": "Has driver's license",
+      "create": "Create user",
+      "update": "Update user",
+      "cancel": "Cancel"
+    },
+    "table": {
+      "firstname": "First name",
+      "lastname": "Last name",
+      "birthday": "Birthday",
+      "driverLicense": "Driver's license",
+      "actions": "Actions"
+    },
+    "messages": {
+      "loadFailed": "Failed to load users.",
+      "createSuccess": "User created.",
+      "createFailed": "Failed to create user.",
+      "updateSuccess": "User updated.",
+      "updateFailed": "Failed to update user.",
+      "deleteSuccess": "User deleted.",
+      "deleteFailed": "Failed to delete user.",
+      "deleteDependencyBlocked": "User cannot be deleted because related cars, drives or costs exist."
+    }
+  },
+  "carManagement": {
+    "title": "Car management",
+    "description": "Create, update, and delete cars.",
+    "loading": "Loading cars and users...",
+    "empty": "No cars available.",
+    "usersRequiredFirst": "Create at least one user before creating a car.",
+    "form": {
+      "createTitle": "Create car",
+      "editTitle": "Update car",
+      "name": "Car name",
+      "plateNumber": "Plate number",
+      "owner": "Owner",
+      "data": "Additional data",
+      "create": "Create car",
+      "update": "Update car",
+      "cancel": "Cancel"
+    },
+    "table": {
+      "name": "Name",
+      "plateNumber": "Plate number",
+      "owner": "Owner",
+      "actions": "Actions"
+    },
+    "messages": {
+      "loadFailed": "Failed to load cars or users.",
+      "usersRequiredFirst": "Create at least one user before creating a car.",
+      "createSuccess": "Car created.",
+      "createFailed": "Failed to create car.",
+      "updateSuccess": "Car updated.",
+      "updateFailed": "Failed to update car.",
+      "deleteSuccess": "Car deleted.",
+      "deleteFailed": "Failed to delete car.",
+      "deleteDependencyBlocked": "Car cannot be deleted because related drives or costs exist."
     }
   },
   "carSelection": {

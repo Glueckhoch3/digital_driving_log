@@ -457,6 +457,14 @@ Current frontend and backend integrations use the base path:
 - `CreateCostRequest`/`UpdateCostRequest`: `carId`, `buyerId`, `transactionObject`, `price`, `amount`, `dayOfTransaction`, `costType`, optional `notes`
 - `costType` accepts `fixed` or `variable` (case-insensitive); responses return enum values in uppercase
 
+### Frontend routes
+- `/` - Start page
+- `/overview` - Management overview
+- `/cars/select` - Car selection
+- `/cars/{carId}` - Car workspace
+- `/manage/users` - User management (create/update/delete)
+- `/manage/cars` - Car management (create/update/delete)
+
 ---
 
 ## Installation and Setup
@@ -464,87 +472,53 @@ Current frontend and backend integrations use the base path:
 ### Prerequisites
 - Java 21 or higher
 - Node.js 18+ and npm 10.8.2+
-- PostgreSQL 12+
+- Docker / Docker Compose
 - Git
 
-### Backend Setup
+### Development Start Guide (Backend + Frontend, Dockerized PostgreSQL)
 
-1. **Navigate to backend directory**
+1. **Start PostgreSQL only (recommended for development)**
+   ```bash
+   docker compose up -d postgres
+   ```
+
+2. **Configure backend environment**
    ```bash
    cd backend
+   cp .env.example .env
    ```
 
-2. **Configure PostgreSQL**
-   - Create a database named `digital_driving_log`
-   - Update connection details in `src/main/resources/application.properties`
-   ```properties
-   spring.datasource.url=jdbc:postgresql://localhost:5432/digital_driving_log
-   spring.datasource.username=your_username
-   spring.datasource.password=your_password
-   spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQL12Dialect
-   spring.jpa.hibernate.ddl-auto=update
-   ```
-
-3. **Build the application**
+3. **Build and run backend**
    ```bash
    ./mvnw clean package
-   ```
-
-4. **Run the application**
-   ```bash
    ./mvnw spring-boot:run
    ```
-   The API will be available at `http://localhost:8080`
+   Backend API: `http://localhost:8080`
 
-### Frontend Setup
-
-1. **Navigate to frontend directory**
+4. **Start frontend**
    ```bash
-   cd frontend
-   ```
-
-2. **Install dependencies**
-   ```bash
+   cd ../frontend
    npm install
-   ```
-
-3. **Start development server**
-   ```bash
    npm start
    ```
-   The application will be available at `http://localhost:4200`
+   Frontend app: `http://localhost:4200`
 
-4. **Build for production**
-   ```bash
-   npm run build
-   ```
+### Full Docker Compose Setup
+Use the committed `docker-compose.yml` at repository root:
 
-### Docker Setup (Optional)
-Create a `docker-compose.yml` for local deployment:
-```yaml
-version: '3.8'
-services:
-  postgres:
-    image: postgres:16-alpine
-    environment:
-      POSTGRES_DB: digital_driving_log
-      POSTGRES_USER: ddl_user
-      POSTGRES_PASSWORD: secure_password
-    ports:
-      - "5432:5432"
-  backend:
-    build: ./backend
-    ports:
-      - "8080:8080"
-    depends_on:
-      - postgres
-  frontend:
-    build: ./frontend
-    ports:
-      - "80:4200"
-    depends_on:
-      - backend
+```bash
+docker compose up --build -d
 ```
+
+This starts:
+- PostgreSQL: `localhost:5432`
+- Backend API: `http://localhost:8080`
+- Frontend app: `http://localhost:4200`
+
+### First-run functional flow
+1. Open `/manage/users` and create at least one user.
+2. Open `/manage/cars` and create a car with an owner.
+3. Deleting users/cars is blocked when dependent entities exist (cars/drives/costs).
 
 ---
 
