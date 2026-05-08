@@ -3,9 +3,9 @@
 > **A comprehensive digital solution for managing shared vehicle driving logs and cost distribution**
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![Java Version](https://img.shields.io/badge/Java-21+-orange.svg)](digidrivelog-backend/pom.xml)
+[![Java Version](https://img.shields.io/badge/Java-21+-orange.svg)](backend/pom.xml)
 [![Angular Version](https://img.shields.io/badge/Angular-21-red.svg)](frontend/package.json)
-[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-12+-blue.svg)](digidrivelog-backend/src/main/resources/application.properties)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-12+-blue.svg)](backend/src/main/resources/application.properties)
 
 ## Quick Overview
 
@@ -70,7 +70,7 @@
 
 ```
 digital_driving_log/
-├── digidrivelog-backend/          # Spring Boot backend API
+├── backend/                       # Spring Boot backend API
 │   ├── src/
 │   │   ├── main/
 │   │   │   ├── java/de/digidrivelog/
@@ -106,7 +106,7 @@ digital_driving_log/
 │   ├── digitalDriveLog-database.dbml  # Database schema
 │   └── digitalDriveLog-database.json  # Database export
 │
-├── USER_STORIES_AND_DOCUMENTATION.md  # Detailed project documentation
+├── docs/documentation.md              # Detailed project documentation
 ├── README.md                      # This file
 ├── LICENSE                        # Project license
 └── .github/                       # GitHub configuration
@@ -166,7 +166,7 @@ digital_driving_log/
 
 2. **Configure Database Connection**
    ```bash
-   cd digidrivelog-backend
+   cd backend
    nano src/main/resources/application.properties
    ```
    Update with your PostgreSQL credentials:
@@ -259,7 +259,6 @@ This will start:
 ### Comprehensive Guides
 - [**User Stories & Project Documentation**](docs/documentation.md) - Complete feature specifications, user stories, and development guidelines
 - [**Database Schema**](docs/digitalDriveLog-database.dbml) - DBML format database design
-- [**Backend README**](digidrivelog-backend/HELP.md) - Spring Boot specific documentation
 - [**Frontend README**](frontend/README.md) - Angular specific documentation
 
 ### API Documentation
@@ -269,20 +268,21 @@ All REST API endpoints are documented in [docs/documentation.md#api-endpoints](d
 
 **Record a Drive (Backend)**
 ```java
-// POST /api/drives
+// POST /ddl/api/drives
 {
-  "distance": 42.5,
+  "carId": 1,
+  "currentMileage": 152340,
+  "driverId": 2,
   "driveDate": "2026-02-06",
-  "notes": "Commute to office",
-  "shareholder": { "id": 1 }
+  "notes": "Commute to office"
 }
 ```
 
 **Record a Drive (Frontend)**
 ```typescript
 // In drive.service.ts
-recordDrive(drive: Drive): Observable<Drive> {
-  return this.http.post<Drive>(`${this.apiUrl}/drives`, drive);
+createDrive(request: CreateDriveRequest): Observable<DriveDto> {
+  return this.http.post<DriveDto>(`${this.apiUrl}/drives`, request);
 }
 ```
 
@@ -293,7 +293,7 @@ recordDrive(drive: Drive): Observable<Drive> {
 ### Getting Started
 1. Clone the repository
 2. Follow [Quick Start](#quick-start) section
-3. Read [USER_STORIES_AND_DOCUMENTATION.md](USER_STORIES_AND_DOCUMENTATION.md) for detailed requirements
+3. Read [docs/documentation.md](docs/documentation.md) for detailed requirements
 
 ### Code Style
 - **Backend**: Follow [Google Java Style Guide](https://google.github.io/styleguide/javaguide.html)
@@ -303,18 +303,18 @@ recordDrive(drive: Drive): Observable<Drive> {
 ### Testing
 ```bash
 # Backend
-cd digidrivelog-backend
+cd backend
 ./mvnw test
 
 # Frontend
 cd frontend
-npm test
+npm test -- --watch=false
 ```
 
 ### Building
 ```bash
 # Backend (JAR file)
-cd digidrivelog-backend
+cd backend
 ./mvnw clean package
 
 # Frontend (optimized build)

@@ -1,21 +1,17 @@
-import { Cost } from './costs';
-
-export interface DriveFormValues {
-  drive?: Drive[];
-  fuelRefills?: FuelRefill[];
+export interface DriveDto {
+  driveId: number;
+  carId: number;
+  driveDate: string;
+  currentMileage: number;
+  drivenDistance: number | null;
+  driverId: number;
+  notes: string | null;
 }
 
-export interface Drive {
-  id?: string;
-  date: Date;
-  driver: string;
-  distance: number;
+export interface CreateDriveRequest {
+  carId: number;
+  currentMileage: number;
+  driverId: number;
+  driveDate: string;
   notes?: string;
 }
-
-export interface FuelRefill extends Cost {
-  type: 'variable';
-  description: 'Fuel Refill';
-  category?: 'Fuel';
-}
-

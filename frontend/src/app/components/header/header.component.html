@@ -1,11 +1,9 @@
 <header class="header">
-<header class="header">
   <div class="header__container">
     <div class="header__logo">
       <h1>{{ 'header.title' | translate }}</h1>
     </div>
 
-    <!-- Mobile burger menu button -->
     <button
       class="header__burger"
       (click)="toggleMenu()"
@@ -17,7 +15,6 @@
       <span class="header__burger-line"></span>
     </button>
 
-    <!-- Desktop Navigation -->
     <nav class="header__nav header__nav--desktop">
       <a
         *ngFor="let item of menuItems"
@@ -30,7 +27,6 @@
       </a>
     </nav>
 
-    <!-- Language Selector -->
     <div class="header__language-selector">
       <select
         [value]="currentLang()"
@@ -43,7 +39,6 @@
     </div>
   </div>
 
-  <!-- Mobile Navigation Menu -->
   @if (isMenuOpen()) {
     <nav class="header__nav header__nav--mobile">
       <div class="header__mobile-close">

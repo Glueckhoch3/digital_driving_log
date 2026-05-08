@@ -416,51 +416,46 @@ For database schema, see [digitalDriveLog-database.dbml](digitalDriveLog-databas
 
 ## API Endpoints
 
-*Will be documentet in a swagger/OpenApi file. **tbd***
+Current frontend and backend integrations use the base path:
+
+- `http://localhost:8080/ddl/api`
+
+### Users
+- `GET /users` - List all users
+- `POST /users` - Create user
+- `GET /users/{userId}` - Get user by ID
+- `PUT /users/{userId}` - Update user
+- `DELETE /users/{userId}` - Delete user
+
+### Vehicles
+- `GET /vehicles` - List all vehicles
+- `POST /vehicles` - Create vehicle
+- `GET /vehicles/{carId}` - Get vehicle by ID
+- `PUT /vehicles/{carId}` - Update vehicle
+- `DELETE /vehicles/{carId}` - Delete vehicle
 
 ### Drives
-- `GET /api/drives` - List all drives (with pagination, filtering)
-- `POST /api/drives` - Create new drive
-- `GET /api/drives/{id}` - Get drive details
-- `PUT /api/drives/{id}` - Update drive
-- `DELETE /api/drives/{id}` - Delete drive
-
-### Fuel Refills
-- `GET /api/fuel-refills` - List all fuel refills
-- `POST /api/fuel-refills` - Record fuel refill
-- `GET /api/fuel-refills/{id}` - Get refill details
-- `PUT /api/fuel-refills/{id}` - Update refill
-- `DELETE /api/fuel-refills/{id}` - Delete refill
+- `POST /drives` - Create drive
+- `GET /drives/{driveId}` - Get drive by ID
+- `PUT /drives/{driveId}` - Update drive
+- `DELETE /drives/{driveId}` - Delete drive
+- `GET /vehicles/{carId}/drives` - List drives for one vehicle
+- `GET /users/{userId}/drives` - List drives for one user
+- `GET /vehicles/{carId}/users/{userId}/drives` - List drives filtered by vehicle and user
 
 ### Costs
-- `POST /api/costs/fixed` - Record fixed cost
-- `POST /api/costs/variable` - Record variable cost
-- `GET /api/costs` - List all costs
-- `PUT /api/costs/{id}` - Update cost
-- `DELETE /api/costs/{id}` - Delete cost
+- `GET /costs` - List all costs
+- `POST /costs` - Create cost
+- `GET /costs/{costId}` - Get cost by ID
+- `PUT /costs/{costId}` - Update cost
+- `DELETE /costs/{costId}` - Delete cost
+- `GET /vehicles/{carId}/costs` - List costs for one vehicle
+- `GET /users/{userId}/costs` - List costs for one user
 
-### Distribution
-- `GET /api/distribution/current` - Get current cost distribution
-- `GET /api/distribution/breakdown/{shareholder_id}` - Get detailed breakdown for shareholder
-- `GET /api/distribution/summary` - Get system-wide summary
-
-### Shareholders
-- `GET /api/shareholders` - List all shareholders
-- `POST /api/shareholders` - Add new shareholder
-- `GET /api/shareholders/{id}` - Get shareholder details
-- `PUT /api/shareholders/{id}` - Update shareholder
-- `DELETE /api/shareholders/{id}` - Remove shareholder
-
-### Settlements
-- `GET /api/settlements` - List all settlements
-- `POST /api/settlements/trigger` - Manually trigger settlement
-- `GET /api/settlements/{id}` - Get settlement details
-- `GET /api/settlements/{id}/report` - Generate settlement report
-
-### Reports
-- `GET /api/reports/cost-breakdown` - Get cost breakdown report
-- `GET /api/reports/distance-summary` - Get distance summary
-- `GET /api/reports/export/{format}` - Export report (pdf, csv, excel)
+### Request/response shape highlights
+- `CreateDriveRequest`/`UpdateDriveRequest`: `carId`, `currentMileage`, `driverId`, `driveDate`, optional `notes`
+- `CreateCostRequest`/`UpdateCostRequest`: `carId`, `buyerId`, `transactionObject`, `price`, `amount`, `dayOfTransaction`, `costType`, optional `notes`
+- `costType` accepts `fixed` or `variable` (case-insensitive); responses return enum values in uppercase
 
 ---
 
@@ -476,7 +471,7 @@ For database schema, see [digitalDriveLog-database.dbml](digitalDriveLog-databas
 
 1. **Navigate to backend directory**
    ```bash
-   cd digidrivelog-backend
+   cd backend
    ```
 
 2. **Configure PostgreSQL**
@@ -492,7 +487,7 @@ For database schema, see [digitalDriveLog-database.dbml](digitalDriveLog-databas
 
 3. **Build the application**
    ```bash
-   ./mvnw clean build
+   ./mvnw clean package
    ```
 
 4. **Run the application**
@@ -538,7 +533,7 @@ services:
     ports:
       - "5432:5432"
   backend:
-    build: ./digidrivelog-backend
+    build: ./backend
     ports:
       - "8080:8080"
     depends_on:
@@ -589,7 +584,7 @@ src/
 └── assets/                 # Images, fonts, etc.
 ```
 
-**Backend** (`digidrivelog-backend/src/main/java/de/digidrivelog/`):
+**Backend** (`backend/src/main/java/de/digidrivelog/`):
 ```
 ├── models/                 # JPA entities
 ├── repositories/           # Spring Data repositories
