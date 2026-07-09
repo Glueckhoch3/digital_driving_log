@@ -299,13 +299,24 @@ createDrive(request: CreateDriveRequest): Observable<DriveDto> {
 
 ### Testing
 ```bash
-# Backend
+# Backend (JaCoCo report in backend/target/site/jacoco/index.html)
 cd backend
-./mvnw test
+./mvnw verify
 
-# Frontend
+# Frontend (coverage report in frontend/coverage/)
 cd frontend
-npm test -- --watch=false
+npm test -- --watch=false --coverage
+```
+
+### Pre-commit Hooks
+The repo uses the [pre-commit framework](https://pre-commit.com) for fast checks
+(whitespace, YAML, secrets via gitleaks, prettier) on commit and the full test
+suites on push:
+
+```bash
+pipx install pre-commit          # one-time install (or: pip install --user pre-commit)
+pre-commit install --hook-type pre-commit --hook-type pre-push
+pre-commit run --all-files       # optional: check everything once
 ```
 
 ### Building
@@ -385,8 +396,8 @@ For questions, issues, or suggestions:
 
 ---
 
-**Last Updated**: February 6, 2026  
-**Project Version**: 0.0.1-SNAPSHOT  
+**Last Updated**: February 6, 2026
+**Project Version**: 0.0.1-SNAPSHOT
 **Maintained By**: [Glueckhoch3]
 
 *This project is done with the help of Copilot and serves the purpos of creating experience in softwaredevelopment.*

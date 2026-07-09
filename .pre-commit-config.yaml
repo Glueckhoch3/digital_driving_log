@@ -1,0 +1,40 @@
+# Fast checks (formatting + secrets) run on pre-commit;
+# slow checks (test suites) run on pre-push.
+# Setup: pipx install pre-commit && pre-commit install --hook-type pre-commit --hook-type pre-push
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-merge-conflict
+      - id: check-yaml
+      - id: check-added-large-files
+      - id: detect-private-key
+
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.30.0
+    hooks:
+      - id: gitleaks
+
+  - repo: local
+    hooks:
+      - id: prettier-frontend
+        name: prettier (frontend)
+        language: system
+        entry: npx --prefix frontend prettier --check
+        files: ^frontend/(src|public)/.*\.(ts|html|scss|json)$
+
+      - id: backend-tests
+        name: backend tests (mvn)
+        language: system
+        entry: backend/mvnw -f backend/pom.xml -q test
+        pass_filenames: false
+        stages: [pre-push]
+
+      - id: frontend-tests
+        name: frontend tests (vitest)
+        language: system
+        entry: npm --prefix frontend test -- --watch=false
+        pass_filenames: false
+        stages: [pre-push]
