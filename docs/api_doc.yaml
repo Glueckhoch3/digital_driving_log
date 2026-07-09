@@ -3,7 +3,7 @@ info:
   title: Digital Driving Log
   description: |-
     A comprehensive digital solution for managing shared vehicle driving logs and cost distribution.
-    
+
     Some useful links:
     - [Digital-Driving-Log repository](https://github.com/Glueckhoch3/digital_driving_log)
     - [The source API definition for the DDL](https://github.com/Glueckhoch3/digital_driving_log/blob/main/docs/api_doc.yaml)
@@ -18,7 +18,7 @@ servers:
 tags:
   - name: drives
     description: Access for logging and fetching driving logs.
-  
+
   - name: costs
     description: Access for Cost data creation and retrieval.
 
@@ -499,7 +499,7 @@ paths:
       summary: Get a user by ID
       description: Retrieve a specific user by their ID
       parameters:
-        - name: userId  
+        - name: userId
           in: path
           required: true
           schema:
@@ -510,7 +510,7 @@ paths:
           description: Successful operation
           content:
             application/json:
-              schema: 
+              schema:
                 $ref: '#/components/schemas/RetrieveUser'
         '404':
           description: User not found
@@ -520,7 +520,7 @@ paths:
       summary: Update a user
       description: Update an existing user by ID
       parameters:
-        - name: userId  
+        - name: userId
           in: path
           required: true
           schema:

@@ -17,12 +17,12 @@ describe('DriveService', () => {
     currentMileage: 14500,
     drivenDistance: 25,
     driverId: 3,
-    notes: null
+    notes: null,
   };
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [provideHttpClient(), provideHttpClientTesting()]
+      providers: [provideHttpClient(), provideHttpClientTesting()],
     });
     service = TestBed.inject(DriveService);
     httpMock = TestBed.inject(HttpTestingController);
@@ -32,7 +32,7 @@ describe('DriveService', () => {
 
   it('getDriveById issues GET /drives/:id', () => {
     let result: DriveDto | undefined;
-    service.getDriveById(1).subscribe(d => (result = d));
+    service.getDriveById(1).subscribe((d) => (result = d));
 
     const req = httpMock.expectOne(`${apiUrl}/drives/1`);
     expect(req.request.method).toBe('GET');
@@ -54,7 +54,7 @@ describe('DriveService', () => {
       carId: 2,
       currentMileage: 14525,
       driverId: 3,
-      driveDate: '2025-03-01'
+      driveDate: '2025-03-01',
     };
     service.createDrive(request).subscribe();
 
@@ -69,7 +69,7 @@ describe('DriveService', () => {
       carId: 2,
       currentMileage: 14600,
       driverId: 3,
-      driveDate: '2025-03-02'
+      driveDate: '2025-03-02',
     };
     service.updateDrive(1, request).subscribe();
 
@@ -90,7 +90,7 @@ describe('DriveService', () => {
   it('propagates HTTP errors to the subscriber', () => {
     let status: number | undefined;
     service.getDriveById(1).subscribe({
-      error: err => (status = err.status)
+      error: (err) => (status = err.status),
     });
 
     httpMock

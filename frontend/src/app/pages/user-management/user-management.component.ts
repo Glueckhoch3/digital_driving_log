@@ -9,7 +9,7 @@ import { CreateUserRequest, UpdateUserRequest, UserDto } from '../../models/user
   standalone: true,
   imports: [ReactiveFormsModule, TranslateModule],
   templateUrl: './user-management.component.html',
-  styleUrl: './user-management.component.scss'
+  styleUrl: './user-management.component.scss',
 })
 export class UserManagementComponent implements OnInit {
   private readonly userService = inject(UserService);
@@ -25,7 +25,7 @@ export class UserManagementComponent implements OnInit {
     firstname: ['', [Validators.required, Validators.maxLength(63)]],
     lastname: ['', [Validators.required, Validators.maxLength(63)]],
     driverLicense: [false],
-    birthday: ['']
+    birthday: [''],
   });
 
   ngOnInit(): void {
@@ -35,14 +35,14 @@ export class UserManagementComponent implements OnInit {
   loadUsers(): void {
     this.loading.set(true);
     this.userService.getUsers().subscribe({
-      next: users => {
+      next: (users) => {
         this.users.set(users);
         this.loading.set(false);
       },
       error: () => {
         this.error.set('userManagement.messages.loadFailed');
         this.loading.set(false);
-      }
+      },
     });
   }
 
@@ -57,7 +57,7 @@ export class UserManagementComponent implements OnInit {
       firstname: form.firstname ?? '',
       lastname: form.lastname ?? '',
       driverLicense: !!form.driverLicense,
-      birthday: form.birthday || undefined
+      birthday: form.birthday || undefined,
     };
 
     const editingId = this.editingUserId();
@@ -71,7 +71,7 @@ export class UserManagementComponent implements OnInit {
         },
         error: () => {
           this.error.set('userManagement.messages.createFailed');
-        }
+        },
       });
       return;
     }
@@ -86,7 +86,7 @@ export class UserManagementComponent implements OnInit {
       },
       error: () => {
         this.error.set('userManagement.messages.updateFailed');
-      }
+      },
     });
   }
 
@@ -96,7 +96,7 @@ export class UserManagementComponent implements OnInit {
       firstname: user.firstname,
       lastname: user.lastname,
       driverLicense: user.driverLicense,
-      birthday: user.birthday ?? ''
+      birthday: user.birthday ?? '',
     });
   }
 
@@ -111,13 +111,13 @@ export class UserManagementComponent implements OnInit {
         this.error.set('');
         this.loadUsers();
       },
-      error: err => {
+      error: (err) => {
         this.error.set(
           err?.status === 409
             ? 'userManagement.messages.deleteDependencyBlocked'
-            : 'userManagement.messages.deleteFailed'
+            : 'userManagement.messages.deleteFailed',
         );
-      }
+      },
     });
   }
 
@@ -127,7 +127,7 @@ export class UserManagementComponent implements OnInit {
       firstname: '',
       lastname: '',
       driverLicense: false,
-      birthday: ''
+      birthday: '',
     });
   }
 }

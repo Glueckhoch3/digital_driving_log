@@ -9,11 +9,19 @@ import { UserDto } from '../../models/users';
 describe('UserManagementComponent', () => {
   let fixture: ComponentFixture<UserManagementComponent>;
   let component: UserManagementComponent;
-  let userService: Mocked<Pick<UserService, 'getUsers' | 'createUser' | 'updateUser' | 'deleteUser'>>;
+  let userService: Mocked<
+    Pick<UserService, 'getUsers' | 'createUser' | 'updateUser' | 'deleteUser'>
+  >;
 
   const users: UserDto[] = [
-    { userId: 1, firstname: 'Anna', lastname: 'Meyer', driverLicense: true, birthday: '1998-03-14' },
-    { userId: 2, firstname: 'Ben', lastname: 'Schulz', driverLicense: false, birthday: null }
+    {
+      userId: 1,
+      firstname: 'Anna',
+      lastname: 'Meyer',
+      driverLicense: true,
+      birthday: '1998-03-14',
+    },
+    { userId: 2, firstname: 'Ben', lastname: 'Schulz', driverLicense: false, birthday: null },
   ];
 
   beforeEach(async () => {
@@ -21,15 +29,12 @@ describe('UserManagementComponent', () => {
       getUsers: vi.fn().mockReturnValue(of(users)),
       createUser: vi.fn().mockReturnValue(of(users[0])),
       updateUser: vi.fn().mockReturnValue(of(users[0])),
-      deleteUser: vi.fn().mockReturnValue(of(void 0))
+      deleteUser: vi.fn().mockReturnValue(of(void 0)),
     };
 
     await TestBed.configureTestingModule({
       imports: [UserManagementComponent],
-      providers: [
-        provideTranslateService(),
-        { provide: UserService, useValue: userService }
-      ]
+      providers: [provideTranslateService(), { provide: UserService, useValue: userService }],
     }).compileComponents();
 
     fixture = TestBed.createComponent(UserManagementComponent);
@@ -58,7 +63,7 @@ describe('UserManagementComponent', () => {
       firstname: '',
       lastname: '',
       driverLicense: false,
-      birthday: ''
+      birthday: '',
     });
 
     component.submit();
@@ -72,7 +77,7 @@ describe('UserManagementComponent', () => {
       firstname: 'Max',
       lastname: 'Neu',
       driverLicense: true,
-      birthday: '1995-08-01'
+      birthday: '1995-08-01',
     });
 
     component.submit();
@@ -81,7 +86,7 @@ describe('UserManagementComponent', () => {
       firstname: 'Max',
       lastname: 'Neu',
       driverLicense: true,
-      birthday: '1995-08-01'
+      birthday: '1995-08-01',
     });
     expect(component.message()).toBe('userManagement.messages.createSuccess');
     expect(userService.getUsers).toHaveBeenCalledTimes(2);
@@ -97,7 +102,7 @@ describe('UserManagementComponent', () => {
       firstname: 'Anna',
       lastname: 'Renamed',
       driverLicense: true,
-      birthday: '1998-03-14'
+      birthday: '1998-03-14',
     });
     expect(userService.createUser).not.toHaveBeenCalled();
     expect(component.editingUserId()).toBeNull();
@@ -109,7 +114,7 @@ describe('UserManagementComponent', () => {
       firstname: 'Max',
       lastname: 'Neu',
       driverLicense: false,
-      birthday: ''
+      birthday: '',
     });
 
     component.submit();

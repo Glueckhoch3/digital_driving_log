@@ -9,7 +9,7 @@ import { CarDto } from '../../models/cars';
   standalone: true,
   imports: [RouterLink, TranslateModule],
   templateUrl: './car-selection.component.html',
-  styleUrl: './car-selection.component.scss'
+  styleUrl: './car-selection.component.scss',
 })
 export class CarSelectionComponent implements OnInit {
   private readonly carService = inject(CarService);
@@ -20,14 +20,14 @@ export class CarSelectionComponent implements OnInit {
 
   ngOnInit(): void {
     this.carService.getCars().subscribe({
-      next: cars => {
+      next: (cars) => {
         this.cars.set(cars);
         this.loading.set(false);
       },
       error: () => {
         this.error.set('carSelection.loadError');
         this.loading.set(false);
-      }
+      },
     });
   }
 }

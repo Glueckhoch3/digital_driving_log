@@ -19,12 +19,12 @@ describe('CostService', () => {
     amount: 40,
     dayOfTransaction: '2025-04-02',
     costType: 'VARIABLE',
-    notes: null
+    notes: null,
   };
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [provideHttpClient(), provideHttpClientTesting()]
+      providers: [provideHttpClient(), provideHttpClientTesting()],
     });
     service = TestBed.inject(CostService);
     httpMock = TestBed.inject(HttpTestingController);
@@ -34,7 +34,7 @@ describe('CostService', () => {
 
   it('getAllCosts issues GET /costs', () => {
     let result: CostDto[] | undefined;
-    service.getAllCosts().subscribe(costs => (result = costs));
+    service.getAllCosts().subscribe((costs) => (result = costs));
 
     const req = httpMock.expectOne(`${apiUrl}/costs`);
     expect(req.request.method).toBe('GET');
@@ -59,7 +59,7 @@ describe('CostService', () => {
       price: 19.99,
       amount: 1,
       dayOfTransaction: '2025-05-05',
-      costType: 'variable'
+      costType: 'variable',
     };
     service.createCost(request).subscribe();
 
@@ -80,7 +80,7 @@ describe('CostService', () => {
   it('propagates HTTP errors to the subscriber', () => {
     let status: number | undefined;
     service.getAllCosts().subscribe({
-      error: err => (status = err.status)
+      error: (err) => (status = err.status),
     });
 
     httpMock

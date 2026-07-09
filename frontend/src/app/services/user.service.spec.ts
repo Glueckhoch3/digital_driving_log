@@ -15,12 +15,12 @@ describe('UserService', () => {
     firstname: 'Anna',
     lastname: 'Meyer',
     driverLicense: true,
-    birthday: '1998-03-14'
+    birthday: '1998-03-14',
   };
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [provideHttpClient(), provideHttpClientTesting()]
+      providers: [provideHttpClient(), provideHttpClientTesting()],
     });
     service = TestBed.inject(UserService);
     httpMock = TestBed.inject(HttpTestingController);
@@ -30,7 +30,7 @@ describe('UserService', () => {
 
   it('getUsers issues GET /users', () => {
     let result: UserDto[] | undefined;
-    service.getUsers().subscribe(users => (result = users));
+    service.getUsers().subscribe((users) => (result = users));
 
     const req = httpMock.expectOne(`${apiUrl}/users`);
     expect(req.request.method).toBe('GET');
@@ -43,7 +43,7 @@ describe('UserService', () => {
     const request: CreateUserRequest = {
       firstname: 'Max',
       lastname: 'Neu',
-      driverLicense: false
+      driverLicense: false,
     };
     service.createUser(request).subscribe();
 
@@ -57,7 +57,7 @@ describe('UserService', () => {
     const request: CreateUserRequest = {
       firstname: 'Anna',
       lastname: 'Renamed',
-      driverLicense: true
+      driverLicense: true,
     };
     service.updateUser(1, request).subscribe();
 
@@ -78,7 +78,7 @@ describe('UserService', () => {
   it('propagates HTTP errors to the subscriber', () => {
     let status: number | undefined;
     service.getUsers().subscribe({
-      error: err => (status = err.status)
+      error: (err) => (status = err.status),
     });
 
     httpMock

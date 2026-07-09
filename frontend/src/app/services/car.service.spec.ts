@@ -15,12 +15,12 @@ describe('CarService', () => {
     name: 'City Car',
     plateNumber: 'M-AB-1001',
     ownerId: 2,
-    data: null
+    data: null,
   };
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [provideHttpClient(), provideHttpClientTesting()]
+      providers: [provideHttpClient(), provideHttpClientTesting()],
     });
     service = TestBed.inject(CarService);
     httpMock = TestBed.inject(HttpTestingController);
@@ -30,7 +30,7 @@ describe('CarService', () => {
 
   it('getCars issues GET /vehicles', () => {
     let result: CarDto[] | undefined;
-    service.getCars().subscribe(cars => (result = cars));
+    service.getCars().subscribe((cars) => (result = cars));
 
     const req = httpMock.expectOne(`${apiUrl}/vehicles`);
     expect(req.request.method).toBe('GET');
@@ -51,7 +51,7 @@ describe('CarService', () => {
     const request: CreateCarRequest = {
       name: 'New Car',
       plateNumber: 'M-NC-1',
-      ownerId: 2
+      ownerId: 2,
     };
     service.createCar(request).subscribe();
 
@@ -65,7 +65,7 @@ describe('CarService', () => {
     const request: CreateCarRequest = {
       name: 'Renamed',
       plateNumber: 'M-NC-2',
-      ownerId: 2
+      ownerId: 2,
     };
     service.updateCar(1, request).subscribe();
 
@@ -86,7 +86,7 @@ describe('CarService', () => {
   it('propagates a 409 conflict to the subscriber', () => {
     let status: number | undefined;
     service.deleteCar(5).subscribe({
-      error: err => (status = err.status)
+      error: (err) => (status = err.status),
     });
 
     httpMock

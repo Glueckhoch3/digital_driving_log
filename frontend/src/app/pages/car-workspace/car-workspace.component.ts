@@ -18,7 +18,7 @@ import { CostDto, CreateCostRequest, CostType } from '../../models/costs';
   standalone: true,
   imports: [ReactiveFormsModule, TranslateModule, DecimalPipe],
   templateUrl: './car-workspace.component.html',
-  styleUrl: './car-workspace.component.scss'
+  styleUrl: './car-workspace.component.scss',
 })
 export class CarWorkspaceComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
@@ -46,7 +46,7 @@ export class CarWorkspaceComponent implements OnInit {
     fuelAmount: [0],
     fuelDate: [new Date().toISOString().slice(0, 10)],
     fuelBuyerId: [0],
-    fuelNotes: ['']
+    fuelNotes: [''],
   });
 
   readonly transactionForm = this.fb.group({
@@ -56,43 +56,45 @@ export class CarWorkspaceComponent implements OnInit {
     amount: [1, [Validators.required, Validators.min(1)]],
     dayOfTransaction: [new Date().toISOString().slice(0, 10), Validators.required],
     costType: ['variable', Validators.required],
-    notes: ['']
+    notes: [''],
   });
 
   readonly userLabelById = computed(() => {
     const map = new Map<number, string>();
-    this.users().forEach(user => {
+    this.users().forEach((user) => {
       map.set(user.userId, `${user.firstname} ${user.lastname}`.trim());
     });
     return map;
   });
 
   ngOnInit(): void {
-    this.route.paramMap.pipe(
-      switchMap(params => {
-        const carId = Number(params.get('carId'));
-        return this.carService.getCarById(carId);
-      })
-    ).subscribe({
-      next: car => {
-        this.car.set(car);
-        this.loadUsersAndEntries(car.carId);
-      },
-      error: () => {
-        this.error.set('carWorkspace.loadError');
-        this.loading.set(false);
-      }
-    });
+    this.route.paramMap
+      .pipe(
+        switchMap((params) => {
+          const carId = Number(params.get('carId'));
+          return this.carService.getCarById(carId);
+        }),
+      )
+      .subscribe({
+        next: (car) => {
+          this.car.set(car);
+          this.loadUsersAndEntries(car.carId);
+        },
+        error: () => {
+          this.error.set('carWorkspace.loadError');
+          this.loading.set(false);
+        },
+      });
   }
 
   private loadUsersAndEntries(carId: number): void {
     this.userService.getUsers().subscribe({
-      next: users => {
+      next: (users) => {
         this.users.set(users);
         if (users.length > 0) {
           this.driveForm.patchValue({
             driverId: users[0].userId,
-            fuelBuyerId: users[0].userId
+            fuelBuyerId: users[0].userId,
           });
           this.transactionForm.patchValue({ buyerId: users[0].userId });
         }
@@ -102,7 +104,7 @@ export class CarWorkspaceComponent implements OnInit {
       error: () => {
         this.error.set('carWorkspace.loadError');
         this.loading.set(false);
-      }
+      },
     });
   }
 
@@ -110,24 +112,24 @@ export class CarWorkspaceComponent implements OnInit {
     this.loading.set(true);
 
     this.driveService.getDrivesForCar(carId).subscribe({
-      next: drives => {
+      next: (drives) => {
         this.drives.set(drives);
 
         this.costService.getCostsForCar(carId).subscribe({
-          next: costs => {
+          next: (costs) => {
             this.costs.set(costs);
             this.loading.set(false);
           },
           error: () => {
             this.error.set('carWorkspace.loadError');
             this.loading.set(false);
-          }
+          },
         });
       },
       error: () => {
         this.error.set('carWorkspace.loadError');
         this.loading.set(false);
-      }
+      },
     });
   }
 
@@ -144,7 +146,7 @@ export class CarWorkspaceComponent implements OnInit {
       currentMileage: Number(value.currentMileage),
       driverId: Number(value.driverId),
       driveDate: value.driveDate ?? new Date().toISOString().slice(0, 10),
-      notes: value.notes ?? undefined
+      notes: value.notes ?? undefined,
     };
 
     this.driveService.createDrive(request).subscribe({
@@ -158,7 +160,7 @@ export class CarWorkspaceComponent implements OnInit {
             amount: Number(value.fuelAmount),
             dayOfTransaction: value.fuelDate ?? new Date().toISOString().slice(0, 10),
             costType: 'variable',
-            notes: value.fuelNotes ?? undefined
+            notes: value.fuelNotes ?? undefined,
           };
 
           this.costService.createCost(fuelRequest).subscribe({
@@ -169,7 +171,7 @@ export class CarWorkspaceComponent implements OnInit {
             },
             error: () => {
               this.error.set('carWorkspace.messages.fuelSaveFailed');
-            }
+            },
           });
           return;
         }
@@ -180,7 +182,7 @@ export class CarWorkspaceComponent implements OnInit {
       },
       error: () => {
         this.error.set('carWorkspace.messages.driveSaveFailed');
-      }
+      },
     });
   }
 
@@ -200,7 +202,7 @@ export class CarWorkspaceComponent implements OnInit {
       amount: Number(value.amount),
       dayOfTransaction: value.dayOfTransaction ?? new Date().toISOString().slice(0, 10),
       costType: (value.costType ?? 'variable') as CostType,
-      notes: value.notes ?? undefined
+      notes: value.notes ?? undefined,
     };
 
     this.costService.createCost(request).subscribe({
@@ -213,13 +215,13 @@ export class CarWorkspaceComponent implements OnInit {
           amount: 1,
           dayOfTransaction: new Date().toISOString().slice(0, 10),
           costType: 'variable',
-          notes: ''
+          notes: '',
         });
         this.reloadEntries(carId);
       },
       error: () => {
         this.error.set('carWorkspace.messages.transactionSaveFailed');
-      }
+      },
     });
   }
 
@@ -234,7 +236,7 @@ export class CarWorkspaceComponent implements OnInit {
       fuelAmount: 0,
       fuelDate: new Date().toISOString().slice(0, 10),
       fuelBuyerId: this.users()[0]?.userId ?? 0,
-      fuelNotes: ''
+      fuelNotes: '',
     });
   }
 }

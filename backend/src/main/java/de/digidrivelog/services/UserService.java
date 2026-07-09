@@ -18,7 +18,7 @@ import org.springframework.web.server.ResponseStatusException;
 public class UserService {
 
     private final UserRepository userRepository;
-    
+
     public List<UserDto> getAllUsers() {
         return userRepository.findAll().stream().map(UserMapper::toDto).toList();
     }
@@ -59,5 +59,5 @@ public class UserService {
         }
     }
 
-    
+
 }

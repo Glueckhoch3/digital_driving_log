@@ -15,10 +15,10 @@ describe('CarManagementComponent', () => {
   let userService: Mocked<Pick<UserService, 'getUsers'>>;
 
   const users: UserDto[] = [
-    { userId: 1, firstname: 'Anna', lastname: 'Meyer', driverLicense: true, birthday: null }
+    { userId: 1, firstname: 'Anna', lastname: 'Meyer', driverLicense: true, birthday: null },
   ];
   const cars: CarDto[] = [
-    { carId: 10, name: 'City Car', plateNumber: 'M-AB-1001', ownerId: 1, data: null }
+    { carId: 10, name: 'City Car', plateNumber: 'M-AB-1001', ownerId: 1, data: null },
   ];
 
   beforeEach(async () => {
@@ -26,10 +26,10 @@ describe('CarManagementComponent', () => {
       getCars: vi.fn().mockReturnValue(of(cars)),
       createCar: vi.fn().mockReturnValue(of(cars[0])),
       updateCar: vi.fn().mockReturnValue(of(cars[0])),
-      deleteCar: vi.fn().mockReturnValue(of(void 0))
+      deleteCar: vi.fn().mockReturnValue(of(void 0)),
     };
     userService = {
-      getUsers: vi.fn().mockReturnValue(of(users))
+      getUsers: vi.fn().mockReturnValue(of(users)),
     };
 
     await TestBed.configureTestingModule({
@@ -37,8 +37,8 @@ describe('CarManagementComponent', () => {
       providers: [
         provideTranslateService(),
         { provide: CarService, useValue: carService },
-        { provide: UserService, useValue: userService }
-      ]
+        { provide: UserService, useValue: userService },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(CarManagementComponent);
@@ -92,7 +92,7 @@ describe('CarManagementComponent', () => {
       name: 'New Car',
       plateNumber: 'M-NC-1',
       ownerId: 1,
-      data: ''
+      data: '',
     });
 
     component.submit();
@@ -101,7 +101,7 @@ describe('CarManagementComponent', () => {
       name: 'New Car',
       plateNumber: 'M-NC-1',
       ownerId: 1,
-      data: undefined
+      data: undefined,
     });
     expect(component.message()).toBe('carManagement.messages.createSuccess');
     expect(carService.getCars).toHaveBeenCalledTimes(2);
@@ -117,7 +117,7 @@ describe('CarManagementComponent', () => {
       name: 'Renamed',
       plateNumber: 'M-AB-1001',
       ownerId: 1,
-      data: undefined
+      data: undefined,
     });
     expect(carService.createCar).not.toHaveBeenCalled();
     expect(component.editingCarId()).toBeNull();

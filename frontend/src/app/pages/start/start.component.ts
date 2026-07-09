@@ -7,6 +7,6 @@ import { TranslateModule } from '@ngx-translate/core';
   standalone: true,
   imports: [RouterLink, TranslateModule],
   templateUrl: './start.component.html',
-  styleUrl: './start.component.scss'
+  styleUrl: './start.component.scss',
 })
 export class StartComponent {}

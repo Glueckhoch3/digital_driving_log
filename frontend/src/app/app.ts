@@ -7,7 +7,7 @@ import { TranslateService } from '@ngx-translate/core';
   selector: 'app-root',
   imports: [RouterOutlet, HeaderComponent],
   templateUrl: './app.html',
-  styleUrl: './app.scss'
+  styleUrl: './app.scss',
 })
 export class App {
   protected readonly title = signal('Digital Driving Log');
@@ -17,7 +17,8 @@ export class App {
     this.translate.addLangs(['en', 'de']);
     const browserLang = this.translate.getBrowserLang();
     const supportedLanguages = ['en', 'de'];
-    const languageToUse = (browserLang && supportedLanguages.includes(browserLang)) ? browserLang : 'en';
+    const languageToUse =
+      browserLang && supportedLanguages.includes(browserLang) ? browserLang : 'en';
     this.translate.use(languageToUse);
   }
 }
