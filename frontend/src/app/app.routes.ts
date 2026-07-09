@@ -1,20 +1,17 @@
 import { Routes } from '@angular/router';
-import { DrivingLogComponent } from './pages/driving-log/driving-log.component';
-import { DrivingHistoryComponent } from './pages/driving-history/driving-history.component';
-import { CostsComponent } from './pages/costs/costs.component';
-import { ShareholdersComponent } from './pages/shareholders/shareholders.component';
-import { SettlementsComponent } from './pages/settlements/settlements.component';
-import { FuelComponent } from './pages/fuel/fuel.component';
-import { ReportsComponent } from './pages/reports/reports.component';
+import { StartComponent } from './pages/start/start.component';
+import { CarSelectionComponent } from './pages/car-selection/car-selection.component';
+import { CarWorkspaceComponent } from './pages/car-workspace/car-workspace.component';
+import { AdminOverviewComponent } from './pages/admin-overview/admin-overview.component';
+import { CarManagementComponent } from './pages/car-management/car-management.component';
+import { UserManagementComponent } from './pages/user-management/user-management.component';
 
 export const routes: Routes = [
-  { path: '', redirectTo: '/drives', pathMatch: 'full' },
-  { path: 'drives', component: DrivingLogComponent },
-  { path: 'history', component: DrivingHistoryComponent },
-  { path: 'costs', component: CostsComponent },
-  { path: 'shareholders', component: ShareholdersComponent },
-  { path: 'settlements', component: SettlementsComponent },
-  { path: 'fuel', component: FuelComponent },
-  { path: 'reports', component: ReportsComponent },
-  { path: '**', redirectTo: '/drives' }
+  { path: '', component: StartComponent },
+  { path: 'cars/select', component: CarSelectionComponent },
+  { path: 'cars/:carId', component: CarWorkspaceComponent },
+  { path: 'manage/cars', component: CarManagementComponent },
+  { path: 'manage/users', component: UserManagementComponent },
+  { path: 'overview', component: AdminOverviewComponent },
+  { path: '**', redirectTo: '' }
 ];

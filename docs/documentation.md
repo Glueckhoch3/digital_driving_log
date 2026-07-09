@@ -416,51 +416,54 @@ For database schema, see [digitalDriveLog-database.dbml](digitalDriveLog-databas
 
 ## API Endpoints
 
-*Will be documentet in a swagger/OpenApi file. **tbd***
+Current frontend and backend integrations use the base path:
+
+- `http://localhost:8080/ddl/api`
+
+### Users
+- `GET /users` - List all users
+- `POST /users` - Create user
+- `GET /users/{userId}` - Get user by ID
+- `PUT /users/{userId}` - Update user
+- `DELETE /users/{userId}` - Delete user
+
+### Vehicles
+- `GET /vehicles` - List all vehicles
+- `POST /vehicles` - Create vehicle
+- `GET /vehicles/{carId}` - Get vehicle by ID
+- `PUT /vehicles/{carId}` - Update vehicle
+- `DELETE /vehicles/{carId}` - Delete vehicle
 
 ### Drives
-- `GET /api/drives` - List all drives (with pagination, filtering)
-- `POST /api/drives` - Create new drive
-- `GET /api/drives/{id}` - Get drive details
-- `PUT /api/drives/{id}` - Update drive
-- `DELETE /api/drives/{id}` - Delete drive
-
-### Fuel Refills
-- `GET /api/fuel-refills` - List all fuel refills
-- `POST /api/fuel-refills` - Record fuel refill
-- `GET /api/fuel-refills/{id}` - Get refill details
-- `PUT /api/fuel-refills/{id}` - Update refill
-- `DELETE /api/fuel-refills/{id}` - Delete refill
+- `POST /drives` - Create drive
+- `GET /drives/{driveId}` - Get drive by ID
+- `PUT /drives/{driveId}` - Update drive
+- `DELETE /drives/{driveId}` - Delete drive
+- `GET /vehicles/{carId}/drives` - List drives for one vehicle
+- `GET /users/{userId}/drives` - List drives for one user
+- `GET /vehicles/{carId}/users/{userId}/drives` - List drives filtered by vehicle and user
 
 ### Costs
-- `POST /api/costs/fixed` - Record fixed cost
-- `POST /api/costs/variable` - Record variable cost
-- `GET /api/costs` - List all costs
-- `PUT /api/costs/{id}` - Update cost
-- `DELETE /api/costs/{id}` - Delete cost
+- `GET /costs` - List all costs
+- `POST /costs` - Create cost
+- `GET /costs/{costId}` - Get cost by ID
+- `PUT /costs/{costId}` - Update cost
+- `DELETE /costs/{costId}` - Delete cost
+- `GET /vehicles/{carId}/costs` - List costs for one vehicle
+- `GET /users/{userId}/costs` - List costs for one user
 
-### Distribution
-- `GET /api/distribution/current` - Get current cost distribution
-- `GET /api/distribution/breakdown/{shareholder_id}` - Get detailed breakdown for shareholder
-- `GET /api/distribution/summary` - Get system-wide summary
+### Request/response shape highlights
+- `CreateDriveRequest`/`UpdateDriveRequest`: `carId`, `currentMileage`, `driverId`, `driveDate`, optional `notes`
+- `CreateCostRequest`/`UpdateCostRequest`: `carId`, `buyerId`, `transactionObject`, `price`, `amount`, `dayOfTransaction`, `costType`, optional `notes`
+- `costType` accepts `fixed` or `variable` (case-insensitive); responses return enum values in uppercase
 
-### Shareholders
-- `GET /api/shareholders` - List all shareholders
-- `POST /api/shareholders` - Add new shareholder
-- `GET /api/shareholders/{id}` - Get shareholder details
-- `PUT /api/shareholders/{id}` - Update shareholder
-- `DELETE /api/shareholders/{id}` - Remove shareholder
-
-### Settlements
-- `GET /api/settlements` - List all settlements
-- `POST /api/settlements/trigger` - Manually trigger settlement
-- `GET /api/settlements/{id}` - Get settlement details
-- `GET /api/settlements/{id}/report` - Generate settlement report
-
-### Reports
-- `GET /api/reports/cost-breakdown` - Get cost breakdown report
-- `GET /api/reports/distance-summary` - Get distance summary
-- `GET /api/reports/export/{format}` - Export report (pdf, csv, excel)
+### Frontend routes
+- `/` - Start page
+- `/overview` - Management overview
+- `/cars/select` - Car selection
+- `/cars/{carId}` - Car workspace
+- `/manage/users` - User management (create/update/delete)
+- `/manage/cars` - Car management (create/update/delete)
 
 ---
 
@@ -469,87 +472,53 @@ For database schema, see [digitalDriveLog-database.dbml](digitalDriveLog-databas
 ### Prerequisites
 - Java 21 or higher
 - Node.js 18+ and npm 10.8.2+
-- PostgreSQL 12+
+- Docker / Docker Compose
 - Git
 
-### Backend Setup
+### Development Start Guide (Backend + Frontend, Dockerized PostgreSQL)
 
-1. **Navigate to backend directory**
+1. **Start PostgreSQL only (recommended for development)**
    ```bash
-   cd digidrivelog-backend
+   docker compose up -d postgres
    ```
 
-2. **Configure PostgreSQL**
-   - Create a database named `digital_driving_log`
-   - Update connection details in `src/main/resources/application.properties`
-   ```properties
-   spring.datasource.url=jdbc:postgresql://localhost:5432/digital_driving_log
-   spring.datasource.username=your_username
-   spring.datasource.password=your_password
-   spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQL12Dialect
-   spring.jpa.hibernate.ddl-auto=update
+2. **Configure backend environment**
+   ```bash
+   cd backend
+   cp .env.example .env
    ```
 
-3. **Build the application**
+3. **Build and run backend**
    ```bash
-   ./mvnw clean build
-   ```
-
-4. **Run the application**
-   ```bash
+   ./mvnw clean package
    ./mvnw spring-boot:run
    ```
-   The API will be available at `http://localhost:8080`
+   Backend API: `http://localhost:8080`
 
-### Frontend Setup
-
-1. **Navigate to frontend directory**
+4. **Start frontend**
    ```bash
-   cd frontend
-   ```
-
-2. **Install dependencies**
-   ```bash
+   cd ../frontend
    npm install
-   ```
-
-3. **Start development server**
-   ```bash
    npm start
    ```
-   The application will be available at `http://localhost:4200`
+   Frontend app: `http://localhost:4200`
 
-4. **Build for production**
-   ```bash
-   npm run build
-   ```
+### Full Docker Compose Setup
+Use the committed `docker-compose.yml` at repository root:
 
-### Docker Setup (Optional)
-Create a `docker-compose.yml` for local deployment:
-```yaml
-version: '3.8'
-services:
-  postgres:
-    image: postgres:16-alpine
-    environment:
-      POSTGRES_DB: digital_driving_log
-      POSTGRES_USER: ddl_user
-      POSTGRES_PASSWORD: secure_password
-    ports:
-      - "5432:5432"
-  backend:
-    build: ./digidrivelog-backend
-    ports:
-      - "8080:8080"
-    depends_on:
-      - postgres
-  frontend:
-    build: ./frontend
-    ports:
-      - "80:4200"
-    depends_on:
-      - backend
+```bash
+docker compose up --build -d
 ```
+
+This starts:
+- PostgreSQL: `localhost:5432`
+- Backend API: `http://localhost:8080`
+- Frontend app: `http://localhost:4200`
+
+### First-run functional flow
+1. Open `/manage/users` and create at least one user.
+2. Open `/manage/cars` and create a car with an owner.
+3. Deleting users/cars is blocked when dependent entities exist (cars/drives/costs).
 
 ---
 
@@ -589,7 +558,7 @@ src/
 └── assets/                 # Images, fonts, etc.
 ```
 
-**Backend** (`digidrivelog-backend/src/main/java/de/digidrivelog/`):
+**Backend** (`backend/src/main/java/de/digidrivelog/`):
 ```
 ├── models/                 # JPA entities
 ├── repositories/           # Spring Data repositories

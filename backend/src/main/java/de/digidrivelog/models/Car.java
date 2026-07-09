@@ -44,11 +44,11 @@ public class Car {
     @Column(name = "data", nullable = true, length = 65535, columnDefinition = "TEXT")
     private String data;
 
-    @OneToMany(mappedBy = "car", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "car", fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Drive> drives;
 
-    @OneToMany(mappedBy = "carId", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "carId", fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Cost> transactions;
 

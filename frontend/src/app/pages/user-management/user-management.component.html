@@ -1,0 +1,85 @@
+<section class="user-management">
+  <h2>{{ 'userManagement.title' | translate }}</h2>
+  <p>{{ 'userManagement.description' | translate }}</p>
+
+  @if (message()) {
+    <p class="user-management__message">{{ message() | translate }}</p>
+  }
+
+  @if (error()) {
+    <p class="user-management__error">{{ error() | translate }}</p>
+  }
+
+  <form class="user-management__form" [formGroup]="userForm" (ngSubmit)="submit()">
+    <h3>
+      @if (editingUserId()) {
+        {{ 'userManagement.form.editTitle' | translate }}
+      } @else {
+        {{ 'userManagement.form.createTitle' | translate }}
+      }
+    </h3>
+
+    <label>{{ 'userManagement.form.firstname' | translate }}</label>
+    <input type="text" formControlName="firstname" />
+
+    <label>{{ 'userManagement.form.lastname' | translate }}</label>
+    <input type="text" formControlName="lastname" />
+
+    <label>{{ 'userManagement.form.birthday' | translate }}</label>
+    <input type="date" formControlName="birthday" />
+
+    <label class="user-management__checkbox">
+      <input type="checkbox" formControlName="driverLicense" />
+      {{ 'userManagement.form.driverLicense' | translate }}
+    </label>
+
+    <div class="user-management__form-actions">
+      <button type="submit">
+        @if (editingUserId()) {
+          {{ 'userManagement.form.update' | translate }}
+        } @else {
+          {{ 'userManagement.form.create' | translate }}
+        }
+      </button>
+      @if (editingUserId()) {
+        <button type="button" (click)="cancelEdit()">{{ 'userManagement.form.cancel' | translate }}</button>
+      }
+    </div>
+  </form>
+
+  @if (loading()) {
+    <p>{{ 'userManagement.loading' | translate }}</p>
+  } @else if (users().length === 0) {
+    <p>{{ 'userManagement.empty' | translate }}</p>
+  } @else {
+    <table class="user-management__table">
+      <thead>
+        <tr>
+          <th>{{ 'userManagement.table.firstname' | translate }}</th>
+          <th>{{ 'userManagement.table.lastname' | translate }}</th>
+          <th>{{ 'userManagement.table.birthday' | translate }}</th>
+          <th>{{ 'userManagement.table.driverLicense' | translate }}</th>
+          <th>{{ 'userManagement.table.actions' | translate }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (user of users(); track user.userId) {
+          <tr>
+            <td>{{ user.firstname }}</td>
+            <td>{{ user.lastname }}</td>
+            <td>{{ user.birthday || '-' }}</td>
+            <td>{{ user.driverLicense ? ('common.yes' | translate) : ('common.no' | translate) }}</td>
+            <td>
+              <div class="user-management__row-actions">
+                <button type="button" (click)="edit(user)">{{ 'common.edit' | translate }}</button>
+                <button type="button" (click)="delete(user.userId)">
+                  {{ 'common.delete' | translate }}
+                </button>
+              </div>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+</section>

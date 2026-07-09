@@ -1,0 +1,162 @@
+<section class="car-workspace">
+  @if (car()) {
+    <h2>{{ car()!.name }} ({{ car()!.plateNumber }})</h2>
+  }
+
+  @if (message()) {
+    <p class="car-workspace__message">{{ message() | translate }}</p>
+  }
+
+  @if (error()) {
+    <p class="car-workspace__error">{{ error() | translate }}</p>
+  }
+
+  <div class="car-workspace__grid">
+    <form class="car-workspace__card" [formGroup]="driveForm" (ngSubmit)="saveDrive()">
+      <h3>{{ 'carWorkspace.driveForm.title' | translate }}</h3>
+      <label>{{ 'carWorkspace.driveForm.driveDate' | translate }}</label>
+      <input type="date" formControlName="driveDate" />
+
+      <label>{{ 'carWorkspace.driveForm.currentMileage' | translate }}</label>
+      <input type="number" formControlName="currentMileage" min="0" />
+
+      <label>{{ 'carWorkspace.driveForm.driver' | translate }}</label>
+      <select formControlName="driverId">
+        @for (user of users(); track user.userId) {
+          <option [value]="user.userId">{{ user.firstname }} {{ user.lastname }}</option>
+        }
+      </select>
+
+      <label>{{ 'carWorkspace.driveForm.notes' | translate }}</label>
+      <textarea rows="3" formControlName="notes"></textarea>
+
+      <label class="car-workspace__checkbox">
+        <input type="checkbox" formControlName="includeFuel" />
+        {{ 'carWorkspace.driveForm.includeFuel' | translate }}
+      </label>
+
+      @if (driveForm.value.includeFuel) {
+        <label>{{ 'carWorkspace.driveForm.fuelPrice' | translate }}</label>
+        <input type="number" formControlName="fuelPrice" min="0" step="0.01" />
+
+        <label>{{ 'carWorkspace.driveForm.fuelAmount' | translate }}</label>
+        <input type="number" formControlName="fuelAmount" min="1" />
+
+        <label>{{ 'carWorkspace.driveForm.fuelDate' | translate }}</label>
+        <input type="date" formControlName="fuelDate" />
+
+        <label>{{ 'carWorkspace.driveForm.fuelBuyer' | translate }}</label>
+        <select formControlName="fuelBuyerId">
+          @for (user of users(); track user.userId) {
+            <option [value]="user.userId">{{ user.firstname }} {{ user.lastname }}</option>
+          }
+        </select>
+
+        <label>{{ 'carWorkspace.driveForm.fuelNotes' | translate }}</label>
+        <textarea rows="2" formControlName="fuelNotes"></textarea>
+      }
+
+      <button type="submit">{{ 'carWorkspace.driveForm.submit' | translate }}</button>
+    </form>
+
+    <form class="car-workspace__card" [formGroup]="transactionForm" (ngSubmit)="saveTransaction()">
+      <h3>{{ 'carWorkspace.transactionForm.title' | translate }}</h3>
+
+      <label>{{ 'carWorkspace.transactionForm.date' | translate }}</label>
+      <input type="date" formControlName="dayOfTransaction" />
+
+      <label>{{ 'carWorkspace.transactionForm.buyer' | translate }}</label>
+      <select formControlName="buyerId">
+        @for (user of users(); track user.userId) {
+          <option [value]="user.userId">{{ user.firstname }} {{ user.lastname }}</option>
+        }
+      </select>
+
+      <label>{{ 'carWorkspace.transactionForm.object' | translate }}</label>
+      <input type="text" formControlName="transactionObject" />
+
+      <label>{{ 'carWorkspace.transactionForm.type' | translate }}</label>
+      <select formControlName="costType">
+        <option value="variable">{{ 'carWorkspace.transactionForm.variable' | translate }}</option>
+        <option value="fixed">{{ 'carWorkspace.transactionForm.fixed' | translate }}</option>
+      </select>
+
+      <label>{{ 'carWorkspace.transactionForm.price' | translate }}</label>
+      <input type="number" formControlName="price" min="0" step="0.01" />
+
+      <label>{{ 'carWorkspace.transactionForm.amount' | translate }}</label>
+      <input type="number" formControlName="amount" min="1" />
+
+      <label>{{ 'carWorkspace.transactionForm.notes' | translate }}</label>
+      <textarea rows="3" formControlName="notes"></textarea>
+
+      <button type="submit">{{ 'carWorkspace.transactionForm.submit' | translate }}</button>
+    </form>
+  </div>
+
+  @if (loading()) {
+    <p>{{ 'carWorkspace.loading' | translate }}</p>
+  } @else {
+    <div class="car-workspace__grid">
+      <article class="car-workspace__card">
+        <h3>{{ 'carWorkspace.drives.title' | translate }}</h3>
+        @if (drives().length === 0) {
+          <p>{{ 'carWorkspace.drives.empty' | translate }}</p>
+        } @else {
+          <table>
+            <thead>
+              <tr>
+                <th>{{ 'carWorkspace.drives.headers.date' | translate }}</th>
+                <th>{{ 'carWorkspace.drives.headers.driver' | translate }}</th>
+                <th>{{ 'carWorkspace.drives.headers.currentMileage' | translate }}</th>
+                <th>{{ 'carWorkspace.drives.headers.distance' | translate }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (drive of drives(); track drive.driveId) {
+                <tr>
+                  <td>{{ drive.driveDate }}</td>
+                  <td>{{ userLabelById().get(drive.driverId) || drive.driverId }}</td>
+                  <td>{{ drive.currentMileage }}</td>
+                  <td>{{ drive.drivenDistance ?? '-' }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        }
+      </article>
+
+      <article class="car-workspace__card">
+        <h3>{{ 'carWorkspace.transactions.title' | translate }}</h3>
+        @if (costs().length === 0) {
+          <p>{{ 'carWorkspace.transactions.empty' | translate }}</p>
+        } @else {
+          <table>
+            <thead>
+              <tr>
+                <th>{{ 'carWorkspace.transactions.headers.date' | translate }}</th>
+                <th>{{ 'carWorkspace.transactions.headers.buyer' | translate }}</th>
+                <th>{{ 'carWorkspace.transactions.headers.object' | translate }}</th>
+                <th>{{ 'carWorkspace.transactions.headers.price' | translate }}</th>
+                <th>{{ 'carWorkspace.transactions.headers.amount' | translate }}</th>
+                <th>{{ 'carWorkspace.transactions.headers.type' | translate }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (cost of costs(); track cost.costId) {
+                <tr>
+                  <td>{{ cost.dayOfTransaction }}</td>
+                  <td>{{ userLabelById().get(cost.buyerId) || cost.buyerId }}</td>
+                  <td>{{ cost.transactionObject }}</td>
+                  <td>{{ cost.price | number: '1.2-2' }}</td>
+                  <td>{{ cost.amount }}</td>
+                  <td>{{ cost.costType }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        }
+      </article>
+    </div>
+  }
+</section>

@@ -11,8 +11,8 @@ import de.digidrivelog.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.http.HttpStatus;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
@@ -23,7 +23,7 @@ public class CarService {
     private final UserRepository userRepository;
 
     public List<CarDto> getAllCars() {
-        return carRepository.findAll().stream().map(CarMapper::toDto).collect(Collectors.toList());
+        return carRepository.findAll().stream().map(CarMapper::toDto).toList();
     }
 
     public CarDto createCar(CreateCarRequest request) {
@@ -57,7 +57,11 @@ public class CarService {
         if (!carRepository.existsById(carId)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Car not found");
         }
-        carRepository.deleteById(carId);
+        try {
+            carRepository.deleteById(carId);
+        } catch (DataIntegrityViolationException e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Car cannot be deleted because related drives or costs exist");
+        }
     }
 
     
