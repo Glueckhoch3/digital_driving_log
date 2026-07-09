@@ -27,12 +27,12 @@ interface ManagementTimelineEntry {
   standalone: true,
   imports: [TranslateModule],
   templateUrl: './admin-overview.component.html',
-  styleUrl: './admin-overview.component.scss'
+  styleUrl: './admin-overview.component.scss',
 })
 export class AdminOverviewComponent implements OnInit {
   private readonly timelineTypeOrder: Record<TimelineEntryType, number> = {
     transaction: 0,
-    drive: 1
+    drive: 1,
   };
 
   private readonly carService = inject(CarService);
@@ -47,7 +47,7 @@ export class AdminOverviewComponent implements OnInit {
   ngOnInit(): void {
     forkJoin({
       cars: this.carService.getCars(),
-      users: this.userService.getUsers()
+      users: this.userService.getUsers(),
     }).subscribe({
       next: ({ cars, users }) => {
         if (cars.length === 0) {
@@ -58,17 +58,17 @@ export class AdminOverviewComponent implements OnInit {
 
         const userNameById = this.createUserMap(users);
 
-        const requests = cars.map(car =>
+        const requests = cars.map((car) =>
           forkJoin({
             drives: this.driveService.getDrivesForCar(car.carId),
-            costs: this.costService.getCostsForCar(car.carId)
-          })
+            costs: this.costService.getCostsForCar(car.carId),
+          }),
         );
 
         forkJoin(requests).subscribe({
-          next: results => {
+          next: (results) => {
             const entries = results.flatMap((result, index) =>
-              this.buildEntriesForCar(cars[index], result.drives, result.costs, userNameById)
+              this.buildEntriesForCar(cars[index], result.drives, result.costs, userNameById),
             );
 
             entries.sort((left, right) => {
@@ -85,20 +85,20 @@ export class AdminOverviewComponent implements OnInit {
           error: () => {
             this.error.set('managementOverview.timelineLoadError');
             this.loading.set(false);
-          }
+          },
         });
       },
       error: () => {
         this.error.set('managementOverview.loadError');
         this.loading.set(false);
-      }
+      },
     });
   }
 
   private createUserMap(users: UserDto[]): Map<number, string> {
     const map = new Map<number, string>();
 
-    users.forEach(user => {
+    users.forEach((user) => {
       map.set(user.userId, `${user.firstname} ${user.lastname}`.trim());
     });
 
@@ -109,26 +109,26 @@ export class AdminOverviewComponent implements OnInit {
     car: CarDto,
     drives: DriveDto[],
     costs: CostDto[],
-    userNameById: Map<number, string>
+    userNameById: Map<number, string>,
   ): ManagementTimelineEntry[] {
-    const driveEntries: ManagementTimelineEntry[] = drives.map(drive => ({
+    const driveEntries: ManagementTimelineEntry[] = drives.map((drive) => ({
       type: 'drive',
       date: drive.driveDate,
       carName: car.name,
       plateNumber: car.plateNumber,
       participantName: userNameById.get(drive.driverId) ?? `Unknown user #${drive.driverId}`,
       details: `${drive.currentMileage} km (${drive.drivenDistance ?? '-'} km)`,
-      valueLabel: drive.notes ?? ''
+      valueLabel: drive.notes ?? '',
     }));
 
-    const transactionEntries: ManagementTimelineEntry[] = costs.map(cost => ({
+    const transactionEntries: ManagementTimelineEntry[] = costs.map((cost) => ({
       type: 'transaction',
       date: cost.dayOfTransaction,
       carName: car.name,
       plateNumber: car.plateNumber,
       participantName: userNameById.get(cost.buyerId) ?? `Unknown user #${cost.buyerId}`,
       details: `${cost.transactionObject} (${cost.costType})`,
-      valueLabel: `${Number(cost.price).toFixed(2)} € x ${cost.amount}`
+      valueLabel: `${Number(cost.price).toFixed(2)} € x ${cost.amount}`,
     }));
 
     return [...driveEntries, ...transactionEntries];

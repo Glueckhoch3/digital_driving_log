@@ -13,5 +13,5 @@ export const routes: Routes = [
   { path: 'manage/cars', component: CarManagementComponent },
   { path: 'manage/users', component: UserManagementComponent },
   { path: 'overview', component: AdminOverviewComponent },
-  { path: '**', redirectTo: '' }
+  { path: '**', redirectTo: '' },
 ];

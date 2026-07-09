@@ -5,7 +5,7 @@ applyTo: ".github/decisions/**"
 visibility: public
 ---
 
-**Maintainer:** Team  
+**Maintainer:** Team
 **Purpose:** Template, rules, and workflow for architectural decision records.
 
 ## When to write an ADR

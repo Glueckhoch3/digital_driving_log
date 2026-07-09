@@ -99,5 +99,3 @@ private CostType costType;
 - [ADR-008: Monetary values — BigDecimal precision/scale](.github/decisions/ADR-008-monetary-values-format.md)
 - [ADR-009: JSONB storage for JSON fields](.github/decisions/ADR-009-jsonb-storage-policy.md)
 - [ADR-010: Naming conventions for tables/columns](.github/decisions/ADR-010-naming-conventions.md)
-
-

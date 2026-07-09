@@ -7,7 +7,7 @@ visibility: public
 
 # Architectural Decisions Index
 
-**Last updated:** YYYY-MM-DD  
+**Last updated:** YYYY-MM-DD
 **Total decisions:** 0
 
 ## How to use this index

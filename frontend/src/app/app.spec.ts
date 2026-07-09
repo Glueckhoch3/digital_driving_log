@@ -16,11 +16,11 @@ describe('App', () => {
         provideTranslateService({
           loader: provideTranslateHttpLoader({
             prefix: '/i18n/',
-            suffix: '.json'
+            suffix: '.json',
           }),
-          fallbackLang: 'en'
-        })
-      ]
+          fallbackLang: 'en',
+        }),
+      ],
     }).compileComponents();
   });
 

@@ -48,7 +48,9 @@
         }
       </button>
       @if (editingCarId()) {
-        <button type="button" (click)="cancelEdit()">{{ 'carManagement.form.cancel' | translate }}</button>
+        <button type="button" (click)="cancelEdit()">
+          {{ 'carManagement.form.cancel' | translate }}
+        </button>
       }
     </div>
   </form>

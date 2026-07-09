@@ -28,11 +28,7 @@
     </nav>
 
     <div class="header__language-selector">
-      <select
-        [value]="currentLang()"
-        (change)="changeLang($event)"
-        class="header__language-select"
-      >
+      <select [value]="currentLang()" (change)="changeLang($event)" class="header__language-select">
         <option value="en">{{ 'header.language.en' | translate }}</option>
         <option value="de">{{ 'header.language.de' | translate }}</option>
       </select>

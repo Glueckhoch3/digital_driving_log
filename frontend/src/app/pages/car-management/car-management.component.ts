@@ -11,7 +11,7 @@ import { UserDto } from '../../models/users';
   standalone: true,
   imports: [ReactiveFormsModule, TranslateModule],
   templateUrl: './car-management.component.html',
-  styleUrl: './car-management.component.scss'
+  styleUrl: './car-management.component.scss',
 })
 export class CarManagementComponent implements OnInit {
   private readonly carService = inject(CarService);
@@ -27,7 +27,7 @@ export class CarManagementComponent implements OnInit {
 
   readonly ownerLabelById = computed(() => {
     const map = new Map<number, string>();
-    this.users().forEach(user => {
+    this.users().forEach((user) => {
       map.set(user.userId, `${user.firstname} ${user.lastname}`.trim());
     });
     return map;
@@ -37,7 +37,7 @@ export class CarManagementComponent implements OnInit {
     name: ['', [Validators.required, Validators.maxLength(50)]],
     plateNumber: ['', [Validators.required, Validators.maxLength(15)]],
     ownerId: [0, [Validators.required, Validators.min(1)]],
-    data: ['']
+    data: [''],
   });
 
   ngOnInit(): void {
@@ -49,7 +49,7 @@ export class CarManagementComponent implements OnInit {
     this.error.set('');
 
     this.userService.getUsers().subscribe({
-      next: users => {
+      next: (users) => {
         this.users.set(users);
 
         const ownerId = Number(this.carForm.value.ownerId ?? 0);
@@ -58,20 +58,20 @@ export class CarManagementComponent implements OnInit {
         }
 
         this.carService.getCars().subscribe({
-          next: cars => {
+          next: (cars) => {
             this.cars.set(cars);
             this.loading.set(false);
           },
           error: () => {
             this.error.set('carManagement.messages.loadFailed');
             this.loading.set(false);
-          }
+          },
         });
       },
       error: () => {
         this.error.set('carManagement.messages.loadFailed');
         this.loading.set(false);
-      }
+      },
     });
   }
 
@@ -91,7 +91,7 @@ export class CarManagementComponent implements OnInit {
       name: form.name ?? '',
       plateNumber: form.plateNumber ?? '',
       ownerId: Number(form.ownerId),
-      data: form.data || undefined
+      data: form.data || undefined,
     };
 
     const editingId = this.editingCarId();
@@ -105,7 +105,7 @@ export class CarManagementComponent implements OnInit {
         },
         error: () => {
           this.error.set('carManagement.messages.createFailed');
-        }
+        },
       });
       return;
     }
@@ -120,7 +120,7 @@ export class CarManagementComponent implements OnInit {
       },
       error: () => {
         this.error.set('carManagement.messages.updateFailed');
-      }
+      },
     });
   }
 
@@ -130,7 +130,7 @@ export class CarManagementComponent implements OnInit {
       name: car.name,
       plateNumber: car.plateNumber,
       ownerId: car.ownerId ?? 0,
-      data: car.data ?? ''
+      data: car.data ?? '',
     });
   }
 
@@ -145,13 +145,13 @@ export class CarManagementComponent implements OnInit {
         this.error.set('');
         this.loadData();
       },
-      error: err => {
+      error: (err) => {
         this.error.set(
           err?.status === 409
             ? 'carManagement.messages.deleteDependencyBlocked'
-            : 'carManagement.messages.deleteFailed'
+            : 'carManagement.messages.deleteFailed',
         );
-      }
+      },
     });
   }
 
@@ -161,7 +161,7 @@ export class CarManagementComponent implements OnInit {
       name: '',
       plateNumber: '',
       ownerId: this.users()[0]?.userId ?? 0,
-      data: ''
+      data: '',
     });
   }
 }

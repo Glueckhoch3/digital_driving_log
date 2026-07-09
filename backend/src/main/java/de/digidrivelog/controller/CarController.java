@@ -13,7 +13,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/ddl/api/vehicles")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*")
 public class CarController {
 
     private final CarService carService;

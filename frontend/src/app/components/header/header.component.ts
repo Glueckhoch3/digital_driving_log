@@ -8,7 +8,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
   standalone: true,
   imports: [CommonModule, RouterLink, RouterLinkActive, TranslateModule],
   templateUrl: './header.component.html',
-  styleUrl: './header.component.scss'
+  styleUrl: './header.component.scss',
 })
 export class HeaderComponent {
   isMenuOpen = signal(false);
@@ -21,7 +21,7 @@ export class HeaderComponent {
   }
 
   toggleMenu(): void {
-    this.isMenuOpen.update(value => !value);
+    this.isMenuOpen.update((value) => !value);
   }
 
   closeMenu(): void {
@@ -40,6 +40,6 @@ export class HeaderComponent {
     { labelKey: 'header.menu.entryOverview', route: '/overview' },
     { labelKey: 'header.menu.chooseCar', route: '/cars/select' },
     { labelKey: 'header.menu.manageUsers', route: '/manage/users' },
-    { labelKey: 'header.menu.manageCars', route: '/manage/cars' }
+    { labelKey: 'header.menu.manageCars', route: '/manage/cars' },
   ];
 }

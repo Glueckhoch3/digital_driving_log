@@ -30,4 +30,3 @@ visibility: public
 
 ## Maintainer Decisions
 - Use folder-scoped instruction files for implementation-specific rules. Record architecture decisions in `.github/decisions/`.
-

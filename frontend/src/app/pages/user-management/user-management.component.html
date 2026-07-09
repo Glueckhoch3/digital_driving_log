@@ -42,7 +42,9 @@
         }
       </button>
       @if (editingUserId()) {
-        <button type="button" (click)="cancelEdit()">{{ 'userManagement.form.cancel' | translate }}</button>
+        <button type="button" (click)="cancelEdit()">
+          {{ 'userManagement.form.cancel' | translate }}
+        </button>
       }
     </div>
   </form>
@@ -68,7 +70,9 @@
             <td>{{ user.firstname }}</td>
             <td>{{ user.lastname }}</td>
             <td>{{ user.birthday || '-' }}</td>
-            <td>{{ user.driverLicense ? ('common.yes' | translate) : ('common.no' | translate) }}</td>
+            <td>
+              {{ user.driverLicense ? ('common.yes' | translate) : ('common.no' | translate) }}
+            </td>
             <td>
               <div class="user-management__row-actions">
                 <button type="button" (click)="edit(user)">{{ 'common.edit' | translate }}</button>

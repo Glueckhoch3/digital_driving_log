@@ -13,7 +13,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/ddl/api")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*")
 public class DriveController {
 
     private final DriveService driveService;

@@ -69,9 +69,9 @@
 ### Epic 1: Drive Logging
 
 #### US-001: Enter Driving Distance
-**As a** driver of the shared vehicle  
-**I want to** enter the distance I drove  
-**So that** the total kilometers/miles are recorded for cost distribution  
+**As a** driver of the shared vehicle
+**I want to** enter the distance I drove
+**So that** the total kilometers/miles are recorded for cost distribution
 
 **Acceptance Criteria:**
 - [ ] User can access a form to enter driving distance
@@ -90,9 +90,9 @@
 ---
 
 #### US-002: Track Fuel Refills
-**As a** driver  
-**I want to** record when I refill the fuel tank  
-**So that** fuel consumption and costs are accurately tracked  
+**As a** driver
+**I want to** record when I refill the fuel tank
+**So that** fuel consumption and costs are accurately tracked
 
 **Acceptance Criteria:**
 - [ ] User can add fuel refill information to a drive
@@ -111,9 +111,9 @@
 ---
 
 #### US-003: View Driving History
-**As a** shareholder  
-**I want to** view all recorded drives in the system  
-**So that** I can verify accuracy and track overall vehicle usage  
+**As a** shareholder
+**I want to** view all recorded drives in the system
+**So that** I can verify accuracy and track overall vehicle usage
 
 **Acceptance Criteria:**
 - [ ] User can see a list of all drives
@@ -135,9 +135,9 @@
 ### Epic 2: Expense Management
 
 #### US-004: Record Fixed Costs
-**As a** vehicle owner/shareholder  
-**I want to** record fixed costs like insurance and registration  
-**So that** these costs can be distributed equally among all shareholders  
+**As a** vehicle owner/shareholder
+**I want to** record fixed costs like insurance and registration
+**So that** these costs can be distributed equally among all shareholders
 
 **Acceptance Criteria:**
 - [ ] User can enter fixed cost information
@@ -156,9 +156,9 @@
 ---
 
 #### US-005: Record Variable Costs
-**As a** driver  
-**I want to** record variable costs like maintenance and repairs  
-**So that** these costs are distributed proportionally to distance driven  
+**As a** driver
+**I want to** record variable costs like maintenance and repairs
+**So that** these costs are distributed proportionally to distance driven
 
 **Acceptance Criteria:**
 - [ ] User can enter variable cost information
@@ -178,9 +178,9 @@
 ---
 
 #### US-006: View Cost Distribution Overview
-**As a** shareholder  
-**I want to** see a clear overview of how much each participant owes/is owed  
-**So that** cost settlements can be made fairly and transparently  
+**As a** shareholder
+**I want to** see a clear overview of how much each participant owes/is owed
+**So that** cost settlements can be made fairly and transparently
 
 **Acceptance Criteria:**
 - [ ] Dashboard displays current cost distribution
@@ -202,9 +202,9 @@
 ### Epic 3: Shareholder Management
 
 #### US-007: Add New Shareholder
-**As a** vehicle owner  
-**I want to** add new participants to the shared vehicle  
-**So that** they can start recording their drives and participating in cost distribution  
+**As a** vehicle owner
+**I want to** add new participants to the shared vehicle
+**So that** they can start recording their drives and participating in cost distribution
 
 **Acceptance Criteria:**
 - [ ] Admin can access shareholder management section
@@ -224,9 +224,9 @@
 ---
 
 #### US-008: Remove Shareholder
-**As a** vehicle owner  
-**I want to** remove shareholders from the vehicle  
-**So that** they no longer participate in cost distribution  
+**As a** vehicle owner
+**I want to** remove shareholders from the vehicle
+**So that** they no longer participate in cost distribution
 
 **Acceptance Criteria:**
 - [ ] Admin can select and remove a shareholder
@@ -245,9 +245,9 @@
 ---
 
 #### US-009: Configure Temporary Participants
-**As a** vehicle owner  
-**I want to** configure temporary participants who only pay variable costs  
-**So that** short-term participants don't bear fixed costs  
+**As a** vehicle owner
+**I want to** configure temporary participants who only pay variable costs
+**So that** short-term participants don't bear fixed costs
 
 **Acceptance Criteria:**
 - [ ] Temporary participants can be marked when added
@@ -268,9 +268,9 @@
 ### Epic 4: Settlement and Reporting
 
 #### US-010: Annual Settlement
-**As a** a vehicle owner  
-**I want to** the system automatically closes the current settlement period at year end  
-**So that** a new settlement period begins for the next year  
+**As a** a vehicle owner
+**I want to** the system automatically closes the current settlement period at year end
+**So that** a new settlement period begins for the next year
 
 **Acceptance Criteria:**
 - [ ] System automatically triggers settlement on December 31st
@@ -290,9 +290,9 @@
 ---
 
 #### US-011: View Settlement History
-**As a** shareholder  
-**I want to** view past settlement periods and their final results  
-**So that** I can verify historical costs and payments  
+**As a** shareholder
+**I want to** view past settlement periods and their final results
+**So that** I can verify historical costs and payments
 
 **Acceptance Criteria:**
 - [ ] User can view all past settlement periods
@@ -311,9 +311,9 @@
 ---
 
 #### US-012: Generate Cost Reports
-**As a** a shareholder  
-**I want to** generate detailed reports about costs  
-**So that** I can understand how my costs are calculated  
+**As a** a shareholder
+**I want to** generate detailed reports about costs
+**So that** I can understand how my costs are calculated
 
 **Acceptance Criteria:**
 - [ ] User can generate reports for a date range
@@ -334,9 +334,9 @@
 ### Epic 5: Data Synchronization
 
 #### US-013: Sync with Server on Network Connection
-**As a** a driver with the app offline  
-**I want to** automatically sync my data when reconnecting to the network  
-**So that** my recorded drives and expenses are saved to the server  
+**As a** a driver with the app offline
+**I want to** automatically sync my data when reconnecting to the network
+**So that** my recorded drives and expenses are saved to the server
 
 **Acceptance Criteria:**
 - [ ] App detects network availability
@@ -356,9 +356,9 @@
 ---
 
 #### US-014: Conflict Resolution for Duplicate Entries
-**As a** the system  
-**I want to** handle conflicts when the same data is modified offline and online  
-**So that** data integrity is maintained  
+**As a** the system
+**I want to** handle conflicts when the same data is modified offline and online
+**So that** data integrity is maintained
 
 **Acceptance Criteria:**
 - [ ] System detects conflicting changes
@@ -608,6 +608,6 @@ For questions or issues, please refer to the main [README.md](../README.md) and 
 
 ---
 
-**Last Updated**: February 2026  
-**Project Version**: 0.0.1-SNAPSHOT  
+**Last Updated**: February 2026
+**Project Version**: 0.0.1-SNAPSHOT
 **License**: See LICENSE file
