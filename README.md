@@ -111,7 +111,8 @@ digital_driving_log/
 ├── README.md                      # This file
 ├── LICENSE                        # Project license
 └── .github/                       # GitHub configuration
-    └── copilot-instructions.md    # Copilot guidelines
+    ├── instructions/              # Agent / contributor instructions
+    └── decisions/                 # Architecture decision records (ADRs)
 ```
 
 ---
@@ -122,7 +123,7 @@ digital_driving_log/
 | Technology | Version | Purpose |
 |-----------|---------|---------|
 | Java | 21+ | Programming language |
-| Spring Boot | 4.0.1 | Web framework & API |
+| Spring Boot | 4.0.7 | Web framework & API |
 | Spring Data JPA | Latest | Data access & ORM |
 | PostgreSQL | 12+ | Relational database |
 | Maven | 3.8+ | Build & dependency management |
