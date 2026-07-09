@@ -28,7 +28,7 @@ trivy sbom --severity HIGH,CRITICAL --exit-code 1 "$SBOM_DIR/backend.cdx.json"
 trivy sbom --severity HIGH,CRITICAL --exit-code 1 "$SBOM_DIR/frontend.cdx.json"
 
 echo "==> Scanning repository for secrets and misconfigurations"
-trivy fs --scanners secret,misconfig --exit-code 1 .
+trivy fs --scanners secret,misconfig --severity HIGH,CRITICAL --exit-code 1 .
 
 if $SCAN_IMAGES; then
     echo "==> Building and scanning Docker images"

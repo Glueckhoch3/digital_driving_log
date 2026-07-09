@@ -13,7 +13,6 @@ import de.digidrivelog.services.CostService;
 @RestController
 @RequestMapping("/ddl/api")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*")
 public class CostController {
     private final CostService costService;
 

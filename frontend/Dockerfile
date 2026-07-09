@@ -2,11 +2,14 @@ FROM node:20-alpine AS build
 
 WORKDIR /app
 COPY package*.json ./
-RUN npm install
+RUN npm ci
 COPY . .
 RUN npm run build
 
-FROM nginx:1.27-alpine
+# Unprivileged nginx runs as non-root and listens on 8080 instead of 80
+FROM nginxinc/nginx-unprivileged:1.27-alpine
 
 COPY --from=build /app/dist/frontend/browser /usr/share/nginx/html
-EXPOSE 80
+EXPOSE 8080
+
+USER nginx
