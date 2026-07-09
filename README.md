@@ -308,6 +308,18 @@ cd frontend
 npm test -- --watch=false --coverage
 ```
 
+### Security Scan (SBOM + vulnerabilities)
+```bash
+# Generates CycloneDX SBOMs into sbom/ (gitignored) and scans dependencies,
+# secrets and Dockerfile misconfigurations. Fails on HIGH/CRITICAL findings.
+scripts/security-scan.sh
+
+# Additionally build and scan both Docker images
+scripts/security-scan.sh --images
+```
+Requires [trivy](https://trivy.dev) and [cdxgen](https://github.com/CycloneDX/cdxgen);
+policy details in [ADR-011](.github/decisions/ADR-011-sbom-and-vuln-scanning.md).
+
 ### Pre-commit Hooks
 The repo uses the [pre-commit framework](https://pre-commit.com) for fast checks
 (whitespace, YAML, secrets via gitleaks, prettier) on commit and the full test

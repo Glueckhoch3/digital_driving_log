@@ -10,3 +10,4 @@
 | ADR-008 | Monetary values: BigDecimal with precision/scale | backend | accepted | 2026-04-06 | |
 | ADR-009 | JSON fields: use JsonNode + jsonb column | backend | deprecated | 2026-04-06 | |
 | ADR-010 | Naming conventions: English and explicit column names | backend | accepted | 2026-04-06 | |
+| ADR-011 | SBOM generation and vulnerability scanning: cdxgen + trivy | security | proposed | 2026-07-09 | |
