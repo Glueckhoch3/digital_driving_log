@@ -7,6 +7,7 @@ import de.digidrivelog.dto.cost.CreateCostRequest;
 import de.digidrivelog.dto.cost.UpdateCostRequest;
 import de.digidrivelog.dto.user.CreateUserRequest;
 import de.digidrivelog.dto.user.UserDto;
+import de.digidrivelog.models.CostType;
 import de.digidrivelog.repositories.CarRepository;
 import de.digidrivelog.repositories.CostRepository;
 import de.digidrivelog.repositories.DriveRepository;
@@ -15,6 +16,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.server.ResponseStatusException;
@@ -78,36 +80,19 @@ class CostServiceIntegrationTest {
                 new BigDecimal("54.90"),
                 40,
                 LocalDate.of(2025, 4, 2),
-                "variable",
+                CostType.VARIABLE,
                 "full tank"
         ));
 
         assertThat(created.getCostId()).isNotNull();
         assertThat(created.getCarId()).isEqualTo(car.getCarId());
         assertThat(created.getBuyerId()).isEqualTo(buyer.getUserId());
-        assertThat(created.getTransactionObject()).isEqualTo("Fuel");
+        assertThat(created.getDescription()).isEqualTo("Fuel");
         assertThat(created.getPrice()).isEqualByComparingTo("54.90");
-        assertThat(created.getAmount()).isEqualTo(40);
+        assertThat(created.getQuantity()).isEqualTo(40);
         assertThat(created.getDayOfTransaction()).isEqualTo(LocalDate.of(2025, 4, 2));
-        assertThat(created.getCostType()).isEqualTo("VARIABLE");
+        assertThat(created.getCostType()).isEqualTo(CostType.VARIABLE);
         assertThat(created.getNotes()).isEqualTo("full tank");
-    }
-
-    @Test
-    void createCostWithInvalidCostType_shouldThrowBadRequest() {
-        assertThatThrownBy(() -> costService.createCost(new CreateCostRequest(
-                car.getCarId(),
-                buyer.getUserId(),
-                "Fuel",
-                new BigDecimal("10.00"),
-                1,
-                LocalDate.of(2025, 4, 2),
-                "sometimes",
-                null
-        )))
-                .isInstanceOf(ResponseStatusException.class)
-                .satisfies(error -> assertThat(((ResponseStatusException) error).getStatusCode())
-                        .isEqualTo(HttpStatus.BAD_REQUEST));
     }
 
     @Test
@@ -133,7 +118,7 @@ class CostServiceIntegrationTest {
         CostDto fetched = costService.getCostById(created.getCostId());
 
         assertThat(fetched.getCostId()).isEqualTo(created.getCostId());
-        assertThat(fetched.getTransactionObject()).isEqualTo("Tires");
+        assertThat(fetched.getDescription()).isEqualTo("Tires");
     }
 
     @Test
@@ -162,18 +147,18 @@ class CostServiceIntegrationTest {
                 new BigDecimal("300.00"),
                 1,
                 LocalDate.of(2025, 7, 1),
-                "fixed",
+                CostType.FIXED,
                 "yearly"
         ));
 
         assertThat(updated.getCostId()).isEqualTo(created.getCostId());
         assertThat(updated.getCarId()).isEqualTo(otherCar.getCarId());
         assertThat(updated.getBuyerId()).isEqualTo(otherBuyer.getUserId());
-        assertThat(updated.getTransactionObject()).isEqualTo("Insurance");
+        assertThat(updated.getDescription()).isEqualTo("Insurance");
         assertThat(updated.getPrice()).isEqualByComparingTo("300.00");
-        assertThat(updated.getAmount()).isEqualTo(1);
+        assertThat(updated.getQuantity()).isEqualTo(1);
         assertThat(updated.getDayOfTransaction()).isEqualTo(LocalDate.of(2025, 7, 1));
-        assertThat(updated.getCostType()).isEqualTo("FIXED");
+        assertThat(updated.getCostType()).isEqualTo(CostType.FIXED);
         assertThat(updated.getNotes()).isEqualTo("yearly");
     }
 
@@ -186,7 +171,7 @@ class CostServiceIntegrationTest {
                 new BigDecimal("10.00"),
                 1,
                 LocalDate.of(2025, 4, 2),
-                "variable",
+                CostType.VARIABLE,
                 null
         )))
                 .isInstanceOf(ResponseStatusException.class)
@@ -225,10 +210,11 @@ class CostServiceIntegrationTest {
         costService.createCost(costRequestFor(car.getCarId(), otherBuyer.getUserId()));
         costService.createCost(costRequestFor(otherCar.getCarId(), buyer.getUserId()));
 
-        assertThat(costService.getAllCosts()).hasSize(3);
-        assertThat(costService.getAllCostsByVehicle(car.getCarId())).hasSize(2);
-        assertThat(costService.getAllCostsByUser(buyer.getUserId())).hasSize(2);
-        assertThat(costService.getAllCostsByVehicle(999_999L)).isEmpty();
+        var page = PageRequest.of(0, 50);
+        assertThat(costService.getAllCosts(page)).hasSize(3);
+        assertThat(costService.getAllCostsByVehicle(car.getCarId(), page)).hasSize(2);
+        assertThat(costService.getAllCostsByUser(buyer.getUserId(), page)).hasSize(2);
+        assertThat(costService.getAllCostsByVehicle(999_999L, page)).isEmpty();
     }
 
     private CreateCostRequest costRequestFor(Long carId, Long buyerId) {
@@ -239,7 +225,7 @@ class CostServiceIntegrationTest {
                 new BigDecimal("120.00"),
                 4,
                 LocalDate.of(2025, 5, 20),
-                "VARIABLE",
+                CostType.VARIABLE,
                 null
         );
     }

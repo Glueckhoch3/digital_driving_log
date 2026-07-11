@@ -10,9 +10,11 @@ import de.digidrivelog.repositories.CarRepository;
 import de.digidrivelog.repositories.CostRepository;
 import de.digidrivelog.repositories.UserRepository;
 import de.digidrivelog.mappers.CostMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -24,10 +26,12 @@ public class CostService {
     private final CarRepository carRepository;
     private final UserRepository userRepository;
 
-    public List<CostDto> getAllCosts() {
-        return costRepository.findAll().stream().map(CostMapper::toDto).toList();
+    @Transactional(readOnly = true)
+    public Page<CostDto> getAllCosts(Pageable pageable) {
+        return costRepository.findAll(pageable).map(CostMapper::toDto);
     }
 
+    @Transactional
     public CostDto createCost(CreateCostRequest request) {
         Car car = carRepository.findById(request.getCarId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Car not found"));
         User buyer = userRepository.findById(request.getBuyerId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Buyer user not found"));
@@ -36,11 +40,13 @@ public class CostService {
         return CostMapper.toDto(saved);
     }
 
+    @Transactional(readOnly = true)
     public CostDto getCostById(Long costId) {
         Cost c = costRepository.findById(costId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cost not found"));
         return CostMapper.toDto(c);
     }
 
+    @Transactional
     public CostDto updateCost(Long costId, UpdateCostRequest request) {
         Cost existing = costRepository.findById(costId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cost not found"));
         Car car = carRepository.findById(request.getCarId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Car not found"));
@@ -50,6 +56,7 @@ public class CostService {
         return CostMapper.toDto(saved);
     }
 
+    @Transactional
     public void deleteCost(Long costId) {
         if (!costRepository.existsById(costId)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cost not found");
@@ -57,12 +64,14 @@ public class CostService {
         costRepository.deleteById(costId);
     }
 
-    public List<CostDto> getAllCostsByVehicle(Long carId) {
-        return costRepository.findByCarIdCarId(carId).stream().map(CostMapper::toDto).toList();
+    @Transactional(readOnly = true)
+    public Page<CostDto> getAllCostsByVehicle(Long carId, Pageable pageable) {
+        return costRepository.findByCarCarId(carId, pageable).map(CostMapper::toDto);
     }
 
-    public List<CostDto> getAllCostsByUser(Long userId) {
-        return costRepository.findByBuyerIdUserId(userId).stream().map(CostMapper::toDto).toList();
+    @Transactional(readOnly = true)
+    public Page<CostDto> getAllCostsByUser(Long userId, Pageable pageable) {
+        return costRepository.findByBuyerUserId(userId, pageable).map(CostMapper::toDto);
     }
 
 }

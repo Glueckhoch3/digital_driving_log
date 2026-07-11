@@ -1,5 +1,6 @@
 package de.digidrivelog.dto.cost;
 
+import de.digidrivelog.models.CostType;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
@@ -13,10 +14,10 @@ public class CostDto {
     private Long costId;
     private Long carId;
     private Long buyerId;
-    private String transactionObject;
+    private String description;
     private BigDecimal price;
     private LocalDate dayOfTransaction;
-    private String costType;
-    private Integer amount;
+    private CostType costType;
+    private Integer quantity;
     private String notes;
 }

@@ -24,6 +24,11 @@
     }
   },
   "common": {
+    "pagination": {
+      "previous": "Zurück",
+      "next": "Weiter",
+      "pageOf": "Seite {{current}} von {{total}}"
+    },
     "yes": "Ja",
     "no": "Nein",
     "edit": "Bearbeiten",
@@ -134,15 +139,19 @@
       "transactionSaved": "Transaktion gespeichert.",
       "transactionSaveFailed": "Transaktion konnte nicht gespeichert werden."
     },
+    "costTypes": {
+      "VARIABLE": "Variabel",
+      "FIXED": "Fix"
+    },
     "driveForm": {
       "title": "Fahrt erfassen",
       "driveDate": "Fahrtdatum",
-      "currentMileage": "Aktueller Kilometerstand",
+      "odometer": "Kilometerstand",
       "driver": "Fahrer",
       "notes": "Notizen",
       "includeFuel": "Tank-Transaktion hinzufügen",
       "fuelPrice": "Tank-Gesamtpreis",
-      "fuelAmount": "Tank-Menge",
+      "fuelQuantity": "Tank-Menge",
       "fuelDate": "Tank-Transaktionsdatum",
       "fuelBuyer": "Käufer",
       "fuelNotes": "Tank-Notizen",
@@ -152,12 +161,10 @@
       "title": "Transaktion erfassen",
       "date": "Transaktionsdatum",
       "buyer": "Käufer",
-      "object": "Transaktionsobjekt",
+      "description": "Beschreibung",
       "type": "Kostenart",
-      "variable": "Variabel",
-      "fixed": "Fix",
       "price": "Preis",
-      "amount": "Menge",
+      "quantity": "Menge",
       "notes": "Notizen",
       "submit": "Transaktion speichern"
     },
@@ -167,7 +174,7 @@
       "headers": {
         "date": "Datum",
         "driver": "Fahrer",
-        "currentMileage": "Kilometerstand",
+        "odometer": "Kilometerstand",
         "distance": "Gefahrene Distanz"
       }
     },
@@ -177,9 +184,9 @@
       "headers": {
         "date": "Datum",
         "buyer": "Käufer",
-        "object": "Objekt",
+        "description": "Beschreibung",
         "price": "Preis",
-        "amount": "Menge",
+        "quantity": "Menge",
         "type": "Typ"
       }
     }

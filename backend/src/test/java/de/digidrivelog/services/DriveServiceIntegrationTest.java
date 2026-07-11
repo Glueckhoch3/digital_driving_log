@@ -15,6 +15,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.server.ResponseStatusException;
@@ -81,7 +82,7 @@ class DriveServiceIntegrationTest {
         assertThat(created.getDriveId()).isNotNull();
         assertThat(created.getCarId()).isEqualTo(car.getCarId());
         assertThat(created.getDriverId()).isEqualTo(driver.getUserId());
-        assertThat(created.getDistance()).isEqualTo(42);
+        assertThat(created.getOdometer()).isEqualTo(42);
         assertThat(created.getDriveDate()).isEqualTo(LocalDate.of(2025, 3, 14));
         assertThat(created.getNotes()).isEqualTo("commute");
     }
@@ -121,7 +122,7 @@ class DriveServiceIntegrationTest {
         DriveDto fetched = driveService.getDriveById(created.getDriveId());
 
         assertThat(fetched.getDriveId()).isEqualTo(created.getDriveId());
-        assertThat(fetched.getDistance()).isEqualTo(15);
+        assertThat(fetched.getOdometer()).isEqualTo(15);
         assertThat(fetched.getNotes()).isEqualTo("short trip");
     }
 
@@ -155,7 +156,7 @@ class DriveServiceIntegrationTest {
         assertThat(updated.getDriveId()).isEqualTo(created.getDriveId());
         assertThat(updated.getCarId()).isEqualTo(otherCar.getCarId());
         assertThat(updated.getDriverId()).isEqualTo(otherDriver.getUserId());
-        assertThat(updated.getDistance()).isEqualTo(77);
+        assertThat(updated.getOdometer()).isEqualTo(77);
         assertThat(updated.getDriveDate()).isEqualTo(LocalDate.of(2025, 6, 1));
         assertThat(updated.getNotes()).isEqualTo("after");
     }
@@ -208,15 +209,16 @@ class DriveServiceIntegrationTest {
         driveService.createDrive(new CreateDriveRequest(
                 otherCar.getCarId(), 30, driver.getUserId(), LocalDate.of(2025, 1, 3), null));
 
-        assertThat(driveService.getAllDrivesByVehicle(car.getCarId())).hasSize(2);
-        assertThat(driveService.getAllDrivesByUser(driver.getUserId())).hasSize(2);
-        assertThat(driveService.getAllDrivesByVehicleAndUser(car.getCarId(), driver.getUserId()))
+        var page = PageRequest.of(0, 50);
+        assertThat(driveService.getAllDrivesByVehicle(car.getCarId(), page)).hasSize(2);
+        assertThat(driveService.getAllDrivesByUser(driver.getUserId(), page)).hasSize(2);
+        assertThat(driveService.getAllDrivesByVehicleAndUser(car.getCarId(), driver.getUserId(), page))
                 .hasSize(1)
                 .allSatisfy(d -> {
                     assertThat(d.getCarId()).isEqualTo(car.getCarId());
                     assertThat(d.getDriverId()).isEqualTo(driver.getUserId());
                 });
-        assertThat(driveService.getAllDrivesByVehicle(999_999L)).isEmpty();
+        assertThat(driveService.getAllDrivesByVehicle(999_999L, page)).isEmpty();
     }
 
     private DriveDto createDrive(int distance, String notes) {

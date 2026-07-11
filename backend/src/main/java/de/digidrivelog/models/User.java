@@ -1,7 +1,6 @@
 package de.digidrivelog.models;
 
 import jakarta.persistence.*;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.NoArgsConstructor;
@@ -10,10 +9,14 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+/**
+ * Slow-growing table with rare changes. Optimised for read clarity and data
+ * integrity; the inverse relation collections were removed on purpose — nothing
+ * reads them and, with {@code open-in-view=false}, lazy access would fail.
+ */
 @Entity
 @Table(name = "app_user")
 @Getter
@@ -26,40 +29,28 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "userId", nullable = false)
+    @Column(name = "user_id", nullable = false)
     @EqualsAndHashCode.Include
     @ToString.Include
     private Long userId;
 
-    @Column(name = "firstname", nullable = false, length = 63)
+    @Column(name = "first_name", nullable = false, length = 63)
     private String firstname;
 
-    @Column(name = "lastname", nullable = false, length = 63)
+    @Column(name = "last_name", nullable = false, length = 63)
     private String lastname;
 
-    @Column(name = "driverLicense", nullable = false)
+    @Column(name = "driver_license", nullable = false)
     private Boolean driverLicense;
 
     @Column(name = "birthday", nullable = true)
     private LocalDate birthday;
 
-    @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY)
-    @JsonIgnore
-    private List<Car> ownedCars;
-
-    @OneToMany(mappedBy = "driver", fetch = FetchType.LAZY)
-    @JsonIgnore
-    private List<Drive> drives;
-
-    @OneToMany(mappedBy = "buyerId", fetch = FetchType.LAZY)
-    @JsonIgnore
-    private List<Cost> transactions;
-
     @CreationTimestamp
-    @Column(name = "createdAt", nullable = false, updatable = false)
+    @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
-    @Column(name = "updatedAt", nullable = false)
+    @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 }

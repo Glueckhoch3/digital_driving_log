@@ -13,6 +13,16 @@ import { UserDto } from '../../models/users';
 import { DriveDto, CreateDriveRequest } from '../../models/drives';
 import { CostDto, CreateCostRequest, CostType } from '../../models/costs';
 
+/** Number of rows shown per page in the drives / transactions tables. */
+const PAGE_SIZE = 10;
+
+/** A drive row enriched with the distance derived from consecutive odometer readings. */
+interface DriveRow {
+  drive: DriveDto;
+  /** Distance since the previous (older) drive on this page, or null when unknown. */
+  distance: number | null;
+}
+
 @Component({
   selector: 'app-car-workspace',
   standalone: true,
@@ -36,14 +46,20 @@ export class CarWorkspaceComponent implements OnInit {
   readonly message = signal('');
   readonly error = signal('');
 
+  // Zero-based page indices and total page counts, tracked per table.
+  readonly drivesPage = signal(0);
+  readonly drivesTotalPages = signal(0);
+  readonly costsPage = signal(0);
+  readonly costsTotalPages = signal(0);
+
   readonly driveForm = this.fb.group({
     driveDate: [new Date().toISOString().slice(0, 10), Validators.required],
-    currentMileage: [0, [Validators.required, Validators.min(0)]],
+    odometer: [0, [Validators.required, Validators.min(0)]],
     driverId: [0, [Validators.required, Validators.min(1)]],
     notes: [''],
     includeFuel: [false],
     fuelPrice: [0],
-    fuelAmount: [0],
+    fuelQuantity: [0],
     fuelDate: [new Date().toISOString().slice(0, 10)],
     fuelBuyerId: [0],
     fuelNotes: [''],
@@ -51,11 +67,11 @@ export class CarWorkspaceComponent implements OnInit {
 
   readonly transactionForm = this.fb.group({
     buyerId: [0, [Validators.required, Validators.min(1)]],
-    transactionObject: ['', [Validators.required, Validators.minLength(2)]],
+    description: ['', [Validators.required, Validators.minLength(2)]],
     price: [0, [Validators.required, Validators.min(0)]],
-    amount: [1, [Validators.required, Validators.min(1)]],
+    quantity: [1, [Validators.required, Validators.min(1)]],
     dayOfTransaction: [new Date().toISOString().slice(0, 10), Validators.required],
-    costType: ['variable', Validators.required],
+    costType: ['VARIABLE' as CostType, Validators.required],
     notes: [''],
   });
 
@@ -65,6 +81,20 @@ export class CarWorkspaceComponent implements OnInit {
       map.set(user.userId, `${user.firstname} ${user.lastname}`.trim());
     });
     return map;
+  });
+
+  /**
+   * Enriches each drive with a driven distance. Drives arrive sorted by date
+   * descending, so a row's distance is its odometer minus the next (older) row's.
+   * The oldest row on the page has no in-page predecessor, so its distance is null.
+   */
+  readonly driveRows = computed<DriveRow[]>(() => {
+    const drives = this.drives();
+    return drives.map((drive, index) => {
+      const previous = drives[index + 1];
+      const distance = previous ? drive.odometer - previous.odometer : null;
+      return { drive, distance };
+    });
   });
 
   ngOnInit(): void {
@@ -111,26 +141,62 @@ export class CarWorkspaceComponent implements OnInit {
   reloadEntries(carId: number): void {
     this.loading.set(true);
 
-    this.driveService.getDrivesForCar(carId).subscribe({
-      next: (drives) => {
-        this.drives.set(drives);
+    this.driveService
+      .getDrivesForCar(carId, { page: this.drivesPage(), size: PAGE_SIZE, sort: 'driveDate,desc' })
+      .subscribe({
+        next: (drivePage) => {
+          this.drives.set(drivePage.content);
+          this.drivesTotalPages.set(drivePage.totalPages);
 
-        this.costService.getCostsForCar(carId).subscribe({
-          next: (costs) => {
-            this.costs.set(costs);
-            this.loading.set(false);
-          },
-          error: () => {
-            this.error.set('carWorkspace.loadError');
-            this.loading.set(false);
-          },
-        });
-      },
-      error: () => {
-        this.error.set('carWorkspace.loadError');
-        this.loading.set(false);
-      },
-    });
+          this.costService
+            .getCostsForCar(carId, {
+              page: this.costsPage(),
+              size: PAGE_SIZE,
+              sort: 'dayOfTransaction,desc',
+            })
+            .subscribe({
+              next: (costPage) => {
+                this.costs.set(costPage.content);
+                this.costsTotalPages.set(costPage.totalPages);
+                this.loading.set(false);
+              },
+              error: () => {
+                this.error.set('carWorkspace.loadError');
+                this.loading.set(false);
+              },
+            });
+        },
+        error: () => {
+          this.error.set('carWorkspace.loadError');
+          this.loading.set(false);
+        },
+      });
+  }
+
+  changeDrivesPage(delta: number): void {
+    const carId = this.car()?.carId;
+    if (!carId) {
+      return;
+    }
+    const next = this.drivesPage() + delta;
+    if (next < 0 || next >= this.drivesTotalPages()) {
+      return;
+    }
+    this.drivesPage.set(next);
+    this.reloadEntries(carId);
+  }
+
+  changeCostsPage(delta: number): void {
+    const carId = this.car()?.carId;
+    if (!carId) {
+      return;
+    }
+    const next = this.costsPage() + delta;
+    if (next < 0 || next >= this.costsTotalPages()) {
+      return;
+    }
+    this.costsPage.set(next);
+    this.reloadEntries(carId);
   }
 
   saveDrive(): void {
@@ -143,7 +209,7 @@ export class CarWorkspaceComponent implements OnInit {
     const value = this.driveForm.getRawValue();
     const request: CreateDriveRequest = {
       carId,
-      currentMileage: Number(value.currentMileage),
+      odometer: Number(value.odometer),
       driverId: Number(value.driverId),
       driveDate: value.driveDate ?? new Date().toISOString().slice(0, 10),
       notes: value.notes ?? undefined,
@@ -155,11 +221,11 @@ export class CarWorkspaceComponent implements OnInit {
           const fuelRequest: CreateCostRequest = {
             carId,
             buyerId: Number(value.fuelBuyerId),
-            transactionObject: 'Fuel',
+            description: 'Fuel',
             price: Number(value.fuelPrice),
-            amount: Number(value.fuelAmount),
+            quantity: Number(value.fuelQuantity),
             dayOfTransaction: value.fuelDate ?? new Date().toISOString().slice(0, 10),
-            costType: 'variable',
+            costType: 'VARIABLE',
             notes: value.fuelNotes ?? undefined,
           };
 
@@ -167,6 +233,7 @@ export class CarWorkspaceComponent implements OnInit {
             next: () => {
               this.message.set('carWorkspace.messages.driveAndFuelSaved');
               this.resetDriveForm();
+              this.resetToFirstPage();
               this.reloadEntries(carId);
             },
             error: () => {
@@ -178,6 +245,7 @@ export class CarWorkspaceComponent implements OnInit {
 
         this.message.set('carWorkspace.messages.driveSaved');
         this.resetDriveForm();
+        this.resetToFirstPage();
         this.reloadEntries(carId);
       },
       error: () => {
@@ -197,11 +265,11 @@ export class CarWorkspaceComponent implements OnInit {
     const request: CreateCostRequest = {
       carId,
       buyerId: Number(value.buyerId),
-      transactionObject: value.transactionObject ?? '',
+      description: value.description ?? '',
       price: Number(value.price),
-      amount: Number(value.amount),
+      quantity: Number(value.quantity),
       dayOfTransaction: value.dayOfTransaction ?? new Date().toISOString().slice(0, 10),
-      costType: (value.costType ?? 'variable') as CostType,
+      costType: (value.costType ?? 'VARIABLE') as CostType,
       notes: value.notes ?? undefined,
     };
 
@@ -210,13 +278,14 @@ export class CarWorkspaceComponent implements OnInit {
         this.message.set('carWorkspace.messages.transactionSaved');
         this.transactionForm.reset({
           buyerId: this.users()[0]?.userId ?? 0,
-          transactionObject: '',
+          description: '',
           price: 0,
-          amount: 1,
+          quantity: 1,
           dayOfTransaction: new Date().toISOString().slice(0, 10),
-          costType: 'variable',
+          costType: 'VARIABLE',
           notes: '',
         });
+        this.resetToFirstPage();
         this.reloadEntries(carId);
       },
       error: () => {
@@ -225,15 +294,20 @@ export class CarWorkspaceComponent implements OnInit {
     });
   }
 
+  private resetToFirstPage(): void {
+    this.drivesPage.set(0);
+    this.costsPage.set(0);
+  }
+
   private resetDriveForm(): void {
     this.driveForm.reset({
       driveDate: new Date().toISOString().slice(0, 10),
-      currentMileage: 0,
+      odometer: 0,
       driverId: this.users()[0]?.userId ?? 0,
       notes: '',
       includeFuel: false,
       fuelPrice: 0,
-      fuelAmount: 0,
+      fuelQuantity: 0,
       fuelDate: new Date().toISOString().slice(0, 10),
       fuelBuyerId: this.users()[0]?.userId ?? 0,
       fuelNotes: '',

@@ -4,6 +4,7 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { environment } from '../../environments/environment';
 import { CostService } from './cost.service';
 import { CostDto, CreateCostRequest } from '../models/costs';
+import { Page } from '../models/page';
 
 describe('CostService', () => {
   let service: CostService;
@@ -14,12 +15,20 @@ describe('CostService', () => {
     costId: 1,
     carId: 2,
     buyerId: 3,
-    transactionObject: 'Fuel',
+    description: 'Fuel',
     price: 54.9,
-    amount: 40,
+    quantity: 40,
     dayOfTransaction: '2025-04-02',
     costType: 'VARIABLE',
     notes: null,
+  };
+
+  const costPage: Page<CostDto> = {
+    content: [cost],
+    totalElements: 1,
+    totalPages: 1,
+    number: 0,
+    size: 50,
   };
 
   beforeEach(() => {
@@ -32,15 +41,15 @@ describe('CostService', () => {
 
   afterEach(() => httpMock.verify());
 
-  it('getAllCosts issues GET /costs', () => {
-    let result: CostDto[] | undefined;
-    service.getAllCosts().subscribe((costs) => (result = costs));
+  it('getAllCosts issues GET /costs and returns a page', () => {
+    let result: Page<CostDto> | undefined;
+    service.getAllCosts().subscribe((page) => (result = page));
 
     const req = httpMock.expectOne(`${apiUrl}/costs`);
     expect(req.request.method).toBe('GET');
-    req.flush([cost]);
+    req.flush(costPage);
 
-    expect(result).toEqual([cost]);
+    expect(result).toEqual(costPage);
   });
 
   it('getCostsForCar issues GET /vehicles/:carId/costs', () => {
@@ -48,18 +57,28 @@ describe('CostService', () => {
 
     const req = httpMock.expectOne(`${apiUrl}/vehicles/2/costs`);
     expect(req.request.method).toBe('GET');
-    req.flush([cost]);
+    req.flush(costPage);
+  });
+
+  it('getCostsForCar forwards page/size/sort query params', () => {
+    service.getCostsForCar(2, { page: 2, size: 5, sort: 'dayOfTransaction,desc' }).subscribe();
+
+    const req = httpMock.expectOne((r) => r.url === `${apiUrl}/vehicles/2/costs`);
+    expect(req.request.params.get('page')).toBe('2');
+    expect(req.request.params.get('size')).toBe('5');
+    expect(req.request.params.get('sort')).toBe('dayOfTransaction,desc');
+    req.flush(costPage);
   });
 
   it('createCost issues POST /costs with body', () => {
     const request: CreateCostRequest = {
       carId: 2,
       buyerId: 3,
-      transactionObject: 'Oil',
+      description: 'Oil',
       price: 19.99,
-      amount: 1,
+      quantity: 1,
       dayOfTransaction: '2025-05-05',
-      costType: 'variable',
+      costType: 'VARIABLE',
     };
     service.createCost(request).subscribe();
 

@@ -17,8 +17,8 @@
       <label>{{ 'carWorkspace.driveForm.driveDate' | translate }}</label>
       <input type="date" formControlName="driveDate" />
 
-      <label>{{ 'carWorkspace.driveForm.currentMileage' | translate }}</label>
-      <input type="number" formControlName="currentMileage" min="0" />
+      <label>{{ 'carWorkspace.driveForm.odometer' | translate }}</label>
+      <input type="number" formControlName="odometer" min="0" />
 
       <label>{{ 'carWorkspace.driveForm.driver' | translate }}</label>
       <select formControlName="driverId">
@@ -39,8 +39,8 @@
         <label>{{ 'carWorkspace.driveForm.fuelPrice' | translate }}</label>
         <input type="number" formControlName="fuelPrice" min="0" step="0.01" />
 
-        <label>{{ 'carWorkspace.driveForm.fuelAmount' | translate }}</label>
-        <input type="number" formControlName="fuelAmount" min="1" />
+        <label>{{ 'carWorkspace.driveForm.fuelQuantity' | translate }}</label>
+        <input type="number" formControlName="fuelQuantity" min="1" />
 
         <label>{{ 'carWorkspace.driveForm.fuelDate' | translate }}</label>
         <input type="date" formControlName="fuelDate" />
@@ -72,20 +72,20 @@
         }
       </select>
 
-      <label>{{ 'carWorkspace.transactionForm.object' | translate }}</label>
-      <input type="text" formControlName="transactionObject" />
+      <label>{{ 'carWorkspace.transactionForm.description' | translate }}</label>
+      <input type="text" formControlName="description" />
 
       <label>{{ 'carWorkspace.transactionForm.type' | translate }}</label>
       <select formControlName="costType">
-        <option value="variable">{{ 'carWorkspace.transactionForm.variable' | translate }}</option>
-        <option value="fixed">{{ 'carWorkspace.transactionForm.fixed' | translate }}</option>
+        <option value="VARIABLE">{{ 'carWorkspace.costTypes.VARIABLE' | translate }}</option>
+        <option value="FIXED">{{ 'carWorkspace.costTypes.FIXED' | translate }}</option>
       </select>
 
       <label>{{ 'carWorkspace.transactionForm.price' | translate }}</label>
       <input type="number" formControlName="price" min="0" step="0.01" />
 
-      <label>{{ 'carWorkspace.transactionForm.amount' | translate }}</label>
-      <input type="number" formControlName="amount" min="1" />
+      <label>{{ 'carWorkspace.transactionForm.quantity' | translate }}</label>
+      <input type="number" formControlName="quantity" min="1" />
 
       <label>{{ 'carWorkspace.transactionForm.notes' | translate }}</label>
       <textarea rows="3" formControlName="notes"></textarea>
@@ -108,21 +108,42 @@
               <tr>
                 <th>{{ 'carWorkspace.drives.headers.date' | translate }}</th>
                 <th>{{ 'carWorkspace.drives.headers.driver' | translate }}</th>
-                <th>{{ 'carWorkspace.drives.headers.currentMileage' | translate }}</th>
+                <th>{{ 'carWorkspace.drives.headers.odometer' | translate }}</th>
                 <th>{{ 'carWorkspace.drives.headers.distance' | translate }}</th>
               </tr>
             </thead>
             <tbody>
-              @for (drive of drives(); track drive.driveId) {
+              @for (row of driveRows(); track row.drive.driveId) {
                 <tr>
-                  <td>{{ drive.driveDate }}</td>
-                  <td>{{ userLabelById().get(drive.driverId) || drive.driverId }}</td>
-                  <td>{{ drive.currentMileage }}</td>
-                  <td>{{ drive.drivenDistance ?? '-' }}</td>
+                  <td>{{ row.drive.driveDate }}</td>
+                  <td>{{ userLabelById().get(row.drive.driverId) || row.drive.driverId }}</td>
+                  <td>{{ row.drive.odometer }}</td>
+                  <td>{{ row.distance ?? '-' }}</td>
                 </tr>
               }
             </tbody>
           </table>
+
+          @if (drivesTotalPages() > 1) {
+            <div class="car-workspace__pager">
+              <button type="button" (click)="changeDrivesPage(-1)" [disabled]="drivesPage() === 0">
+                {{ 'common.pagination.previous' | translate }}
+              </button>
+              <span>
+                {{
+                  'common.pagination.pageOf'
+                    | translate: { current: drivesPage() + 1, total: drivesTotalPages() }
+                }}
+              </span>
+              <button
+                type="button"
+                (click)="changeDrivesPage(1)"
+                [disabled]="drivesPage() + 1 >= drivesTotalPages()"
+              >
+                {{ 'common.pagination.next' | translate }}
+              </button>
+            </div>
+          }
         }
       </article>
 
@@ -136,9 +157,9 @@
               <tr>
                 <th>{{ 'carWorkspace.transactions.headers.date' | translate }}</th>
                 <th>{{ 'carWorkspace.transactions.headers.buyer' | translate }}</th>
-                <th>{{ 'carWorkspace.transactions.headers.object' | translate }}</th>
+                <th>{{ 'carWorkspace.transactions.headers.description' | translate }}</th>
                 <th>{{ 'carWorkspace.transactions.headers.price' | translate }}</th>
-                <th>{{ 'carWorkspace.transactions.headers.amount' | translate }}</th>
+                <th>{{ 'carWorkspace.transactions.headers.quantity' | translate }}</th>
                 <th>{{ 'carWorkspace.transactions.headers.type' | translate }}</th>
               </tr>
             </thead>
@@ -147,14 +168,35 @@
                 <tr>
                   <td>{{ cost.dayOfTransaction }}</td>
                   <td>{{ userLabelById().get(cost.buyerId) || cost.buyerId }}</td>
-                  <td>{{ cost.transactionObject }}</td>
+                  <td>{{ cost.description }}</td>
                   <td>{{ cost.price | number: '1.2-2' }}</td>
-                  <td>{{ cost.amount }}</td>
-                  <td>{{ cost.costType }}</td>
+                  <td>{{ cost.quantity }}</td>
+                  <td>{{ 'carWorkspace.costTypes.' + cost.costType | translate }}</td>
                 </tr>
               }
             </tbody>
           </table>
+
+          @if (costsTotalPages() > 1) {
+            <div class="car-workspace__pager">
+              <button type="button" (click)="changeCostsPage(-1)" [disabled]="costsPage() === 0">
+                {{ 'common.pagination.previous' | translate }}
+              </button>
+              <span>
+                {{
+                  'common.pagination.pageOf'
+                    | translate: { current: costsPage() + 1, total: costsTotalPages() }
+                }}
+              </span>
+              <button
+                type="button"
+                (click)="changeCostsPage(1)"
+                [disabled]="costsPage() + 1 >= costsTotalPages()"
+              >
+                {{ 'common.pagination.next' | translate }}
+              </button>
+            </div>
+          }
         }
       </article>
     </div>

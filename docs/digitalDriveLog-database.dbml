@@ -1,66 +1,73 @@
-Table Car [headercolor: #6a2b94] {
-	carId bigint [ pk, increment, not null, unique ]
-	brand varchar(50) [ not null ]
+// Reconciled with the JPA entities (backend/src/main/java/de/digidrivelog/models).
+// Column names are snake_case; camelCase quoting was dropped. The eventual
+// Flyway V1 baseline (ADR-012) should be generated from this schema.
+
+Table app_user [headercolor: #177a1b] {
+	user_id bigint [ pk, increment, not null, unique ]
+	first_name varchar(63) [ not null ]
+	last_name varchar(63) [ not null ]
+	driver_license boolean [ not null ]
+	birthday date [ note: 'optional' ]
+	created_at timestamp [ not null ]
+	updated_at timestamp [ not null ]
+}
+
+Table car [headercolor: #6a2b94] {
+	car_id bigint [ pk, increment, not null, unique ]
 	name varchar(50) [ not null ]
-	platenumber varchar(15) [ not null ]
-	userId bigint [ note: '''owner
-''' ]
-	data jsonb
-	createdAt timestamp [ not null ]
-	updatedAt timestamp [ not null ]
+	plate_number varchar(15) [ not null, unique, note: 'natural key, uniquely indexed' ]
+	user_id bigint [ note: 'owner (nullable)' ]
+	data text [ note: 'free-form attributes; migrate to jsonb with Flyway baseline' ]
+	created_at timestamp [ not null ]
+	updated_at timestamp [ not null ]
+
+	indexes {
+		plate_number [ unique, name: 'idx_car_plate_number' ]
+	}
 }
 
-Table Drive [headercolor: #175e7a] {
-	driveId bigint [ pk, not null ]
-	carId bigint [ not null ]
-	distance integer [ not null ]
-	userId bigint [ not null, note: 'driver' ]
-	driveDay date [ not null ]
+// Fast-growing log table. Id from a pooled sequence (batchable inserts);
+// foreign keys indexed. `odometer` is the total odometer reading at the time of
+// the drive (cumulative), not the per-drive distance.
+Table drive [headercolor: #175e7a] {
+	drive_id bigint [ pk, not null, note: 'sequence drive_seq' ]
+	car_id bigint [ not null ]
+	drive_date date [ not null ]
+	odometer integer [ not null, note: 'total odometer reading (cumulative)' ]
+	user_id bigint [ not null, note: 'driver' ]
 	notes text
-	createdAt timestamp [ not null ]
-	updatedAt timestamp [ not null ]
+	created_at timestamp [ not null ]
+	updated_at timestamp [ not null ]
+
+	indexes {
+		car_id [ name: 'idx_drive_car' ]
+		user_id [ name: 'idx_drive_user' ]
+		(car_id, drive_date) [ name: 'idx_drive_car_date' ]
+	}
 }
 
-Table Transaktion [headercolor: #175e7a] {
-	id bigint [ pk, increment, not null, unique ]
-	carId bigint [ not null ]
-	costType char(1) [ not null ]
-	price money [ not null ]
-	amount integer [ not null ]
-	userId bigint [ not null, note: 'buyer' ]
-	dayOfTransaction date [ not null ]
-	transactionObject varchar(63) [ not null ]
+// Fast-growing "transaction" log table (formerly modelled as Transaktion).
+Table cost [headercolor: #175e7a] {
+	cost_id bigint [ pk, not null, note: 'sequence cost_seq' ]
+	car_id bigint [ not null ]
+	user_id bigint [ not null, note: 'buyer' ]
+	description varchar(63) [ not null, note: 'what was bought' ]
+	price decimal(10,2) [ not null ]
+	day_of_transaction date [ not null ]
+	cost_type varchar(20) [ not null, note: 'enum: VARIABLE | FIXED' ]
+	quantity integer [ not null, note: 'units purchased' ]
 	notes text
-	createdAt timestamp [ not null ]
-	updatedAt timestamp [ not null ]
+	created_at timestamp [ not null ]
+	updated_at timestamp [ not null ]
+
+	indexes {
+		car_id [ name: 'idx_cost_car' ]
+		user_id [ name: 'idx_cost_user' ]
+	}
 }
 
-Table User [headercolor: #177a1b] {
-	userId bigint [ pk, increment, not null, unique ]
-	firstname varchar(63) [ not null ]
-	lastname varchar(63) [ not null ]
-	driverLicense boolean [ not null ]
-	brithday date [ not null ]
-	createdAt timestamp [ not null ]
-	updatedAt timestamp [ not null ]
-}
-
-Ref fk_Car_userId_User {
-	Car.userId > User.userId [ delete: no action, update: no action ]
-}
-
-Ref fk_Car_carId_Drive {
-	Car.carId < Drive.carId [ delete: no action, update: no action ]
-}
-
-Ref fk_User_userId_Drive {
-	User.userId < Drive.userId [ delete: no action, update: no action ]
-}
-
-Ref fk_User_userId_Transaktion {
-	User.userId < Transaktion.userId [ delete: no action, update: no action ]
-}
-
-Ref fk_Car_carId_Transaktion {
-	Car.carId < Transaktion.carId [ delete: no action, update: no action ]
-}
+Ref fk_car_user: car.user_id > app_user.user_id [ delete: no action, update: no action ]
+Ref fk_drive_car: car.car_id < drive.car_id [ delete: no action, update: no action ]
+Ref fk_drive_user: app_user.user_id < drive.user_id [ delete: no action, update: no action ]
+Ref fk_cost_user: app_user.user_id < cost.user_id [ delete: no action, update: no action ]
+Ref fk_cost_car: car.car_id < cost.car_id [ delete: no action, update: no action ]

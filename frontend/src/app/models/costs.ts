@@ -1,23 +1,27 @@
-export type CostType = 'fixed' | 'variable';
+/**
+ * Matches the backend `CostType` enum. Responses always use the uppercase form;
+ * request payloads are parsed case-insensitively, so sending uppercase is safe.
+ */
+export type CostType = 'VARIABLE' | 'FIXED';
 
 export interface CostDto {
   costId: number;
   carId: number;
   buyerId: number;
-  transactionObject: string;
+  description: string;
   price: number;
-  amount: number;
+  quantity: number;
   dayOfTransaction: string;
-  costType: string;
+  costType: CostType;
   notes: string | null;
 }
 
 export interface CreateCostRequest {
   carId: number;
   buyerId: number;
-  transactionObject: string;
+  description: string;
   price: number;
-  amount: number;
+  quantity: number;
   dayOfTransaction: string;
   costType: CostType;
   notes?: string;

@@ -1,20 +1,24 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { CostDto, CreateCostRequest } from '../models/costs';
+import { Page } from '../models/page';
+import { PageQuery, toHttpParams } from '../models/page-query';
 
 @Injectable({ providedIn: 'root' })
 export class CostService {
   private readonly http = inject(HttpClient);
   private readonly apiUrl = environment.apiUrl;
 
-  getAllCosts(): Observable<CostDto[]> {
-    return this.http.get<CostDto[]>(`${this.apiUrl}/costs`);
+  getAllCosts(query?: PageQuery): Observable<Page<CostDto>> {
+    const params: HttpParams = toHttpParams(query);
+    return this.http.get<Page<CostDto>>(`${this.apiUrl}/costs`, { params });
   }
 
-  getCostsForCar(carId: number): Observable<CostDto[]> {
-    return this.http.get<CostDto[]>(`${this.apiUrl}/vehicles/${carId}/costs`);
+  getCostsForCar(carId: number, query?: PageQuery): Observable<Page<CostDto>> {
+    const params: HttpParams = toHttpParams(query);
+    return this.http.get<Page<CostDto>>(`${this.apiUrl}/vehicles/${carId}/costs`, { params });
   }
 
   createCost(request: CreateCostRequest): Observable<CostDto> {
