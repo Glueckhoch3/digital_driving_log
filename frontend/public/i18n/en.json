@@ -24,6 +24,11 @@
     }
   },
   "common": {
+    "pagination": {
+      "previous": "Previous",
+      "next": "Next",
+      "pageOf": "Page {{current}} of {{total}}"
+    },
     "yes": "Yes",
     "no": "No",
     "edit": "Edit",
@@ -134,15 +139,19 @@
       "transactionSaved": "Transaction saved.",
       "transactionSaveFailed": "Failed to save transaction."
     },
+    "costTypes": {
+      "VARIABLE": "Variable",
+      "FIXED": "Fixed"
+    },
     "driveForm": {
       "title": "Drive entry",
       "driveDate": "Drive date",
-      "currentMileage": "Current mileage",
+      "odometer": "Odometer",
       "driver": "Driver",
       "notes": "Notes",
       "includeFuel": "Add fuel transaction",
       "fuelPrice": "Fuel total price",
-      "fuelAmount": "Fuel amount",
+      "fuelQuantity": "Fuel quantity",
       "fuelDate": "Fuel transaction date",
       "fuelBuyer": "Fuel buyer",
       "fuelNotes": "Fuel notes",
@@ -152,12 +161,10 @@
       "title": "Transaction entry",
       "date": "Transaction date",
       "buyer": "Buyer",
-      "object": "Transaction object",
+      "description": "Description",
       "type": "Cost type",
-      "variable": "Variable",
-      "fixed": "Fixed",
       "price": "Price",
-      "amount": "Amount",
+      "quantity": "Quantity",
       "notes": "Notes",
       "submit": "Save transaction"
     },
@@ -167,7 +174,7 @@
       "headers": {
         "date": "Date",
         "driver": "Driver",
-        "currentMileage": "Current mileage",
+        "odometer": "Odometer",
         "distance": "Driven distance"
       }
     },
@@ -177,9 +184,9 @@
       "headers": {
         "date": "Date",
         "buyer": "Buyer",
-        "object": "Object",
+        "description": "Description",
         "price": "Price",
-        "amount": "Amount",
+        "quantity": "Quantity",
         "type": "Type"
       }
     }

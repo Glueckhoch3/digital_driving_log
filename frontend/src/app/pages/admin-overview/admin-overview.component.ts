@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { forkJoin } from 'rxjs';
 import { TranslateModule } from '@ngx-translate/core';
 import { CarService } from '../../services/car.service';
@@ -22,6 +22,15 @@ interface ManagementTimelineEntry {
   valueLabel: string;
 }
 
+/**
+ * Upper bound of per-car entries pulled from each paged endpoint. The combined
+ * timeline is then paginated client-side below.
+ */
+const PER_CAR_FETCH_SIZE = 500;
+
+/** Rows shown per page in the merged timeline. */
+const PAGE_SIZE = 20;
+
 @Component({
   selector: 'app-admin-overview',
   standalone: true,
@@ -43,6 +52,16 @@ export class AdminOverviewComponent implements OnInit {
   readonly loading = signal(true);
   readonly error = signal('');
   readonly timelineEntries = signal<ManagementTimelineEntry[]>([]);
+  readonly page = signal(0);
+
+  readonly totalPages = computed(() =>
+    Math.max(1, Math.ceil(this.timelineEntries().length / PAGE_SIZE)),
+  );
+
+  readonly pagedEntries = computed<ManagementTimelineEntry[]>(() => {
+    const start = this.page() * PAGE_SIZE;
+    return this.timelineEntries().slice(start, start + PAGE_SIZE);
+  });
 
   ngOnInit(): void {
     forkJoin({
@@ -60,15 +79,20 @@ export class AdminOverviewComponent implements OnInit {
 
         const requests = cars.map((car) =>
           forkJoin({
-            drives: this.driveService.getDrivesForCar(car.carId),
-            costs: this.costService.getCostsForCar(car.carId),
+            drives: this.driveService.getDrivesForCar(car.carId, { size: PER_CAR_FETCH_SIZE }),
+            costs: this.costService.getCostsForCar(car.carId, { size: PER_CAR_FETCH_SIZE }),
           }),
         );
 
         forkJoin(requests).subscribe({
           next: (results) => {
             const entries = results.flatMap((result, index) =>
-              this.buildEntriesForCar(cars[index], result.drives, result.costs, userNameById),
+              this.buildEntriesForCar(
+                cars[index],
+                result.drives.content,
+                result.costs.content,
+                userNameById,
+              ),
             );
 
             entries.sort((left, right) => {
@@ -80,6 +104,7 @@ export class AdminOverviewComponent implements OnInit {
             });
 
             this.timelineEntries.set(entries);
+            this.page.set(0);
             this.loading.set(false);
           },
           error: () => {
@@ -93,6 +118,14 @@ export class AdminOverviewComponent implements OnInit {
         this.loading.set(false);
       },
     });
+  }
+
+  changePage(delta: number): void {
+    const next = this.page() + delta;
+    if (next < 0 || next >= this.totalPages()) {
+      return;
+    }
+    this.page.set(next);
   }
 
   private createUserMap(users: UserDto[]): Map<number, string> {
@@ -117,7 +150,7 @@ export class AdminOverviewComponent implements OnInit {
       carName: car.name,
       plateNumber: car.plateNumber,
       participantName: userNameById.get(drive.driverId) ?? `Unknown user #${drive.driverId}`,
-      details: `${drive.currentMileage} km (${drive.drivenDistance ?? '-'} km)`,
+      details: `${drive.odometer} km`,
       valueLabel: drive.notes ?? '',
     }));
 
@@ -127,8 +160,8 @@ export class AdminOverviewComponent implements OnInit {
       carName: car.name,
       plateNumber: car.plateNumber,
       participantName: userNameById.get(cost.buyerId) ?? `Unknown user #${cost.buyerId}`,
-      details: `${cost.transactionObject} (${cost.costType})`,
-      valueLabel: `${Number(cost.price).toFixed(2)} € x ${cost.amount}`,
+      details: `${cost.description} (${cost.costType})`,
+      valueLabel: `${Number(cost.price).toFixed(2)} € x ${cost.quantity}`,
     }));
 
     return [...driveEntries, ...transactionEntries];

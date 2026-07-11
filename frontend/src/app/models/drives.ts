@@ -2,15 +2,15 @@ export interface DriveDto {
   driveId: number;
   carId: number;
   driveDate: string;
-  currentMileage: number;
-  drivenDistance: number | null;
+  /** Cumulative odometer reading at the time of the drive (not per-drive distance). */
+  odometer: number;
   driverId: number;
   notes: string | null;
 }
 
 export interface CreateDriveRequest {
   carId: number;
-  currentMileage: number;
+  odometer: number;
   driverId: number;
   driveDate: string;
   notes?: string;

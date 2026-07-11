@@ -21,7 +21,7 @@
           </tr>
         </thead>
         <tbody>
-          @for (entry of timelineEntries(); track $index) {
+          @for (entry of pagedEntries(); track $index) {
             <tr>
               <td>{{ entry.date }}</td>
               <td>{{ entry.carName }} ({{ entry.plateNumber }})</td>
@@ -40,5 +40,19 @@
         </tbody>
       </table>
     </div>
+
+    @if (totalPages() > 1) {
+      <div class="admin-overview__pager">
+        <button type="button" (click)="changePage(-1)" [disabled]="page() === 0">
+          {{ 'common.pagination.previous' | translate }}
+        </button>
+        <span>
+          {{ 'common.pagination.pageOf' | translate: { current: page() + 1, total: totalPages() } }}
+        </span>
+        <button type="button" (click)="changePage(1)" [disabled]="page() + 1 >= totalPages()">
+          {{ 'common.pagination.next' | translate }}
+        </button>
+      </div>
+    }
   }
 </section>

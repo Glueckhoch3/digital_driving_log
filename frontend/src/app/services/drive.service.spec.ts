@@ -4,6 +4,7 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { environment } from '../../environments/environment';
 import { DriveService } from './drive.service';
 import { CreateDriveRequest, DriveDto } from '../models/drives';
+import { Page } from '../models/page';
 
 describe('DriveService', () => {
   let service: DriveService;
@@ -14,10 +15,17 @@ describe('DriveService', () => {
     driveId: 1,
     carId: 2,
     driveDate: '2025-03-01',
-    currentMileage: 14500,
-    drivenDistance: 25,
+    odometer: 14500,
     driverId: 3,
     notes: null,
+  };
+
+  const drivePage: Page<DriveDto> = {
+    content: [drive],
+    totalElements: 1,
+    totalPages: 1,
+    number: 0,
+    size: 50,
   };
 
   beforeEach(() => {
@@ -41,18 +49,31 @@ describe('DriveService', () => {
     expect(result).toEqual(drive);
   });
 
-  it('getDrivesForCar issues GET /vehicles/:carId/drives', () => {
-    service.getDrivesForCar(2).subscribe();
+  it('getDrivesForCar issues GET /vehicles/:carId/drives and returns a page', () => {
+    let result: Page<DriveDto> | undefined;
+    service.getDrivesForCar(2).subscribe((page) => (result = page));
 
     const req = httpMock.expectOne(`${apiUrl}/vehicles/2/drives`);
     expect(req.request.method).toBe('GET');
-    req.flush([drive]);
+    req.flush(drivePage);
+
+    expect(result).toEqual(drivePage);
+  });
+
+  it('getDrivesForCar forwards page/size/sort query params', () => {
+    service.getDrivesForCar(2, { page: 1, size: 10, sort: 'driveDate,desc' }).subscribe();
+
+    const req = httpMock.expectOne((r) => r.url === `${apiUrl}/vehicles/2/drives`);
+    expect(req.request.params.get('page')).toBe('1');
+    expect(req.request.params.get('size')).toBe('10');
+    expect(req.request.params.get('sort')).toBe('driveDate,desc');
+    req.flush(drivePage);
   });
 
   it('createDrive issues POST /drives with body', () => {
     const request: CreateDriveRequest = {
       carId: 2,
-      currentMileage: 14525,
+      odometer: 14525,
       driverId: 3,
       driveDate: '2025-03-01',
     };
@@ -67,7 +88,7 @@ describe('DriveService', () => {
   it('updateDrive issues PUT /drives/:id with body', () => {
     const request: CreateDriveRequest = {
       carId: 2,
-      currentMileage: 14600,
+      odometer: 14600,
       driverId: 3,
       driveDate: '2025-03-02',
     };

@@ -43,4 +43,21 @@
       width: auto;
     }
   }
+
+  &__pager {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    justify-content: center;
+    margin-top: 0.75rem;
+
+    button {
+      width: auto;
+
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+    }
+  }
 }

@@ -1,8 +1,10 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { CreateDriveRequest, DriveDto } from '../models/drives';
+import { Page } from '../models/page';
+import { PageQuery, toHttpParams } from '../models/page-query';
 
 @Injectable({ providedIn: 'root' })
 export class DriveService {
@@ -13,8 +15,9 @@ export class DriveService {
     return this.http.get<DriveDto>(`${this.apiUrl}/drives/${driveId}`);
   }
 
-  getDrivesForCar(carId: number): Observable<DriveDto[]> {
-    return this.http.get<DriveDto[]>(`${this.apiUrl}/vehicles/${carId}/drives`);
+  getDrivesForCar(carId: number, query?: PageQuery): Observable<Page<DriveDto>> {
+    const params: HttpParams = toHttpParams(query);
+    return this.http.get<Page<DriveDto>>(`${this.apiUrl}/vehicles/${carId}/drives`, { params });
   }
 
   createDrive(request: CreateDriveRequest): Observable<DriveDto> {
