@@ -16,9 +16,10 @@ public class UpdateDriveRequest {
     @NotNull
     private Long carId;
 
+    /** Total odometer reading at the time of the drive (not per-drive distance). */
     @NotNull
     @Positive
-    private Integer distance;
+    private Integer odometer;
 
     @NotNull
     private Long driverId;

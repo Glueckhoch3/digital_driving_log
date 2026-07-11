@@ -8,14 +8,19 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.LocalDateTime;
-import java.util.List;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+/**
+ * Slow-growing table with rare changes. {@code plate_number} is the natural key
+ * and is uniquely indexed. The inverse relation collections were removed on
+ * purpose (see {@link User}).
+ */
 @Entity
-@Table(name = "Car")
+@Table(name = "car", indexes = {
+        @Index(name = "idx_car_plate_number", columnList = "plate_number", unique = true)
+})
 @Getter
 @Setter
 @NoArgsConstructor
@@ -26,7 +31,7 @@ public class Car {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "carId", nullable = false)
+    @Column(name = "car_id", nullable = false)
     @EqualsAndHashCode.Include
     @ToString.Include
     private Long carId;
@@ -34,29 +39,23 @@ public class Car {
     @Column(name = "name", nullable = false, length = 50)
     private String name;
 
-    @Column(name = "platenumber", nullable = false, length = 15)
+    @Column(name = "plate_number", nullable = false, length = 15)
     private String plateNumber;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userId", nullable = true)
+    @JoinColumn(name = "user_id", nullable = true)
     private User owner;
 
-    @Column(name = "data", nullable = true, length = 65535, columnDefinition = "TEXT")
+    // Free-form vehicle attributes (brand, colour, …). Stored as TEXT for now;
+    // migrating to jsonb is tracked with the Flyway baseline (see DBML).
+    @Column(name = "data", nullable = true, columnDefinition = "TEXT")
     private String data;
 
-    @OneToMany(mappedBy = "car", fetch = FetchType.LAZY)
-    @JsonIgnore
-    private List<Drive> drives;
-
-    @OneToMany(mappedBy = "carId", fetch = FetchType.LAZY)
-    @JsonIgnore
-    private List<Cost> transactions;
-
     @CreationTimestamp
-    @Column(name = "createdAt", nullable = false, updatable = false)
+    @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
-    @Column(name = "updatedAt", nullable = false)
+    @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 }

@@ -453,9 +453,11 @@ Current frontend and backend integrations use the base path:
 - `GET /users/{userId}/costs` - List costs for one user
 
 ### Request/response shape highlights
-- `CreateDriveRequest`/`UpdateDriveRequest`: `carId`, `currentMileage`, `driverId`, `driveDate`, optional `notes`
-- `CreateCostRequest`/`UpdateCostRequest`: `carId`, `buyerId`, `transactionObject`, `price`, `amount`, `dayOfTransaction`, `costType`, optional `notes`
+- `CreateDriveRequest`/`UpdateDriveRequest`: `carId`, `odometer`, `driverId`, `driveDate`, optional `notes`
+  - `odometer` is the **total odometer reading** at the time of the drive (cumulative, monotonically increasing), not the distance driven on the single trip.
+- `CreateCostRequest`/`UpdateCostRequest`: `carId`, `buyerId`, `description`, `price`, `quantity`, `dayOfTransaction`, `costType`, optional `notes`
 - `costType` accepts `fixed` or `variable` (case-insensitive); responses return enum values in uppercase
+- **List endpoints are paginated.** The drive/cost list endpoints (`/vehicles/{carId}/drives`, `/users/{userId}/drives`, `/vehicles/{carId}/users/{userId}/drives`, `/costs`, `/vehicles/{carId}/costs`, `/users/{userId}/costs`) return a Spring `Page` object (`content` array plus `totalElements`, `totalPages`, `number`, `size`). They accept `?page`, `?size` and `?sort`; drives default to `driveDate` desc, costs to `dayOfTransaction` desc, page size 50.
 
 ### Frontend routes
 - `/` - Start page

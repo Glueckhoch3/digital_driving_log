@@ -1,13 +1,9 @@
 package de.digidrivelog.mappers;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.server.ResponseStatusException;
-
 import de.digidrivelog.dto.cost.*;
 import de.digidrivelog.models.Cost;
 import de.digidrivelog.models.Car;
 import de.digidrivelog.models.User;
-import de.digidrivelog.models.CostType;
 
 public final class CostMapper {
 
@@ -17,52 +13,41 @@ public final class CostMapper {
         if (c == null) return null;
         return new CostDto(
                 c.getCostId(),
-                c.getCarId() != null ? c.getCarId().getCarId() : null,
-                c.getBuyerId() != null ? c.getBuyerId().getUserId() : null,
-                c.getTransactionObject(),
+                c.getCar() != null ? c.getCar().getCarId() : null,
+                c.getBuyer() != null ? c.getBuyer().getUserId() : null,
+                c.getDescription(),
                 c.getPrice(),
                 c.getDayOfTransaction(),
-                c.getCostType() != null ? c.getCostType().name() : null,
-                c.getAmount(),
+                c.getCostType(),
+                c.getQuantity(),
                 c.getNotes()
         );
     }
 
-    public static Cost fromCreate(CreateCostRequest r, Car carId, User buyerId) {
+    public static Cost fromCreate(CreateCostRequest r, Car car, User buyer) {
         if (r == null) return null;
         Cost c = new Cost();
-        c.setCarId(carId);
-        c.setBuyerId(buyerId);
-        c.setTransactionObject(r.getTransactionObject());
+        c.setCar(car);
+        c.setBuyer(buyer);
+        c.setDescription(r.getDescription());
         c.setPrice(r.getPrice());
-        c.setAmount(r.getAmount());
+        c.setQuantity(r.getQuantity());
         c.setDayOfTransaction(r.getDayOfTransaction());
         c.setNotes(r.getNotes());
-        if (r.getCostType() != null) {
-            try {
-                c.setCostType(CostType.valueOf(r.getCostType().toUpperCase()));
-            } catch (IllegalArgumentException handled) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid cost type: " + r.getCostType());
-            }
-        }
+        c.setCostType(r.getCostType());
         return c;
     }
 
-    public static void applyUpdate(UpdateCostRequest r, Cost existing, Car carId, User buyerId) {
+    /** Full replace (PUT semantics): all editable fields are applied. */
+    public static void applyUpdate(UpdateCostRequest r, Cost existing, Car car, User buyer) {
         if (r == null || existing == null) return;
-        if (r.getCarId() != null && carId != null) existing.setCarId(carId);
-        if (r.getBuyerId() != null && buyerId != null) existing.setBuyerId(buyerId);
-        if (r.getTransactionObject() != null) existing.setTransactionObject(r.getTransactionObject());
-        if (r.getPrice() != null) existing.setPrice(r.getPrice());
-        if (r.getAmount() != null) existing.setAmount(r.getAmount());
-        if (r.getDayOfTransaction() != null) existing.setDayOfTransaction(r.getDayOfTransaction());
-        if (r.getCostType() != null) {
-            try {
-                existing.setCostType(CostType.valueOf(r.getCostType().toUpperCase()));
-            } catch (IllegalArgumentException handled) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid cost type: " + r.getCostType());
-            }
-        }
-        if (r.getNotes() != null) existing.setNotes(r.getNotes());
+        existing.setCar(car);
+        existing.setBuyer(buyer);
+        existing.setDescription(r.getDescription());
+        existing.setPrice(r.getPrice());
+        existing.setQuantity(r.getQuantity());
+        existing.setDayOfTransaction(r.getDayOfTransaction());
+        existing.setCostType(r.getCostType());
+        existing.setNotes(r.getNotes());
     }
 }

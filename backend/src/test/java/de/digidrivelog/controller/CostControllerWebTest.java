@@ -6,6 +6,7 @@ import de.digidrivelog.dto.cost.CostDto;
 import de.digidrivelog.dto.cost.CreateCostRequest;
 import de.digidrivelog.dto.user.CreateUserRequest;
 import de.digidrivelog.dto.user.UserDto;
+import de.digidrivelog.models.CostType;
 import de.digidrivelog.services.CarService;
 import de.digidrivelog.services.CostService;
 import de.digidrivelog.services.UserService;
@@ -83,8 +84,8 @@ class CostControllerWebTest {
 
         mockMvc.perform(get("/ddl/api/costs"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(1))
-                .andExpect(jsonPath("$[0].transactionObject").value("Fuel"));
+                .andExpect(jsonPath("$.content.length()").value(1))
+                .andExpect(jsonPath("$.content[0].description").value("Fuel"));
     }
 
     @Test
@@ -92,12 +93,12 @@ class CostControllerWebTest {
         mockMvc.perform(post("/ddl/api/costs")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                                {"carId":%d,"buyerId":%d,"transactionObject":"Oil","price":19.99,
-                                 "amount":1,"dayOfTransaction":"2025-05-05","costType":"variable","notes":"5W30"}
+                                {"carId":%d,"buyerId":%d,"description":"Oil","price":19.99,
+                                 "quantity":1,"dayOfTransaction":"2025-05-05","costType":"variable","notes":"5W30"}
                                 """.formatted(car.getCarId(), buyer.getUserId())))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.costId").isNumber())
-                .andExpect(jsonPath("$.transactionObject").value("Oil"))
+                .andExpect(jsonPath("$.description").value("Oil"))
                 .andExpect(jsonPath("$.costType").value("VARIABLE"));
     }
 
@@ -106,8 +107,8 @@ class CostControllerWebTest {
         mockMvc.perform(post("/ddl/api/costs")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                                {"carId":%d,"buyerId":%d,"transactionObject":"Oil","price":-1.00,
-                                 "amount":1,"dayOfTransaction":"2025-05-05","costType":"variable"}
+                                {"carId":%d,"buyerId":%d,"description":"Oil","price":-1.00,
+                                 "quantity":1,"dayOfTransaction":"2025-05-05","costType":"variable"}
                                 """.formatted(car.getCarId(), buyer.getUserId())))
                 .andExpect(status().isBadRequest());
     }
@@ -117,8 +118,8 @@ class CostControllerWebTest {
         mockMvc.perform(post("/ddl/api/costs")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                                {"carId":%d,"buyerId":%d,"transactionObject":"Oil","price":5.00,
-                                 "amount":1,"dayOfTransaction":"2025-05-05","costType":"sometimes"}
+                                {"carId":%d,"buyerId":%d,"description":"Oil","price":5.00,
+                                 "quantity":1,"dayOfTransaction":"2025-05-05","costType":"sometimes"}
                                 """.formatted(car.getCarId(), buyer.getUserId())))
                 .andExpect(status().isBadRequest());
     }
@@ -128,8 +129,8 @@ class CostControllerWebTest {
         mockMvc.perform(post("/ddl/api/costs")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                                {"carId":999999,"buyerId":%d,"transactionObject":"Oil","price":5.00,
-                                 "amount":1,"dayOfTransaction":"2025-05-05","costType":"fixed"}
+                                {"carId":999999,"buyerId":%d,"description":"Oil","price":5.00,
+                                 "quantity":1,"dayOfTransaction":"2025-05-05","costType":"fixed"}
                                 """.formatted(buyer.getUserId())))
                 .andExpect(status().isNotFound());
     }
@@ -141,7 +142,7 @@ class CostControllerWebTest {
         mockMvc.perform(get("/ddl/api/costs/{id}", cost.getCostId()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.costId").value(cost.getCostId()))
-                .andExpect(jsonPath("$.transactionObject").value("Tires"));
+                .andExpect(jsonPath("$.description").value("Tires"));
     }
 
     @Test
@@ -157,13 +158,13 @@ class CostControllerWebTest {
         mockMvc.perform(put("/ddl/api/costs/{id}", cost.getCostId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                                {"carId":%d,"buyerId":%d,"transactionObject":"After","price":80.00,
-                                 "amount":2,"dayOfTransaction":"2025-06-06","costType":"fixed","notes":"changed"}
+                                {"carId":%d,"buyerId":%d,"description":"After","price":80.00,
+                                 "quantity":2,"dayOfTransaction":"2025-06-06","costType":"fixed","notes":"changed"}
                                 """.formatted(car.getCarId(), buyer.getUserId())))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.transactionObject").value("After"))
+                .andExpect(jsonPath("$.description").value("After"))
                 .andExpect(jsonPath("$.costType").value("FIXED"))
-                .andExpect(jsonPath("$.amount").value(2));
+                .andExpect(jsonPath("$.quantity").value(2));
     }
 
     @Test
@@ -187,26 +188,26 @@ class CostControllerWebTest {
 
         mockMvc.perform(get("/ddl/api/vehicles/{carId}/costs", car.getCarId()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(2));
+                .andExpect(jsonPath("$.content.length()").value(2));
 
         mockMvc.perform(get("/ddl/api/users/{userId}/costs", buyer.getUserId()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(2));
+                .andExpect(jsonPath("$.content.length()").value(2));
 
         mockMvc.perform(get("/ddl/api/vehicles/{carId}/costs", 999_999L))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(0));
+                .andExpect(jsonPath("$.content.length()").value(0));
     }
 
-    private CostDto createCost(String transactionObject) {
+    private CostDto createCost(String description) {
         return costService.createCost(new CreateCostRequest(
                 car.getCarId(),
                 buyer.getUserId(),
-                transactionObject,
+                description,
                 new BigDecimal("42.00"),
                 1,
                 LocalDate.of(2025, 5, 5),
-                "VARIABLE",
+                CostType.VARIABLE,
                 null
         ));
     }

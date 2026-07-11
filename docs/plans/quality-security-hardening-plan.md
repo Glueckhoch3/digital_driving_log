@@ -1,7 +1,7 @@
 # Quality & Security Hardening Plan
 
 **Created:** 2026-07-09
-**Status:** Not started
+**Status:** Finished
 **Executor:** This file is a self-contained instruction set for a Claude Code session (or a human). Work through the phases in order; each phase ends with a verification step and should be its own commit (or small set of commits) on a branch `chore/quality-security-hardening`.
 
 ---

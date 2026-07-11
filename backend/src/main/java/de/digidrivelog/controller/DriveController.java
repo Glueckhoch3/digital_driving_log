@@ -5,10 +5,13 @@ import de.digidrivelog.dto.drive.DriveDto;
 import de.digidrivelog.dto.drive.CreateDriveRequest;
 import de.digidrivelog.dto.drive.UpdateDriveRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
-import java.util.List;
 
 @RestController
 @RequestMapping("/ddl/api")
@@ -42,20 +45,24 @@ public class DriveController {
     }
 
     @GetMapping("/vehicles/{carId}/drives")
-    public ResponseEntity<List<DriveDto>> getAllDrivesByVehicle(@PathVariable Long carId) {
-        List<DriveDto> drives = driveService.getAllDrivesByVehicle(carId);
-        return ResponseEntity.ok(drives);
+    public ResponseEntity<Page<DriveDto>> getAllDrivesByVehicle(
+            @PathVariable Long carId,
+            @PageableDefault(size = 50, sort = "driveDate", direction = Sort.Direction.DESC) Pageable pageable) {
+        return ResponseEntity.ok(driveService.getAllDrivesByVehicle(carId, pageable));
     }
 
     @GetMapping("/users/{userId}/drives")
-    public ResponseEntity<List<DriveDto>> getAllDrivesByUser(@PathVariable Long userId) {
-        List<DriveDto> drives = driveService.getAllDrivesByUser(userId);
-        return ResponseEntity.ok(drives);
+    public ResponseEntity<Page<DriveDto>> getAllDrivesByUser(
+            @PathVariable Long userId,
+            @PageableDefault(size = 50, sort = "driveDate", direction = Sort.Direction.DESC) Pageable pageable) {
+        return ResponseEntity.ok(driveService.getAllDrivesByUser(userId, pageable));
     }
 
     @GetMapping("/vehicles/{carId}/users/{userId}/drives")
-    public ResponseEntity<List<DriveDto>> getAllDrivesByVehicleAndUser(@PathVariable Long carId, @PathVariable Long userId) {
-        List<DriveDto> drives = driveService.getAllDrivesByVehicleAndUser(carId, userId);
-        return ResponseEntity.ok(drives);
+    public ResponseEntity<Page<DriveDto>> getAllDrivesByVehicleAndUser(
+            @PathVariable Long carId,
+            @PathVariable Long userId,
+            @PageableDefault(size = 50, sort = "driveDate", direction = Sort.Direction.DESC) Pageable pageable) {
+        return ResponseEntity.ok(driveService.getAllDrivesByVehicleAndUser(carId, userId, pageable));
     }
 }

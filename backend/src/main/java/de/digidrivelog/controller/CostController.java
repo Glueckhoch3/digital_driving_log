@@ -1,11 +1,14 @@
 package de.digidrivelog.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
-import java.util.List;
 
 import de.digidrivelog.dto.cost.*;
 import de.digidrivelog.services.CostService;
@@ -17,9 +20,9 @@ public class CostController {
     private final CostService costService;
 
     @GetMapping("/costs")
-    public ResponseEntity<List<CostDto>> getAllCosts() {
-        List<CostDto> costs = costService.getAllCosts();
-        return ResponseEntity.ok(costs);
+    public ResponseEntity<Page<CostDto>> getAllCosts(
+            @PageableDefault(size = 50, sort = "dayOfTransaction", direction = Sort.Direction.DESC) Pageable pageable) {
+        return ResponseEntity.ok(costService.getAllCosts(pageable));
     }
 
     @PostMapping("/costs")
@@ -47,14 +50,16 @@ public class CostController {
     }
 
     @GetMapping("/vehicles/{carId}/costs")
-    public  ResponseEntity<List<CostDto>> getAllCostsByVehicle(@PathVariable Long carId) {
-        List<CostDto> costs = costService.getAllCostsByVehicle(carId);
-        return ResponseEntity.ok(costs);
+    public ResponseEntity<Page<CostDto>> getAllCostsByVehicle(
+            @PathVariable Long carId,
+            @PageableDefault(size = 50, sort = "dayOfTransaction", direction = Sort.Direction.DESC) Pageable pageable) {
+        return ResponseEntity.ok(costService.getAllCostsByVehicle(carId, pageable));
     }
 
     @GetMapping("/users/{userId}/costs")
-    public ResponseEntity<List<CostDto>> getAllCostsByUser(@PathVariable Long userId) {
-        List<CostDto> costs = costService.getAllCostsByUser(userId);
-        return ResponseEntity.ok(costs);
+    public ResponseEntity<Page<CostDto>> getAllCostsByUser(
+            @PathVariable Long userId,
+            @PageableDefault(size = 50, sort = "dayOfTransaction", direction = Sort.Direction.DESC) Pageable pageable) {
+        return ResponseEntity.ok(costService.getAllCostsByUser(userId, pageable));
     }
 }

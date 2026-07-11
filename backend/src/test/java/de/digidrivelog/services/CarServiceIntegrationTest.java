@@ -125,7 +125,7 @@ class CarServiceIntegrationTest {
         drive.setCar(carRepository.findById(created.getCarId()).orElseThrow());
         drive.setDriver(userRepository.findById(driver.getUserId()).orElseThrow());
         drive.setDriveDate(LocalDate.of(2025, 1, 7));
-        drive.setDistance(42);
+        drive.setOdometer(42);
         drive.setNotes("integration test");
         driveRepository.save(drive);
 

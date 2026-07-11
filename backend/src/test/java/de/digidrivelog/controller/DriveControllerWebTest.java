@@ -81,11 +81,11 @@ class DriveControllerWebTest {
         mockMvc.perform(post("/ddl/api/drives")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                                {"carId":%d,"distance":25,"driverId":%d,"driveDate":"2025-03-01","notes":"trip"}
+                                {"carId":%d,"odometer":25,"driverId":%d,"driveDate":"2025-03-01","notes":"trip"}
                                 """.formatted(car.getCarId(), driver.getUserId())))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.driveId").isNumber())
-                .andExpect(jsonPath("$.distance").value(25))
+                .andExpect(jsonPath("$.odometer").value(25))
                 .andExpect(jsonPath("$.notes").value("trip"));
     }
 
@@ -94,7 +94,7 @@ class DriveControllerWebTest {
         mockMvc.perform(post("/ddl/api/drives")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                                {"carId":%d,"distance":-5,"driverId":%d,"driveDate":"2025-03-01"}
+                                {"carId":%d,"odometer":-5,"driverId":%d,"driveDate":"2025-03-01"}
                                 """.formatted(car.getCarId(), driver.getUserId())))
                 .andExpect(status().isBadRequest());
     }
@@ -104,7 +104,7 @@ class DriveControllerWebTest {
         mockMvc.perform(post("/ddl/api/drives")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                                {"carId":%d,"distance":5,"driverId":%d}
+                                {"carId":%d,"odometer":5,"driverId":%d}
                                 """.formatted(car.getCarId(), driver.getUserId())))
                 .andExpect(status().isBadRequest());
     }
@@ -114,7 +114,7 @@ class DriveControllerWebTest {
         mockMvc.perform(post("/ddl/api/drives")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                                {"carId":999999,"distance":5,"driverId":%d,"driveDate":"2025-03-01"}
+                                {"carId":999999,"odometer":5,"driverId":%d,"driveDate":"2025-03-01"}
                                 """.formatted(driver.getUserId())))
                 .andExpect(status().isNotFound());
     }
@@ -126,7 +126,7 @@ class DriveControllerWebTest {
         mockMvc.perform(get("/ddl/api/drives/{id}", drive.getDriveId()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.driveId").value(drive.getDriveId()))
-                .andExpect(jsonPath("$.distance").value(33));
+                .andExpect(jsonPath("$.odometer").value(33));
     }
 
     @Test
@@ -142,10 +142,10 @@ class DriveControllerWebTest {
         mockMvc.perform(put("/ddl/api/drives/{id}", drive.getDriveId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                                {"carId":%d,"distance":99,"driverId":%d,"driveDate":"2025-04-04","notes":"longer"}
+                                {"carId":%d,"odometer":99,"driverId":%d,"driveDate":"2025-04-04","notes":"longer"}
                                 """.formatted(car.getCarId(), driver.getUserId())))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.distance").value(99))
+                .andExpect(jsonPath("$.odometer").value(99))
                 .andExpect(jsonPath("$.notes").value("longer"));
     }
 
@@ -170,20 +170,20 @@ class DriveControllerWebTest {
 
         mockMvc.perform(get("/ddl/api/vehicles/{carId}/drives", car.getCarId()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(2));
+                .andExpect(jsonPath("$.content.length()").value(2));
 
         mockMvc.perform(get("/ddl/api/users/{userId}/drives", driver.getUserId()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(2));
+                .andExpect(jsonPath("$.content.length()").value(2));
 
         mockMvc.perform(get("/ddl/api/vehicles/{carId}/users/{userId}/drives",
                         car.getCarId(), driver.getUserId()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(2));
+                .andExpect(jsonPath("$.content.length()").value(2));
 
         mockMvc.perform(get("/ddl/api/vehicles/{carId}/drives", 999_999L))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(0));
+                .andExpect(jsonPath("$.content.length()").value(0));
     }
 
     private DriveDto createDrive(int distance) {

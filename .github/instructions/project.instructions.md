@@ -18,8 +18,8 @@ visibility: public
 ## Commit Messages
 - Use imperative tense and reference issue IDs where applicable: `Add: validate drive distance (#123)`.
 
-## CI & Releases
-- CI runs on push and PRs. Make sure local checks pass before pushing.
+## CI & Releases (temporarily disabled)
+- CI not implemented. Make sure local checks pass before pushing.
 - Tag releases with semantic versions and include a short changelog entry.
 
 ## Security & Secrets

@@ -13,7 +13,8 @@ public class DriveDto {
     private Long driveId;
     private Long carId;
     private LocalDate driveDate;
-    private Integer distance;
+    /** Total odometer reading at the time of the drive (not per-drive distance). */
+    private Integer odometer;
     private Long driverId;
     private String notes;
 }

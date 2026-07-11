@@ -1,5 +1,6 @@
 package de.digidrivelog.dto.cost;
 
+import de.digidrivelog.models.CostType;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
@@ -22,7 +23,7 @@ public class UpdateCostRequest {
     private Long buyerId;
 
     @NotBlank
-    private String transactionObject;
+    private String description;
 
     @NotNull
     @DecimalMin("0.0")
@@ -30,13 +31,13 @@ public class UpdateCostRequest {
 
     @NotNull
     @Positive
-    private Integer amount;
+    private Integer quantity;
 
     @NotNull
     private LocalDate dayOfTransaction;
 
-    @NotBlank
-    private String costType;
+    @NotNull
+    private CostType costType;
 
     private String notes;
 }

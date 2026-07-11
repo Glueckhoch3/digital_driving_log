@@ -631,7 +631,7 @@ components:
         buyerId:
           type: number
           format: int64
-        transactionObject:
+        description:
           type: string
         price:
           type: number
@@ -640,18 +640,19 @@ components:
           format: date-time
         costType:
           type: string
-        amount:
+          enum: [VARIABLE, FIXED]
+        quantity:
           type: number
         notes:
           type: string
       required:
          - carId
          - buyerId
-         - transactionObject
+         - description
          - price
          - dayOfTransaction
          - costType
-         - amount
+         - quantity
 
     RetrieveCost:
       type: object
@@ -665,7 +666,7 @@ components:
         buyerId:
           type: number
           format: int64
-        transactionObject:
+        description:
           type: string
         price:
           type: number
@@ -674,7 +675,8 @@ components:
           format: date-time
         costType:
           type: string
-        amount:
+          enum: [VARIABLE, FIXED]
+        quantity:
           type: number
         notes:
           type: string
@@ -682,11 +684,11 @@ components:
          - costId
          - carId
          - buyerId
-         - transactionObject
+         - description
          - price
          - dayOfTransaction
          - costType
-         - amount
+         - quantity
 
     PutCost:
       type: object
@@ -697,7 +699,7 @@ components:
         buyerId:
           type: number
           format: int64
-        transactionObject:
+        description:
           type: string
         price:
           type: number
@@ -706,18 +708,19 @@ components:
           format: date-time
         costType:
           type: string
-        amount:
+          enum: [VARIABLE, FIXED]
+        quantity:
           type: number
         notes:
           type: string
       required:
          - carId
          - buyerId
-         - transactionObject
+         - description
          - price
          - dayOfTransaction
          - costType
-         - amount
+         - quantity
 
     CreateDrive:
       type: object
@@ -728,7 +731,7 @@ components:
         driveDate:
           type: string
           format: date-time
-        distance:
+        odometer:
           type: number
         driverId:
           type: number
@@ -738,7 +741,7 @@ components:
       required:
         - carId
         - driveDate
-        - distance
+        - odometer
         - driverId
 
     RetrieveDrive:
@@ -753,7 +756,7 @@ components:
         driveDate:
           type: string
           format: date-time
-        distance:
+        odometer:
           type: number
         driverId:
           type: number
@@ -764,7 +767,7 @@ components:
         - driveId
         - carId
         - driveDate
-        - distance
+        - odometer
         - driverId
 
     PutDrive:
@@ -776,7 +779,7 @@ components:
         driveDate:
           type: string
           format: date-time
-        distance:
+        odometer:
           type: number
         driverId:
           type: number
@@ -786,7 +789,7 @@ components:
       required:
         - carId
         - driveDate
-        - distance
+        - odometer
         - driverId
 
     CreateUser:
