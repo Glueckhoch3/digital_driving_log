@@ -1,6 +1,6 @@
 # Digital Driving Log
 
-> **A comprehensive digital solution for managing shared vehicle driving logs and cost distribution**
+> **A digital solution for managing shared vehicle driving logs and cost distribution**
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Java Version](https://img.shields.io/badge/Java-21+-orange.svg)](backend/pom.xml)
@@ -9,7 +9,7 @@
 
 ## Quick Overview
 
-**Digital Driving Log** is a modern web application designed to replace manual driving logs and Excel spreadsheets. It provides a centralized platform for shared vehicle participants to track drives, manage expenses, and automatically calculate fair cost distribution.
+**Digital Driving Log** is a web application designed to replace manual driving logs and Excel spreadsheets. It provides a centralized platform for shared vehicle participants to track drives, manage expenses, and calculate cost distribution.
 
 ### Perfect For
 - Family car sharing
@@ -42,13 +42,13 @@
 ### Cost Management
 - **Fixed Costs**: Insurance, registration fees (distributed equally)
 - **Variable Costs**: Fuel, maintenance, repairs (distributed by distance)
-- **Fuel Tracking**: Automatic cost calculation per drive
+- **Fuel Tracking**: Cost calculation per drive
 - **Real-time Distribution**: View current cost balances anytime
 
 ### Shareholder Management
-- Add and remove participants flexibly
+- Add and remove participants
 - Support for temporary participants (variable costs only)
-- Automatic cost distribution based on participant type
+- Cost distribution based on participant type
 - Transparent cost breakdown per person
 - Dedicated user and car management pages for create/update/delete workflows
 
@@ -350,9 +350,9 @@ npm run build -- --configuration production
 ### Current Status: Alpha (v0.0.1)
 - [X] Project structure
 - [X] Database schema
-- [ ] Core drive logging
+- [X] Core drive logging
 - [ ] Cost distribution algorithms
-- [ ] Basic UI/UX
+- [X] Basic UI/UX
 
 ### Short Term (Q1-Q2 2026)
 - [ ] Complete CRUD operations for all entities
@@ -409,8 +409,8 @@ For questions, issues, or suggestions:
 
 ---
 
-**Last Updated**: February 6, 2026
-**Project Version**: 0.0.1-SNAPSHOT
+**Last Updated**: Juli 18, 2026
+**Project Version**: 0.0.2-SNAPSHOT
 **Maintained By**: [Glueckhoch3]
 
 *This project is done with the help of Copilot and serves the purpos of creating experience in softwaredevelopment.*

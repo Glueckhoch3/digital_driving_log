@@ -12,3 +12,5 @@
 | ADR-010 | Naming conventions: English and explicit column names | backend | accepted | 2026-04-06 | |
 | ADR-011 | SBOM generation and vulnerability scanning: cdxgen + trivy | security | accepted | 2026-07-09 | |
 | ADR-012 | Schema management: ddl-auto validate in prod, Flyway planned | backend | accepted | 2026-07-09 | |
+| ADR-013 | Allowed drivers: rejected CarUser join entity, any User can drive any Car | backend | accepted | 2026-07-18 | |
+| ADR-014 | Drive distance calculation: odometer-delta vs. begin+end odometer | backend | proposed | 2026-07-18 | |
