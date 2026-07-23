@@ -10,6 +10,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Size;
 
 @Data
 @NoArgsConstructor
@@ -22,6 +23,7 @@ public class CreateCostRequest {
     private Long buyerId;
 
     @NotBlank
+    @Size(min = 2, max = 63)
     private String description;
 
     @NotNull

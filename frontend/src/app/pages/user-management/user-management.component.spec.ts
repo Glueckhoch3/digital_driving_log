@@ -58,7 +58,7 @@ describe('UserManagementComponent', () => {
     expect(component.loading()).toBe(false);
   });
 
-  it('does not submit an invalid form', () => {
+  it('does not submit an invalid form and shows a validation error', () => {
     component.userForm.setValue({
       firstname: '',
       lastname: '',
@@ -67,9 +67,43 @@ describe('UserManagementComponent', () => {
     });
 
     component.submit();
+    fixture.detectChanges();
 
     expect(userService.createUser).not.toHaveBeenCalled();
     expect(component.userForm.touched).toBe(true);
+    expect(component.error()).toBe('userManagement.messages.formInvalid');
+    expect(fixture.nativeElement.textContent).toContain('userManagement.messages.formInvalid');
+  });
+
+  it('rejects a birthday that is today or in the future', () => {
+    const today = new Date().toISOString().slice(0, 10);
+    component.userForm.setValue({
+      firstname: 'Max',
+      lastname: 'Neu',
+      driverLicense: false,
+      birthday: today,
+    });
+
+    expect(component.userForm.controls.birthday.invalid).toBe(true);
+    expect(component.userForm.controls.birthday.errors?.['pastDate']).toBe(true);
+  });
+
+  it('clears a stale success message when a new invalid submission is attempted', () => {
+    component.message.set('userManagement.messages.createSuccess');
+    component.userForm.setValue({
+      firstname: '',
+      lastname: '',
+      driverLicense: false,
+      birthday: '',
+    });
+
+    component.submit();
+    fixture.detectChanges();
+
+    expect(component.message()).toBe('');
+    expect(fixture.nativeElement.textContent).not.toContain(
+      'userManagement.messages.createSuccess',
+    );
   });
 
   it('creates a user from a valid form and reloads the list', () => {
@@ -144,5 +178,24 @@ describe('UserManagementComponent', () => {
     component.delete(1);
 
     expect(component.error()).toBe('userManagement.messages.deleteFailed');
+  });
+
+  it('surfaces the backend detail message when the create request fails', () => {
+    userService.createUser.mockReturnValue(
+      throwError(() => ({
+        status: 400,
+        error: { detail: 'firstname must not exceed 63 characters' },
+      })),
+    );
+    component.userForm.setValue({
+      firstname: 'Max',
+      lastname: 'Neu',
+      driverLicense: false,
+      birthday: '',
+    });
+
+    component.submit();
+
+    expect(component.error()).toBe('firstname must not exceed 63 characters');
   });
 });

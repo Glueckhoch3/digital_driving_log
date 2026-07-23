@@ -15,17 +15,34 @@
     <form class="car-workspace__card" [formGroup]="driveForm" (ngSubmit)="saveDrive()">
       <h3>{{ 'carWorkspace.driveForm.title' | translate }}</h3>
       <label>{{ 'carWorkspace.driveForm.driveDate' | translate }}</label>
-      <input type="date" formControlName="driveDate" />
+      <input
+        type="date"
+        formControlName="driveDate"
+        [class.invalid]="
+          driveForm.controls.driveDate.invalid && driveForm.controls.driveDate.touched
+        "
+      />
+      <app-field-error [control]="driveForm.controls.driveDate" />
 
       <label>{{ 'carWorkspace.driveForm.odometer' | translate }}</label>
-      <input type="number" formControlName="odometer" min="0" />
+      <input
+        type="number"
+        formControlName="odometer"
+        min="1"
+        [class.invalid]="driveForm.controls.odometer.invalid && driveForm.controls.odometer.touched"
+      />
+      <app-field-error [control]="driveForm.controls.odometer" />
 
       <label>{{ 'carWorkspace.driveForm.driver' | translate }}</label>
-      <select formControlName="driverId">
+      <select
+        formControlName="driverId"
+        [class.invalid]="driveForm.controls.driverId.invalid && driveForm.controls.driverId.touched"
+      >
         @for (user of users(); track user.userId) {
           <option [value]="user.userId">{{ user.firstname }} {{ user.lastname }}</option>
         }
       </select>
+      <app-field-error [control]="driveForm.controls.driverId" />
 
       <label>{{ 'carWorkspace.driveForm.notes' | translate }}</label>
       <textarea rows="3" formControlName="notes"></textarea>
@@ -37,20 +54,50 @@
 
       @if (driveForm.value.includeFuel) {
         <label>{{ 'carWorkspace.driveForm.fuelPrice' | translate }}</label>
-        <input type="number" formControlName="fuelPrice" min="0" step="0.01" />
+        <input
+          type="number"
+          formControlName="fuelPrice"
+          min="0"
+          step="0.01"
+          [class.invalid]="
+            driveForm.controls.fuelPrice.invalid && driveForm.controls.fuelPrice.touched
+          "
+        />
+        <app-field-error [control]="driveForm.controls.fuelPrice" />
 
         <label>{{ 'carWorkspace.driveForm.fuelQuantity' | translate }}</label>
-        <input type="number" formControlName="fuelQuantity" min="1" />
+        <input
+          type="number"
+          formControlName="fuelQuantity"
+          min="1"
+          [class.invalid]="
+            driveForm.controls.fuelQuantity.invalid && driveForm.controls.fuelQuantity.touched
+          "
+        />
+        <app-field-error [control]="driveForm.controls.fuelQuantity" />
 
         <label>{{ 'carWorkspace.driveForm.fuelDate' | translate }}</label>
-        <input type="date" formControlName="fuelDate" />
+        <input
+          type="date"
+          formControlName="fuelDate"
+          [class.invalid]="
+            driveForm.controls.fuelDate.invalid && driveForm.controls.fuelDate.touched
+          "
+        />
+        <app-field-error [control]="driveForm.controls.fuelDate" />
 
         <label>{{ 'carWorkspace.driveForm.fuelBuyer' | translate }}</label>
-        <select formControlName="fuelBuyerId">
+        <select
+          formControlName="fuelBuyerId"
+          [class.invalid]="
+            driveForm.controls.fuelBuyerId.invalid && driveForm.controls.fuelBuyerId.touched
+          "
+        >
           @for (user of users(); track user.userId) {
             <option [value]="user.userId">{{ user.firstname }} {{ user.lastname }}</option>
           }
         </select>
+        <app-field-error [control]="driveForm.controls.fuelBuyerId" />
 
         <label>{{ 'carWorkspace.driveForm.fuelNotes' | translate }}</label>
         <textarea rows="2" formControlName="fuelNotes"></textarea>
@@ -63,29 +110,74 @@
       <h3>{{ 'carWorkspace.transactionForm.title' | translate }}</h3>
 
       <label>{{ 'carWorkspace.transactionForm.date' | translate }}</label>
-      <input type="date" formControlName="dayOfTransaction" />
+      <input
+        type="date"
+        formControlName="dayOfTransaction"
+        [class.invalid]="
+          transactionForm.controls.dayOfTransaction.invalid &&
+          transactionForm.controls.dayOfTransaction.touched
+        "
+      />
+      <app-field-error [control]="transactionForm.controls.dayOfTransaction" />
 
       <label>{{ 'carWorkspace.transactionForm.buyer' | translate }}</label>
-      <select formControlName="buyerId">
+      <select
+        formControlName="buyerId"
+        [class.invalid]="
+          transactionForm.controls.buyerId.invalid && transactionForm.controls.buyerId.touched
+        "
+      >
         @for (user of users(); track user.userId) {
           <option [value]="user.userId">{{ user.firstname }} {{ user.lastname }}</option>
         }
       </select>
+      <app-field-error [control]="transactionForm.controls.buyerId" />
 
       <label>{{ 'carWorkspace.transactionForm.description' | translate }}</label>
-      <input type="text" formControlName="description" />
+      <input
+        type="text"
+        formControlName="description"
+        [class.invalid]="
+          transactionForm.controls.description.invalid &&
+          transactionForm.controls.description.touched
+        "
+      />
+      <app-field-error [control]="transactionForm.controls.description" />
 
       <label>{{ 'carWorkspace.transactionForm.type' | translate }}</label>
-      <select formControlName="costType">
+      <select
+        formControlName="costType"
+        [class.invalid]="
+          transactionForm.controls.costType.invalid && transactionForm.controls.costType.touched
+        "
+      >
         <option value="VARIABLE">{{ 'carWorkspace.costTypes.VARIABLE' | translate }}</option>
         <option value="FIXED">{{ 'carWorkspace.costTypes.FIXED' | translate }}</option>
       </select>
+      <app-field-error [control]="transactionForm.controls.costType" />
 
       <label>{{ 'carWorkspace.transactionForm.price' | translate }}</label>
-      <input type="number" formControlName="price" min="0" step="0.01" />
+      <input
+        type="number"
+        formControlName="price"
+        min="0"
+        step="0.01"
+        [class.invalid]="
+          transactionForm.controls.price.invalid && transactionForm.controls.price.touched
+        "
+      />
+      <app-field-error [control]="transactionForm.controls.price" />
 
       <label>{{ 'carWorkspace.transactionForm.quantity' | translate }}</label>
-      <input type="number" formControlName="quantity" min="1" />
+      <input
+        type="number"
+        formControlName="quantity"
+        min="1"
+        [class.invalid]="
+          transactionForm.controls.quantity.invalid && transactionForm.controls.quantity.touched
+        "
+      />
+      <app-field-error [control]="transactionForm.controls.quantity" />
 
       <label>{{ 'carWorkspace.transactionForm.notes' | translate }}</label>
       <textarea rows="3" formControlName="notes"></textarea>

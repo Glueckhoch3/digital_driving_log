@@ -419,38 +419,8 @@ For database schema, see [digitalDriveLog-database.dbml](digitalDriveLog-databas
 Current frontend and backend integrations use the base path:
 
 - `http://localhost:8080/ddl/api`
+API Documentation see: [api_doc](./api_doc.yaml)
 
-### Users
-- `GET /users` - List all users
-- `POST /users` - Create user
-- `GET /users/{userId}` - Get user by ID
-- `PUT /users/{userId}` - Update user
-- `DELETE /users/{userId}` - Delete user
-
-### Vehicles
-- `GET /vehicles` - List all vehicles
-- `POST /vehicles` - Create vehicle
-- `GET /vehicles/{carId}` - Get vehicle by ID
-- `PUT /vehicles/{carId}` - Update vehicle
-- `DELETE /vehicles/{carId}` - Delete vehicle
-
-### Drives
-- `POST /drives` - Create drive
-- `GET /drives/{driveId}` - Get drive by ID
-- `PUT /drives/{driveId}` - Update drive
-- `DELETE /drives/{driveId}` - Delete drive
-- `GET /vehicles/{carId}/drives` - List drives for one vehicle
-- `GET /users/{userId}/drives` - List drives for one user
-- `GET /vehicles/{carId}/users/{userId}/drives` - List drives filtered by vehicle and user
-
-### Costs
-- `GET /costs` - List all costs
-- `POST /costs` - Create cost
-- `GET /costs/{costId}` - Get cost by ID
-- `PUT /costs/{costId}` - Update cost
-- `DELETE /costs/{costId}` - Delete cost
-- `GET /vehicles/{carId}/costs` - List costs for one vehicle
-- `GET /users/{userId}/costs` - List costs for one user
 
 ### Request/response shape highlights
 - `CreateDriveRequest`/`UpdateDriveRequest`: `carId`, `odometer`, `driverId`, `driveDate`, optional `notes`
@@ -581,7 +551,7 @@ src/
 ### Testing
 - Backend: JUnit 5 + Mockito
 - Frontend: Jasmine + Karma
-- Aim for >80% code coverage
+- Aim for ~80% code coverage
 
 ### Documentation
 - Update this file for architectural changes

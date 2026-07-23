@@ -47,6 +47,12 @@
     margin-top: 0.35rem;
   }
 
+  input.invalid,
+  select.invalid,
+  textarea.invalid {
+    border-color: #b02020;
+  }
+
   .car-management__row-actions button,
   .car-management__form-actions button {
     width: auto;

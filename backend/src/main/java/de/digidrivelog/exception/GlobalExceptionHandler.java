@@ -1,5 +1,6 @@
 package de.digidrivelog.exception;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
@@ -20,8 +21,10 @@ import java.util.Map;
  *   <li>unreadable/invalid body (e.g. unknown {@code costType}) → 400</li>
  *   <li>{@link ResponseStatusException} (missing entity, …) → its own status</li>
  *   <li>{@link DataIntegrityViolationException} (FK / unique violation) → 409</li>
+ *   <li>anything else (bug, null-pointer, …) → 500 with a generic message, logged server-side</li>
  * </ul>
  */
+@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -47,7 +50,18 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ProblemDetail handleDataIntegrity(DataIntegrityViolationException ex) {
-        return ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT,
-                "Request violates a data integrity constraint");
+        String cause = ex.getMostSpecificCause().getMessage();
+        // Postgres lower-cases unquoted identifiers; H2 (used in tests) upper-cases them.
+        String detail = cause != null && cause.toLowerCase().contains("idx_car_plate_number")
+                ? "Plate number already in use"
+                : "Request violates a data integrity constraint";
+        return ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, detail);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ProblemDetail handleUnexpected(Exception ex) {
+        log.error("Unhandled exception while processing request", ex);
+        return ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR,
+                "An unexpected error occurred");
     }
 }

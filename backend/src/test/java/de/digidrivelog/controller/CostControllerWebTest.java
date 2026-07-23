@@ -125,6 +125,30 @@ class CostControllerWebTest {
     }
 
     @Test
+    void createCostWithTooShortDescription_shouldReturn400() throws Exception {
+        mockMvc.perform(post("/ddl/api/costs")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {"carId":%d,"buyerId":%d,"description":"O","price":5.00,
+                                 "quantity":1,"dayOfTransaction":"2025-05-05","costType":"variable"}
+                                """.formatted(car.getCarId(), buyer.getUserId())))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void createCostWithTooLongDescription_shouldReturn400() throws Exception {
+        String tooLongDescription = "D".repeat(64);
+
+        mockMvc.perform(post("/ddl/api/costs")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {"carId":%d,"buyerId":%d,"description":"%s","price":5.00,
+                                 "quantity":1,"dayOfTransaction":"2025-05-05","costType":"variable"}
+                                """.formatted(car.getCarId(), buyer.getUserId(), tooLongDescription)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
     void createCostWithUnknownCar_shouldReturn404() throws Exception {
         mockMvc.perform(post("/ddl/api/costs")
                         .contentType(MediaType.APPLICATION_JSON)

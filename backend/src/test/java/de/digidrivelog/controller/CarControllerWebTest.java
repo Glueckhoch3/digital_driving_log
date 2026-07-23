@@ -96,12 +96,49 @@ class CarControllerWebTest {
     }
 
     @Test
+    void createCarWithDuplicatePlateNumber_shouldReturn409WithSpecificMessage() throws Exception {
+        createCar("First Car", "M-DUP-1");
+
+        mockMvc.perform(post("/ddl/api/vehicles")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {"name":"Second Car","plateNumber":"M-DUP-1","ownerId":%d}
+                                """.formatted(owner.getUserId())))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.detail").value("Plate number already in use"));
+    }
+
+    @Test
     void createCarWithBlankName_shouldReturn400() throws Exception {
         mockMvc.perform(post("/ddl/api/vehicles")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {"name":"","plateNumber":"M-NC-1","ownerId":%d}
                                 """.formatted(owner.getUserId())))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void createCarWithTooLongName_shouldReturn400() throws Exception {
+        String tooLongName = "N".repeat(51);
+
+        mockMvc.perform(post("/ddl/api/vehicles")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {"name":"%s","plateNumber":"M-NC-1","ownerId":%d}
+                                """.formatted(tooLongName, owner.getUserId())))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void createCarWithTooLongPlateNumber_shouldReturn400() throws Exception {
+        String tooLongPlate = "P".repeat(16);
+
+        mockMvc.perform(post("/ddl/api/vehicles")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {"name":"New Car","plateNumber":"%s","ownerId":%d}
+                                """.formatted(tooLongPlate, owner.getUserId())))
                 .andExpect(status().isBadRequest());
     }
 

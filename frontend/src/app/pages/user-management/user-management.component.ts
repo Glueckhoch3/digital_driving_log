@@ -1,13 +1,17 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { UserService } from '../../services/user.service';
 import { CreateUserRequest, UpdateUserRequest, UserDto } from '../../models/users';
+import { extractApiErrorMessage } from '../../models/api-error';
+import { pastDateValidator } from '../../validators/past-date.validator';
+import { FieldErrorComponent } from '../../components/field-error/field-error.component';
 
 @Component({
   selector: 'app-user-management',
   standalone: true,
-  imports: [ReactiveFormsModule, TranslateModule],
+  imports: [ReactiveFormsModule, TranslateModule, FieldErrorComponent],
   templateUrl: './user-management.component.html',
   styleUrl: './user-management.component.scss',
 })
@@ -25,7 +29,7 @@ export class UserManagementComponent implements OnInit {
     firstname: ['', [Validators.required, Validators.maxLength(63)]],
     lastname: ['', [Validators.required, Validators.maxLength(63)]],
     driverLicense: [false],
-    birthday: [''],
+    birthday: ['', pastDateValidator()],
   });
 
   ngOnInit(): void {
@@ -39,16 +43,20 @@ export class UserManagementComponent implements OnInit {
         this.users.set(users);
         this.loading.set(false);
       },
-      error: () => {
-        this.error.set('userManagement.messages.loadFailed');
+      error: (err: HttpErrorResponse) => {
+        this.error.set(extractApiErrorMessage(err, 'userManagement.messages.loadFailed'));
         this.loading.set(false);
       },
     });
   }
 
   submit(): void {
+    this.message.set('');
+    this.error.set('');
+
     if (this.userForm.invalid) {
       this.userForm.markAllAsTouched();
+      this.error.set('userManagement.messages.formInvalid');
       return;
     }
 
@@ -69,8 +77,8 @@ export class UserManagementComponent implements OnInit {
           this.resetForm();
           this.loadUsers();
         },
-        error: () => {
-          this.error.set('userManagement.messages.createFailed');
+        error: (err: HttpErrorResponse) => {
+          this.error.set(extractApiErrorMessage(err, 'userManagement.messages.createFailed'));
         },
       });
       return;
@@ -84,8 +92,8 @@ export class UserManagementComponent implements OnInit {
         this.resetForm();
         this.loadUsers();
       },
-      error: () => {
-        this.error.set('userManagement.messages.updateFailed');
+      error: (err: HttpErrorResponse) => {
+        this.error.set(extractApiErrorMessage(err, 'userManagement.messages.updateFailed'));
       },
     });
   }
@@ -105,17 +113,19 @@ export class UserManagementComponent implements OnInit {
   }
 
   delete(userId: number): void {
+    this.message.set('');
+    this.error.set('');
     this.userService.deleteUser(userId).subscribe({
       next: () => {
         this.message.set('userManagement.messages.deleteSuccess');
         this.error.set('');
         this.loadUsers();
       },
-      error: (err) => {
+      error: (err: HttpErrorResponse) => {
         this.error.set(
           err?.status === 409
             ? 'userManagement.messages.deleteDependencyBlocked'
-            : 'userManagement.messages.deleteFailed',
+            : extractApiErrorMessage(err, 'userManagement.messages.deleteFailed'),
         );
       },
     });

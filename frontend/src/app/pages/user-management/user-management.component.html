@@ -20,13 +20,28 @@
     </h3>
 
     <label>{{ 'userManagement.form.firstname' | translate }}</label>
-    <input type="text" formControlName="firstname" />
+    <input
+      type="text"
+      formControlName="firstname"
+      [class.invalid]="userForm.controls.firstname.invalid && userForm.controls.firstname.touched"
+    />
+    <app-field-error [control]="userForm.controls.firstname" />
 
     <label>{{ 'userManagement.form.lastname' | translate }}</label>
-    <input type="text" formControlName="lastname" />
+    <input
+      type="text"
+      formControlName="lastname"
+      [class.invalid]="userForm.controls.lastname.invalid && userForm.controls.lastname.touched"
+    />
+    <app-field-error [control]="userForm.controls.lastname" />
 
     <label>{{ 'userManagement.form.birthday' | translate }}</label>
-    <input type="date" formControlName="birthday" />
+    <input
+      type="date"
+      formControlName="birthday"
+      [class.invalid]="userForm.controls.birthday.invalid && userForm.controls.birthday.touched"
+    />
+    <app-field-error [control]="userForm.controls.birthday" />
 
     <label class="user-management__checkbox">
       <input type="checkbox" formControlName="driverLicense" />

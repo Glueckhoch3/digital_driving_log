@@ -1,15 +1,18 @@
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { CarService } from '../../services/car.service';
 import { UserService } from '../../services/user.service';
 import { CarDto, CreateCarRequest, UpdateCarRequest } from '../../models/cars';
 import { UserDto } from '../../models/users';
+import { extractApiErrorMessage } from '../../models/api-error';
+import { FieldErrorComponent } from '../../components/field-error/field-error.component';
 
 @Component({
   selector: 'app-car-management',
   standalone: true,
-  imports: [ReactiveFormsModule, TranslateModule],
+  imports: [ReactiveFormsModule, TranslateModule, FieldErrorComponent],
   templateUrl: './car-management.component.html',
   styleUrl: './car-management.component.scss',
 })
@@ -62,20 +65,23 @@ export class CarManagementComponent implements OnInit {
             this.cars.set(cars);
             this.loading.set(false);
           },
-          error: () => {
-            this.error.set('carManagement.messages.loadFailed');
+          error: (err: HttpErrorResponse) => {
+            this.error.set(extractApiErrorMessage(err, 'carManagement.messages.loadFailed'));
             this.loading.set(false);
           },
         });
       },
-      error: () => {
-        this.error.set('carManagement.messages.loadFailed');
+      error: (err: HttpErrorResponse) => {
+        this.error.set(extractApiErrorMessage(err, 'carManagement.messages.loadFailed'));
         this.loading.set(false);
       },
     });
   }
 
   submit(): void {
+    this.message.set('');
+    this.error.set('');
+
     if (this.users().length === 0) {
       this.error.set('carManagement.messages.usersRequiredFirst');
       return;
@@ -83,6 +89,7 @@ export class CarManagementComponent implements OnInit {
 
     if (this.carForm.invalid) {
       this.carForm.markAllAsTouched();
+      this.error.set('carManagement.messages.formInvalid');
       return;
     }
 
@@ -103,8 +110,8 @@ export class CarManagementComponent implements OnInit {
           this.resetForm();
           this.loadData();
         },
-        error: () => {
-          this.error.set('carManagement.messages.createFailed');
+        error: (err: HttpErrorResponse) => {
+          this.error.set(extractApiErrorMessage(err, 'carManagement.messages.createFailed'));
         },
       });
       return;
@@ -118,8 +125,8 @@ export class CarManagementComponent implements OnInit {
         this.resetForm();
         this.loadData();
       },
-      error: () => {
-        this.error.set('carManagement.messages.updateFailed');
+      error: (err: HttpErrorResponse) => {
+        this.error.set(extractApiErrorMessage(err, 'carManagement.messages.updateFailed'));
       },
     });
   }
@@ -139,17 +146,19 @@ export class CarManagementComponent implements OnInit {
   }
 
   delete(carId: number): void {
+    this.message.set('');
+    this.error.set('');
     this.carService.deleteCar(carId).subscribe({
       next: () => {
         this.message.set('carManagement.messages.deleteSuccess');
         this.error.set('');
         this.loadData();
       },
-      error: (err) => {
+      error: (err: HttpErrorResponse) => {
         this.error.set(
           err?.status === 409
             ? 'carManagement.messages.deleteDependencyBlocked'
-            : 'carManagement.messages.deleteFailed',
+            : extractApiErrorMessage(err, 'carManagement.messages.deleteFailed'),
         );
       },
     });
