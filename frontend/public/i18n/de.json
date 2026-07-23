@@ -2,7 +2,6 @@
   "header": {
     "title": "Digitales Fahrtenbuch",
     "menu": {
-      "start": "Start",
       "entryOverview": "Managementübersicht",
       "chooseCar": "Auto auswählen",
       "manageUsers": "Benutzer verwalten",
@@ -11,16 +10,6 @@
     "language": {
       "en": "English",
       "de": "Deutsch"
-    }
-  },
-  "start": {
-    "title": "Willkommen",
-    "description": "Wähle deinen Ablauf für Einträge und Übersichten.",
-    "actions": {
-      "entryOverview": "Managementübersicht",
-      "chooseCar": "Auto auswählen",
-      "manageUsers": "Benutzerverwaltung",
-      "manageCars": "Autoverwaltung"
     }
   },
   "common": {

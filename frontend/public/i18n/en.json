@@ -2,7 +2,6 @@
   "header": {
     "title": "Digital Driving Log",
     "menu": {
-      "start": "Start",
       "entryOverview": "Management overview",
       "chooseCar": "Choose car",
       "manageUsers": "Manage users",
@@ -11,16 +10,6 @@
     "language": {
       "en": "English",
       "de": "Deutsch"
-    }
-  },
-  "start": {
-    "title": "Welcome",
-    "description": "Choose your workflow for entries and overviews.",
-    "actions": {
-      "entryOverview": "Management overview",
-      "chooseCar": "Choose car",
-      "manageUsers": "User management",
-      "manageCars": "Car management"
     }
   },
   "common": {

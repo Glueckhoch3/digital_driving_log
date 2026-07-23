@@ -1,5 +1,4 @@
 import { Routes } from '@angular/router';
-import { StartComponent } from './pages/start/start.component';
 import { CarSelectionComponent } from './pages/car-selection/car-selection.component';
 import { CarHubComponent } from './pages/car-hub/car-hub.component';
 import { DrivesListComponent } from './pages/drives-list/drives-list.component';
@@ -13,8 +12,8 @@ import { carResolver } from './resolvers/car.resolver';
 import { usersResolver } from './resolvers/users.resolver';
 
 export const routes: Routes = [
-  { path: '', component: StartComponent },
-  { path: 'cars/select', component: CarSelectionComponent },
+  { path: '', component: CarSelectionComponent },
+  { path: 'cars/select', redirectTo: '' },
   {
     path: 'cars/:carId',
     resolve: { car: carResolver, users: usersResolver },
