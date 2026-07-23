@@ -1,0 +1,61 @@
+<section class="calc">
+  <a class="calc__back" routerLink="/calculations">{{ 'calculations.back' | translate }}</a>
+  <h2 class="calc__title">{{ 'calculations.factors.title' | translate }}</h2>
+  <p class="calc__sub">
+    {{ 'calculations.factors.subtitle' | translate }}
+    <span class="calc__pill calc__pill--lock">{{
+      'calculations.factors.adminOnly' | translate
+    }}</span>
+  </p>
+
+  <div class="calc__fields" style="margin-bottom: 1.3rem">
+    <div class="calc__field">
+      <label>{{ 'calculations.fields.car' | translate }}</label>
+      <select class="calc__control" [(ngModel)]="carId" (ngModelChange)="load()">
+        @for (car of cars(); track car.carId) {
+          <option [ngValue]="car.carId">{{ car.name }} · {{ car.plateNumber }}</option>
+        }
+      </select>
+    </div>
+    <div class="calc__field">
+      <label>{{ 'calculations.fields.year' | translate }}</label>
+      <select class="calc__control" [(ngModel)]="year" (ngModelChange)="load()">
+        @for (y of years; track y) {
+          <option [ngValue]="y">{{ y }}</option>
+        }
+      </select>
+    </div>
+  </div>
+
+  @if (loading()) {
+    <p>{{ 'calculations.loading' | translate }}</p>
+  } @else if (error()) {
+    <p class="calc__note calc__note--error">{{ error() | translate }}</p>
+  } @else if (rows().length === 0) {
+    <p class="calc__note calc__note--info">{{ 'calculations.notCalculated' | translate }}</p>
+  } @else {
+    <div class="calc__tbl-wrap">
+      <table class="calc__table">
+        <thead>
+          <tr>
+            <th>{{ 'calculations.cols.driver' | translate }}</th>
+            <th class="num">{{ 'calculations.cols.varFactor' | translate }}</th>
+            <th class="num">{{ 'calculations.cols.fixFactor' | translate }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of rows(); track row.userId) {
+            <tr>
+              <td>{{ row.userName }}</td>
+              <td class="num">{{ row.factorVariableCost | number: '1.2-2' }}%</td>
+              <td class="num">{{ row.factorFixCost | number: '1.2-2' }}%</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    <p class="calc__note calc__note--info" style="margin-top: 1.2rem">
+      {{ 'calculations.factors.explainer' | translate }}
+    </p>
+  }
+</section>

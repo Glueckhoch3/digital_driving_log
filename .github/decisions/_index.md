@@ -14,3 +14,4 @@
 | ADR-012 | Schema management: ddl-auto validate in prod, Flyway planned | backend | accepted | 2026-07-09 | |
 | ADR-013 | Allowed drivers: rejected CarUser join entity, any User can drive any Car | backend | accepted | 2026-07-18 | |
 | ADR-014 | Drive distance calculation: odometer-delta vs. begin+end odometer | backend | proposed | 2026-07-18 | |
+| ADR-015 | Yearly cost distribution: distance-weighted variable, equal-split fixed factors | backend | proposed | 2026-07-23 | Issue #20 |

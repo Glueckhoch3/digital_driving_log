@@ -1,0 +1,36 @@
+<section class="calc">
+  <h2 class="calc__title">{{ 'calculations.hub.title' | translate }}</h2>
+  <p class="calc__sub">{{ 'calculations.hub.subtitle' | translate }}</p>
+
+  <div class="calc__group">
+    <p class="calc__eyebrow">{{ 'calculations.hub.viewResults' | translate }}</p>
+    <div class="calc__card-grid">
+      <a class="calc__link-card" routerLink="yearly">
+        <h4>{{ 'calculations.hub.yearlyTitle' | translate }}</h4>
+        <p>{{ 'calculations.hub.yearlyDesc' | translate }}</p>
+      </a>
+      <a class="calc__link-card" routerLink="combined">
+        <h4>{{ 'calculations.hub.combinedTitle' | translate }}</h4>
+        <p>{{ 'calculations.hub.combinedDesc' | translate }}</p>
+      </a>
+      <a class="calc__link-card" routerLink="monthly">
+        <h4>{{ 'calculations.hub.monthlyTitle' | translate }}</h4>
+        <p>{{ 'calculations.hub.monthlyDesc' | translate }}</p>
+      </a>
+      <a class="calc__link-card" routerLink="factors">
+        <h4>{{ 'calculations.hub.factorsTitle' | translate }}</h4>
+        <p>{{ 'calculations.hub.factorsDesc' | translate }}</p>
+      </a>
+    </div>
+  </div>
+
+  <div class="calc__group">
+    <p class="calc__eyebrow">{{ 'calculations.hub.takeAction' | translate }}</p>
+    <div class="calc__card-grid">
+      <a class="calc__link-card calc__link-card--action" routerLink="run">
+        <h4>{{ 'calculations.hub.runTitle' | translate }}</h4>
+        <p>{{ 'calculations.hub.runDesc' | translate }}</p>
+      </a>
+    </div>
+  </div>
+</section>

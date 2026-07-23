@@ -4,6 +4,7 @@
     "menu": {
       "entryOverview": "Management overview",
       "chooseCar": "Choose car",
+      "calculations": "Calculations",
       "manageUsers": "Manage users",
       "manageCars": "Manage cars"
     },
@@ -202,6 +203,110 @@
         "quantity": "Quantity",
         "type": "Type"
       }
+    }
+  },
+  "calculations": {
+    "back": "← Back to calculations",
+    "loading": "Loading…",
+    "notCalculated": "No calculation for this selection yet. Run it on the action page.",
+    "hub": {
+      "title": "Calculations",
+      "subtitle": "Review distances, factors and settlements, or run a monthly or yearly calculation.",
+      "viewResults": "View results",
+      "takeAction": "Take action",
+      "yearlyTitle": "Yearly settlement",
+      "yearlyDesc": "One car's owed split per driver — fixed and variable.",
+      "combinedTitle": "Combined settlement",
+      "combinedDesc": "Each driver's net balance across all their cars.",
+      "monthlyTitle": "Monthly distances",
+      "monthlyDesc": "Per-driver kilometres by month for a car.",
+      "factorsTitle": "Distribution factors",
+      "factorsDesc": "The variable and fixed factors used per driver (read-only).",
+      "runTitle": "Run a calculation",
+      "runDesc": "Aggregate a month, calculate a year, or delete a run."
+    },
+    "run": {
+      "title": "Run a calculation",
+      "subtitle": "Each action stands on its own. A period is calculated only once — an existing run must be deleted before it is recalculated.",
+      "monthlyTitle": "Aggregate a month",
+      "monthlyDesc": "Rolls this car's drives into monthly distance totals per driver. Distances only, no costs.",
+      "aggregateBtn": "Aggregate month",
+      "monthlyExistsWarn": "This month is already aggregated. Delete it below before redoing.",
+      "yearlyTitle": "Calculate a year",
+      "yearlyDesc": "Rolls the year's months up, totals fixed and variable costs, derives factors, and writes the combined settlement.",
+      "calculateBtn": "Calculate year",
+      "yearlyHint": "Aggregate all of the year's months first. Fixed-cost factors default to an equal split and are adjustable only by an admin in the database.",
+      "yearlyExistsWarn": "This year is already calculated for this car. Delete it below before recalculating.",
+      "deleteTitle": "Delete a calculation",
+      "deleteDesc": "Removes a stored monthly or yearly run so its period can be recalculated.",
+      "deleteBtn": "Delete run"
+    },
+    "fields": {
+      "car": "Car",
+      "year": "Year",
+      "month": "Month",
+      "period": "Period",
+      "periodMonthly": "Monthly",
+      "periodYearly": "Yearly"
+    },
+    "months": {
+      "1": "January",
+      "2": "February",
+      "3": "March",
+      "4": "April",
+      "5": "May",
+      "6": "June",
+      "7": "July",
+      "8": "August",
+      "9": "September",
+      "10": "October",
+      "11": "November",
+      "12": "December"
+    },
+    "messages": {
+      "monthAggregated": "Month aggregated.",
+      "monthExists": "This month is already aggregated. Delete it first to redo.",
+      "yearCalculated": "Year calculated.",
+      "yearExists": "This year is already calculated. Delete it first to recalculate.",
+      "deleted": "Calculation deleted.",
+      "actionFailed": "The action could not be completed. Please try again.",
+      "loadFailed": "Failed to load the calculation results."
+    },
+    "cols": {
+      "driver": "Driver",
+      "distance": "Distance (km)",
+      "varFactor": "Var. factor",
+      "fixFactor": "Fix. factor",
+      "variableOwed": "Variable owed (€)",
+      "fixedOwed": "Fixed owed (€)",
+      "totalOwed": "Total owed (€)",
+      "total": "Total",
+      "paid": "Paid (€)",
+      "variableDiff": "Variable diff. (€)",
+      "fixedDiff": "Fixed diff. (€)",
+      "netBalance": "Net balance (€)",
+      "month": "Month"
+    },
+    "yearly": {
+      "title": "Yearly settlement",
+      "subtitle": "One car's owed split per driver for the year.",
+      "explainer": "Variable owed = variable factor × the car's variable total (the factor follows distance, so a non-fueler still pays for km driven). Fixed owed = fixed factor × the car's fixed total. This view shows what each driver owes; paid and net balance are combined across cars — see the combined settlement."
+    },
+    "combined": {
+      "title": "Combined settlement",
+      "subtitle": "Net balance per driver across every car in their group.",
+      "explainer": "Variable / fixed diff. = what a driver paid of that cost type minus what they owe, summed across every calculated car. Net balance = the two differences added; positive means the group owes the driver. Each column nets to zero."
+    },
+    "monthly": {
+      "title": "Monthly distances",
+      "subtitle": "Per-driver kilometres by month for a car.",
+      "empty": "No aggregated months for this car and year."
+    },
+    "factors": {
+      "title": "Distribution factors",
+      "subtitle": "The factors that split this car's yearly costs. Variable follows distance; fixed defaults to an equal split.",
+      "adminOnly": "admin-adjusted in DB",
+      "explainer": "Factors are computed by the yearly run and are read-only here. Only an admin adjusts the fixed factor directly in the database."
     }
   }
 }
