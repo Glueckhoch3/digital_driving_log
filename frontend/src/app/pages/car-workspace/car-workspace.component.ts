@@ -12,6 +12,9 @@ import { CarDto } from '../../models/cars';
 import { UserDto } from '../../models/users';
 import { DriveDto, CreateDriveRequest } from '../../models/drives';
 import { CostDto, CreateCostRequest, CostType } from '../../models/costs';
+import { extractApiErrorMessage } from '../../models/api-error';
+import { HttpErrorResponse } from '@angular/common/http';
+import { FieldErrorComponent } from '../../components/field-error/field-error.component';
 
 /** Number of rows shown per page in the drives / transactions tables. */
 const PAGE_SIZE = 10;
@@ -26,7 +29,7 @@ interface DriveRow {
 @Component({
   selector: 'app-car-workspace',
   standalone: true,
-  imports: [ReactiveFormsModule, TranslateModule, DecimalPipe],
+  imports: [ReactiveFormsModule, TranslateModule, DecimalPipe, FieldErrorComponent],
   templateUrl: './car-workspace.component.html',
   styleUrl: './car-workspace.component.scss',
 })
@@ -54,7 +57,7 @@ export class CarWorkspaceComponent implements OnInit {
 
   readonly driveForm = this.fb.group({
     driveDate: [new Date().toISOString().slice(0, 10), Validators.required],
-    odometer: [0, [Validators.required, Validators.min(0)]],
+    odometer: [0, [Validators.required, Validators.min(1)]],
     driverId: [0, [Validators.required, Validators.min(1)]],
     notes: [''],
     includeFuel: [false],
@@ -67,7 +70,7 @@ export class CarWorkspaceComponent implements OnInit {
 
   readonly transactionForm = this.fb.group({
     buyerId: [0, [Validators.required, Validators.min(1)]],
-    description: ['', [Validators.required, Validators.minLength(2)]],
+    description: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(63)]],
     price: [0, [Validators.required, Validators.min(0)]],
     quantity: [1, [Validators.required, Validators.min(1)]],
     dayOfTransaction: [new Date().toISOString().slice(0, 10), Validators.required],
@@ -98,6 +101,10 @@ export class CarWorkspaceComponent implements OnInit {
   });
 
   ngOnInit(): void {
+    this.driveForm.controls.includeFuel.valueChanges.subscribe((includeFuel) => {
+      this.setFuelValidatorsEnabled(!!includeFuel);
+    });
+
     this.route.paramMap
       .pipe(
         switchMap((params) => {
@@ -110,11 +117,24 @@ export class CarWorkspaceComponent implements OnInit {
           this.car.set(car);
           this.loadUsersAndEntries(car.carId);
         },
-        error: () => {
-          this.error.set('carWorkspace.loadError');
+        error: (err: HttpErrorResponse) => {
+          this.error.set(extractApiErrorMessage(err, 'carWorkspace.loadError'));
           this.loading.set(false);
         },
       });
+  }
+
+  /** The fuel sub-fields mirror CreateCostRequest's own constraints, but only when fuel is actually being logged. */
+  private setFuelValidatorsEnabled(enabled: boolean): void {
+    const { fuelBuyerId, fuelPrice, fuelQuantity, fuelDate } = this.driveForm.controls;
+    fuelBuyerId.setValidators(enabled ? [Validators.required, Validators.min(1)] : []);
+    fuelPrice.setValidators(enabled ? [Validators.required, Validators.min(0)] : []);
+    fuelQuantity.setValidators(enabled ? [Validators.required, Validators.min(1)] : []);
+    fuelDate.setValidators(enabled ? [Validators.required] : []);
+    fuelBuyerId.updateValueAndValidity();
+    fuelPrice.updateValueAndValidity();
+    fuelQuantity.updateValueAndValidity();
+    fuelDate.updateValueAndValidity();
   }
 
   private loadUsersAndEntries(carId: number): void {
@@ -131,8 +151,8 @@ export class CarWorkspaceComponent implements OnInit {
 
         this.reloadEntries(carId);
       },
-      error: () => {
-        this.error.set('carWorkspace.loadError');
+      error: (err: HttpErrorResponse) => {
+        this.error.set(extractApiErrorMessage(err, 'carWorkspace.loadError'));
         this.loading.set(false);
       },
     });
@@ -160,14 +180,14 @@ export class CarWorkspaceComponent implements OnInit {
                 this.costsTotalPages.set(costPage.totalPages);
                 this.loading.set(false);
               },
-              error: () => {
-                this.error.set('carWorkspace.loadError');
+              error: (err: HttpErrorResponse) => {
+                this.error.set(extractApiErrorMessage(err, 'carWorkspace.loadError'));
                 this.loading.set(false);
               },
             });
         },
-        error: () => {
-          this.error.set('carWorkspace.loadError');
+        error: (err: HttpErrorResponse) => {
+          this.error.set(extractApiErrorMessage(err, 'carWorkspace.loadError'));
           this.loading.set(false);
         },
       });
@@ -200,9 +220,15 @@ export class CarWorkspaceComponent implements OnInit {
   }
 
   saveDrive(): void {
+    this.message.set('');
+    this.error.set('');
+
     const carId = this.car()?.carId;
     if (!carId || this.driveForm.invalid) {
       this.driveForm.markAllAsTouched();
+      if (this.driveForm.invalid) {
+        this.error.set('carWorkspace.messages.driveFormInvalid');
+      }
       return;
     }
 
@@ -236,8 +262,8 @@ export class CarWorkspaceComponent implements OnInit {
               this.resetToFirstPage();
               this.reloadEntries(carId);
             },
-            error: () => {
-              this.error.set('carWorkspace.messages.fuelSaveFailed');
+            error: (err: HttpErrorResponse) => {
+              this.error.set(extractApiErrorMessage(err, 'carWorkspace.messages.fuelSaveFailed'));
             },
           });
           return;
@@ -248,16 +274,22 @@ export class CarWorkspaceComponent implements OnInit {
         this.resetToFirstPage();
         this.reloadEntries(carId);
       },
-      error: () => {
-        this.error.set('carWorkspace.messages.driveSaveFailed');
+      error: (err: HttpErrorResponse) => {
+        this.error.set(extractApiErrorMessage(err, 'carWorkspace.messages.driveSaveFailed'));
       },
     });
   }
 
   saveTransaction(): void {
+    this.message.set('');
+    this.error.set('');
+
     const carId = this.car()?.carId;
     if (!carId || this.transactionForm.invalid) {
       this.transactionForm.markAllAsTouched();
+      if (this.transactionForm.invalid) {
+        this.error.set('carWorkspace.messages.transactionFormInvalid');
+      }
       return;
     }
 
@@ -288,8 +320,8 @@ export class CarWorkspaceComponent implements OnInit {
         this.resetToFirstPage();
         this.reloadEntries(carId);
       },
-      error: () => {
-        this.error.set('carWorkspace.messages.transactionSaveFailed');
+      error: (err: HttpErrorResponse) => {
+        this.error.set(extractApiErrorMessage(err, 'carWorkspace.messages.transactionSaveFailed'));
       },
     });
   }

@@ -78,13 +78,27 @@ describe('CarManagementComponent', () => {
     expect(carService.createCar).not.toHaveBeenCalled();
   });
 
-  it('does not submit an invalid form', () => {
+  it('does not submit an invalid form and shows a validation error', () => {
     component.carForm.setValue({ name: '', plateNumber: '', ownerId: 0, data: '' });
 
     component.submit();
+    fixture.detectChanges();
 
     expect(carService.createCar).not.toHaveBeenCalled();
     expect(component.carForm.touched).toBe(true);
+    expect(component.error()).toBe('carManagement.messages.formInvalid');
+    expect(fixture.nativeElement.textContent).toContain('carManagement.messages.formInvalid');
+  });
+
+  it('clears a stale success message when a new invalid submission is attempted', () => {
+    component.message.set('carManagement.messages.createSuccess');
+    component.carForm.setValue({ name: '', plateNumber: '', ownerId: 0, data: '' });
+
+    component.submit();
+    fixture.detectChanges();
+
+    expect(component.message()).toBe('');
+    expect(fixture.nativeElement.textContent).not.toContain('carManagement.messages.createSuccess');
   });
 
   it('creates a car from a valid form and reloads', () => {
@@ -144,5 +158,24 @@ describe('CarManagementComponent', () => {
     component.delete(10);
 
     expect(component.error()).toBe('carManagement.messages.deleteFailed');
+  });
+
+  it('surfaces the backend detail message when a create request fails', () => {
+    carService.createCar.mockReturnValue(
+      throwError(() => ({
+        status: 400,
+        error: { detail: 'plateNumber must not exceed 15 characters' },
+      })),
+    );
+    component.carForm.setValue({
+      name: 'New Car',
+      plateNumber: 'M-NC-1',
+      ownerId: 1,
+      data: '',
+    });
+
+    component.submit();
+
+    expect(component.error()).toBe('plateNumber must not exceed 15 characters');
   });
 });

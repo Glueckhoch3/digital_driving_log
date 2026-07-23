@@ -1,0 +1,7 @@
+@if (visible()) {
+  <p class="field-error">
+    @for (entry of entries(); track entry.key) {
+      <span>{{ entry.key | translate: entry.params }}</span>
+    }
+  </p>
+}

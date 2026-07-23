@@ -34,6 +34,13 @@
     "edit": "Edit",
     "delete": "Delete"
   },
+  "validation": {
+    "required": "This field is required.",
+    "maxLength": "Must be at most {{max}} characters.",
+    "minLength": "Must be at least {{min}} characters.",
+    "min": "Must be at least {{min}}.",
+    "pastDate": "Must be a date in the past."
+  },
   "userManagement": {
     "title": "User management",
     "description": "Create, update, and delete users.",
@@ -59,6 +66,7 @@
     },
     "messages": {
       "loadFailed": "Failed to load users.",
+      "formInvalid": "Please correct the highlighted fields before submitting.",
       "createSuccess": "User created.",
       "createFailed": "Failed to create user.",
       "updateSuccess": "User updated.",
@@ -94,6 +102,7 @@
     "messages": {
       "loadFailed": "Failed to load cars or users.",
       "usersRequiredFirst": "Create at least one user before creating a car.",
+      "formInvalid": "Please correct the highlighted fields before submitting.",
       "createSuccess": "Car created.",
       "createFailed": "Failed to create car.",
       "updateSuccess": "Car updated.",
@@ -136,8 +145,10 @@
       "driveSaveFailed": "Failed to save drive.",
       "driveAndFuelSaved": "Drive and fuel transaction saved.",
       "fuelSaveFailed": "Drive saved, but fuel transaction failed.",
+      "driveFormInvalid": "Please correct the highlighted fields before submitting.",
       "transactionSaved": "Transaction saved.",
-      "transactionSaveFailed": "Failed to save transaction."
+      "transactionSaveFailed": "Failed to save transaction.",
+      "transactionFormInvalid": "Please correct the highlighted fields before submitting."
     },
     "costTypes": {
       "VARIABLE": "Variable",

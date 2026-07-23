@@ -24,17 +24,31 @@
     </h3>
 
     <label>{{ 'carManagement.form.name' | translate }}</label>
-    <input type="text" formControlName="name" />
+    <input
+      type="text"
+      formControlName="name"
+      [class.invalid]="carForm.controls.name.invalid && carForm.controls.name.touched"
+    />
+    <app-field-error [control]="carForm.controls.name" />
 
     <label>{{ 'carManagement.form.plateNumber' | translate }}</label>
-    <input type="text" formControlName="plateNumber" />
+    <input
+      type="text"
+      formControlName="plateNumber"
+      [class.invalid]="carForm.controls.plateNumber.invalid && carForm.controls.plateNumber.touched"
+    />
+    <app-field-error [control]="carForm.controls.plateNumber" />
 
     <label>{{ 'carManagement.form.owner' | translate }}</label>
-    <select formControlName="ownerId">
+    <select
+      formControlName="ownerId"
+      [class.invalid]="carForm.controls.ownerId.invalid && carForm.controls.ownerId.touched"
+    >
       @for (user of users(); track user.userId) {
         <option [ngValue]="user.userId">{{ user.firstname }} {{ user.lastname }}</option>
       }
     </select>
+    <app-field-error [control]="carForm.controls.ownerId" />
 
     <label>{{ 'carManagement.form.data' | translate }}</label>
     <textarea rows="3" formControlName="data"></textarea>

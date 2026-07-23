@@ -44,6 +44,11 @@
     }
   }
 
+  input.invalid,
+  select.invalid {
+    border-color: #b02020;
+  }
+
   &__pager {
     display: flex;
     gap: 0.75rem;

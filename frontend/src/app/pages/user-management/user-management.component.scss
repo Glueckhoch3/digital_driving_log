@@ -55,6 +55,10 @@
     width: auto;
   }
 
+  input.invalid {
+    border-color: #b02020;
+  }
+
   .user-management__row-actions button,
   .user-management__form-actions button {
     width: auto;

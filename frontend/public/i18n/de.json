@@ -34,6 +34,13 @@
     "edit": "Bearbeiten",
     "delete": "Löschen"
   },
+  "validation": {
+    "required": "Dieses Feld ist erforderlich.",
+    "maxLength": "Darf höchstens {{max}} Zeichen lang sein.",
+    "minLength": "Muss mindestens {{min}} Zeichen lang sein.",
+    "min": "Muss mindestens {{min}} sein.",
+    "pastDate": "Muss ein Datum in der Vergangenheit sein."
+  },
   "userManagement": {
     "title": "Benutzerverwaltung",
     "description": "Benutzer erstellen, bearbeiten und löschen.",
@@ -59,6 +66,7 @@
     },
     "messages": {
       "loadFailed": "Benutzer konnten nicht geladen werden.",
+      "formInvalid": "Bitte korrigiere die markierten Felder, bevor du absendest.",
       "createSuccess": "Benutzer erstellt.",
       "createFailed": "Benutzer konnte nicht erstellt werden.",
       "updateSuccess": "Benutzer aktualisiert.",
@@ -94,6 +102,7 @@
     "messages": {
       "loadFailed": "Autos oder Benutzer konnten nicht geladen werden.",
       "usersRequiredFirst": "Erstelle zuerst mindestens einen Benutzer, bevor du ein Auto anlegst.",
+      "formInvalid": "Bitte korrigiere die markierten Felder, bevor du absendest.",
       "createSuccess": "Auto erstellt.",
       "createFailed": "Auto konnte nicht erstellt werden.",
       "updateSuccess": "Auto aktualisiert.",
@@ -136,8 +145,10 @@
       "driveSaveFailed": "Fahrt konnte nicht gespeichert werden.",
       "driveAndFuelSaved": "Fahrt und Tank-Transaktion gespeichert.",
       "fuelSaveFailed": "Fahrt gespeichert, Tank-Transaktion fehlgeschlagen.",
+      "driveFormInvalid": "Bitte korrigiere die markierten Felder, bevor du absendest.",
       "transactionSaved": "Transaktion gespeichert.",
-      "transactionSaveFailed": "Transaktion konnte nicht gespeichert werden."
+      "transactionSaveFailed": "Transaktion konnte nicht gespeichert werden.",
+      "transactionFormInvalid": "Bitte korrigiere die markierten Felder, bevor du absendest."
     },
     "costTypes": {
       "VARIABLE": "Variabel",
