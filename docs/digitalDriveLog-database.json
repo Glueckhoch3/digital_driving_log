@@ -93,8 +93,8 @@
       ],
       "indices": [],
       "uniqueConstraints": [],
-      "x": -689.4643978125,
-      "y": 1017.6316768750004
+      "x": -716.266310625,
+      "y": 763.6516459375002
     },
     {
       "id": "CIkfRE6yNoEsGrOasSfSx",
@@ -102,6 +102,18 @@
       "comment": "",
       "color": "#6a2b94",
       "fields": [
+        {
+          "id": "fXJc6wP2mxt7YWs_6FRs_",
+          "name": "car_id",
+          "type": "BIGINT",
+          "default": "",
+          "check": "",
+          "primary": true,
+          "unique": true,
+          "notNull": true,
+          "increment": true,
+          "comment": ""
+        },
         {
           "id": "7ek7gwaWDgd9XlNwsjsug",
           "name": "name",
@@ -173,18 +185,6 @@
           "notNull": true,
           "increment": false,
           "comment": ""
-        },
-        {
-          "id": "fXJc6wP2mxt7YWs_6FRs_",
-          "name": "car_id",
-          "type": "BIGINT",
-          "default": "",
-          "check": "",
-          "primary": true,
-          "unique": true,
-          "notNull": true,
-          "increment": true,
-          "comment": ""
         }
       ],
       "indices": [
@@ -205,7 +205,7 @@
       "id": "q6QG27MMVBRKDTIOdB-Tv",
       "name": "drive",
       "comment": "",
-      "color": "#175e7a",
+      "color": "#7a1754",
       "fields": [
         {
           "id": "KV35cthPyw9U8o4xMgTNZ",
@@ -493,13 +493,447 @@
         }
       ],
       "uniqueConstraints": [],
-      "x": 308.70933468750025,
-      "y": 759.6078556249997
+      "x": 160.66067343750012,
+      "y": 1134.8346349999997
+    },
+    {
+      "id": "XFF7TCLjtJ3GFEDgLmp4e",
+      "name": "drive_account_year",
+      "x": 636.8644996875003,
+      "y": 555.1824796875004,
+      "locked": false,
+      "fields": [
+        {
+          "name": "year",
+          "type": "SMALLINT",
+          "default": "",
+          "check": "",
+          "primary": true,
+          "unique": false,
+          "unsigned": true,
+          "notNull": true,
+          "increment": false,
+          "comment": "",
+          "id": "Mp9bGBwRMJhDQuX_vFGjC",
+          "size": "",
+          "values": []
+        },
+        {
+          "id": "Xi-GgmwwHSC8KvKqKReX9",
+          "name": "user_id",
+          "type": "BIGINT",
+          "default": "",
+          "check": "",
+          "primary": true,
+          "unique": false,
+          "notNull": true,
+          "increment": false,
+          "comment": "",
+          "size": "",
+          "values": []
+        },
+        {
+          "id": "Y7jOKuZruCGBmtCqwgiwQ",
+          "name": "car_id",
+          "type": "BIGINT",
+          "default": "",
+          "check": "",
+          "primary": true,
+          "unique": false,
+          "notNull": true,
+          "increment": false,
+          "comment": "",
+          "size": "",
+          "values": []
+        },
+        {
+          "id": "XKX5USwPF_3kM0Kl1TF2f",
+          "name": "total_distance_year",
+          "type": "INTEGER",
+          "default": "0",
+          "check": "",
+          "primary": false,
+          "unique": false,
+          "notNull": true,
+          "increment": false,
+          "comment": "",
+          "size": "",
+          "values": []
+        }
+      ],
+      "comment": "",
+      "indices": [],
+      "uniqueConstraints": [],
+      "color": "#7a1717",
+      "collapsed": false,
+      "inherits": []
+    },
+    {
+      "id": "H5eFdPKwKVqFwFFoPt2Jh",
+      "name": "drive_log_month_total",
+      "x": 125.07559312500018,
+      "y": 555.1824796875004,
+      "locked": false,
+      "fields": [
+        {
+          "name": "year",
+          "type": "SMALLINT",
+          "default": "",
+          "check": "",
+          "primary": true,
+          "unique": false,
+          "unsigned": true,
+          "notNull": true,
+          "increment": true,
+          "comment": "",
+          "id": "QyCl8wHv-KyxK0ej2eCnc",
+          "size": "",
+          "values": []
+        },
+        {
+          "id": "EST9g5ONajc2bOXDSpISC",
+          "name": "month",
+          "type": "SMALLINT",
+          "default": "",
+          "check": "",
+          "primary": true,
+          "unique": false,
+          "notNull": true,
+          "increment": false,
+          "comment": "",
+          "size": "",
+          "values": []
+        },
+        {
+          "id": "vkr9YxBNgafVrBQLGP2ID",
+          "name": "user_id",
+          "type": "BIGINT",
+          "default": "",
+          "check": "",
+          "primary": true,
+          "unique": false,
+          "notNull": true,
+          "increment": false,
+          "comment": "",
+          "size": "",
+          "values": []
+        },
+        {
+          "id": "aJMcZCY7Z7QIYwI9CiSwR",
+          "name": "car_id",
+          "type": "BIGINT",
+          "default": "",
+          "check": "",
+          "primary": true,
+          "unique": false,
+          "notNull": true,
+          "increment": false,
+          "comment": "",
+          "size": "",
+          "values": []
+        },
+        {
+          "id": "Mvi5Bof4eVlyaulpxuQeT",
+          "name": "total_distance_month",
+          "type": "INTEGER",
+          "default": "",
+          "check": "",
+          "primary": false,
+          "unique": false,
+          "notNull": true,
+          "increment": false,
+          "comment": "",
+          "size": "",
+          "values": []
+        }
+      ],
+      "comment": "",
+      "indices": [],
+      "uniqueConstraints": [],
+      "color": "#7a1717",
+      "collapsed": false
+    },
+    {
+      "id": "ipTxWgUAdzxFAKR7wKnV4",
+      "name": "cost_total_car_year",
+      "x": 614.9124568125003,
+      "y": 1175.4553190625006,
+      "locked": false,
+      "fields": [
+        {
+          "name": "year",
+          "type": "SMALLINT",
+          "default": "",
+          "check": "",
+          "primary": true,
+          "unique": false,
+          "unsigned": true,
+          "notNull": true,
+          "increment": true,
+          "comment": "",
+          "id": "OonoWMlBn0JCjq2gX3Ssw",
+          "size": "",
+          "values": []
+        },
+        {
+          "id": "ydqOPKPtSyFHvt3ynzdG-",
+          "name": "car_id",
+          "type": "BIGINT",
+          "default": "",
+          "check": "",
+          "primary": true,
+          "unique": false,
+          "notNull": true,
+          "increment": false,
+          "comment": "",
+          "size": "",
+          "values": []
+        },
+        {
+          "id": "9KrtF3NERV3UlLbiTOGze",
+          "name": "fix_total",
+          "type": "DECIMAL",
+          "default": "",
+          "check": "",
+          "primary": false,
+          "unique": false,
+          "notNull": true,
+          "increment": false,
+          "comment": "",
+          "size": "10,2"
+        },
+        {
+          "id": "o81gEt873Kq1HbrAORE5F",
+          "name": "var_total",
+          "type": "DECIMAL",
+          "default": "",
+          "check": "",
+          "primary": false,
+          "unique": false,
+          "notNull": true,
+          "increment": false,
+          "comment": "",
+          "size": "10,2"
+        }
+      ],
+      "comment": "",
+      "indices": [],
+      "uniqueConstraints": [],
+      "color": "#17497a",
+      "collapsed": false
+    },
+    {
+      "id": "BEUyyWQY1hwd6e8lr1kEP",
+      "name": "user_cost_factor_year",
+      "x": 613.3809189375005,
+      "y": 923.0068260000008,
+      "locked": false,
+      "fields": [
+        {
+          "name": "year",
+          "type": "SMALLINT",
+          "default": "",
+          "check": "",
+          "primary": true,
+          "unique": false,
+          "unsigned": true,
+          "notNull": true,
+          "increment": true,
+          "comment": "",
+          "id": "_ZzwBzg0w1eCDYMyVGl_F",
+          "size": "",
+          "values": []
+        },
+        {
+          "id": "n76UW_r_fkVOKiVKSTSq1",
+          "name": "user_id",
+          "type": "BIGINT",
+          "default": "",
+          "check": "",
+          "primary": true,
+          "unique": false,
+          "notNull": true,
+          "increment": false,
+          "comment": "",
+          "size": "",
+          "values": []
+        },
+        {
+          "id": "FYMfbC0djrWkv9t1V0RpR",
+          "name": "car_id",
+          "type": "BIGINT",
+          "default": "",
+          "check": "",
+          "primary": true,
+          "unique": false,
+          "notNull": true,
+          "increment": false,
+          "comment": "",
+          "size": "",
+          "values": []
+        },
+        {
+          "id": "82uE5OHqmFIrRWfKyp-I9",
+          "name": "factor_variable_cost",
+          "type": "DECIMAL",
+          "default": "0",
+          "check": "",
+          "primary": false,
+          "unique": false,
+          "notNull": true,
+          "increment": false,
+          "comment": "",
+          "size": "3,3"
+        },
+        {
+          "id": "KpTxdpSOD7nKuv-sKE9k0",
+          "name": "factor_fix_cost",
+          "type": "DECIMAL",
+          "default": "0",
+          "check": "",
+          "primary": false,
+          "unique": false,
+          "notNull": true,
+          "increment": false,
+          "comment": "",
+          "size": "3,3"
+        }
+      ],
+      "comment": "",
+      "indices": [],
+      "uniqueConstraints": [],
+      "color": "#177a65",
+      "collapsed": false
+    },
+    {
+      "id": "rYKy3octW78XZPZbPUHf6",
+      "name": "expenses_user_year",
+      "x": 618.9965578125004,
+      "y": 1412.8436896875012,
+      "locked": false,
+      "fields": [
+        {
+          "id": "pxmzb8-ycG9Cg8r_oH5Rh",
+          "name": "year",
+          "type": "SMALLINT",
+          "default": "",
+          "check": "",
+          "primary": true,
+          "unique": false,
+          "notNull": true,
+          "increment": false,
+          "comment": "",
+          "size": "",
+          "values": []
+        },
+        {
+          "name": "user_id",
+          "type": "BIGINT",
+          "default": "",
+          "check": "",
+          "primary": true,
+          "unique": false,
+          "unsigned": true,
+          "notNull": true,
+          "increment": true,
+          "comment": "",
+          "id": "jIwqW-uGwfRcn3j_pC_AI",
+          "size": "",
+          "values": []
+        },
+        {
+          "id": "abKPpTlVK9Bwr2n9SihwI",
+          "name": "spent_total",
+          "type": "DECIMAL",
+          "default": "",
+          "check": "",
+          "primary": false,
+          "unique": false,
+          "notNull": true,
+          "increment": false,
+          "comment": "",
+          "size": "10,2"
+        }
+      ],
+      "comment": "",
+      "indices": [],
+      "uniqueConstraints": [],
+      "color": "#175e7a",
+      "collapsed": false
+    },
+    {
+      "id": "LqA5nL0cE6mi8R7uqkj1M",
+      "name": "cost_distribution_log_year",
+      "x": 964.8688612500006,
+      "y": 922.7515696875008,
+      "locked": false,
+      "fields": [
+        {
+          "id": "1CmP7x19DZvzzDj-Khe1F",
+          "name": "year",
+          "type": "SMALLINT",
+          "default": "",
+          "check": "",
+          "primary": true,
+          "unique": false,
+          "notNull": true,
+          "increment": false,
+          "comment": "",
+          "size": "",
+          "values": []
+        },
+        {
+          "name": "user_id",
+          "type": "BIGINT",
+          "default": "",
+          "check": "",
+          "primary": true,
+          "unique": false,
+          "unsigned": true,
+          "notNull": true,
+          "increment": true,
+          "comment": "",
+          "id": "YTjPFV0BtOJ-QkoJuc4LO",
+          "size": "",
+          "values": []
+        },
+        {
+          "id": "tcRoEt8aD49Pd1Xe6Ca8d",
+          "name": "difference_variale_cost",
+          "type": "DECIMAL",
+          "default": "",
+          "check": "",
+          "primary": false,
+          "unique": false,
+          "notNull": true,
+          "increment": false,
+          "comment": "",
+          "size": "11,2"
+        },
+        {
+          "id": "QJDbhusxteLN6EflNLTox",
+          "name": "difference_fix_cost",
+          "type": "DECIMAL",
+          "default": "",
+          "check": "",
+          "primary": false,
+          "unique": false,
+          "notNull": true,
+          "increment": false,
+          "comment": "",
+          "size": "11,2"
+        }
+      ],
+      "comment": "",
+      "indices": [],
+      "uniqueConstraints": [],
+      "color": "#17497a",
+      "collapsed": false
     }
   ],
   "relationships": [
     {
-      "name": "fk_user_id_app_user",
+      "name": "fk_car_user_id_app_user",
       "startTableId": "CIkfRE6yNoEsGrOasSfSx",
       "endTableId": "iQFqGdInJgyvsPYtzN8e7",
       "fields": [
@@ -533,7 +967,7 @@
       "cardinality": "one_to_many"
     },
     {
-      "name": "fk_car_user_user_id_drive",
+      "name": "fk_user_user_id_drive",
       "startTableId": "iQFqGdInJgyvsPYtzN8e7",
       "endTableId": "q6QG27MMVBRKDTIOdB-Tv",
       "fields": [
@@ -579,6 +1013,159 @@
       "endFieldId": "jgEfhXgWbukiwdeVBmhXZ",
       "startFieldId": "fXJc6wP2mxt7YWs_6FRs_",
       "id": "QN9ZDomscGnOBJwfo38pr",
+      "updateConstraint": "No action",
+      "deleteConstraint": "No action",
+      "cardinality": "one_to_many"
+    },
+    {
+      "name": "fk_car_car_id_drive_account_year",
+      "startTableId": "CIkfRE6yNoEsGrOasSfSx",
+      "endTableId": "XFF7TCLjtJ3GFEDgLmp4e",
+      "fields": [
+        {
+          "startFieldId": "fXJc6wP2mxt7YWs_6FRs_",
+          "endFieldId": "Y7jOKuZruCGBmtCqwgiwQ"
+        }
+      ],
+      "endFieldId": "Y7jOKuZruCGBmtCqwgiwQ",
+      "startFieldId": "fXJc6wP2mxt7YWs_6FRs_",
+      "id": "rel_car_drive_account_year",
+      "updateConstraint": "No action",
+      "deleteConstraint": "No action",
+      "cardinality": "one_to_many"
+    },
+    {
+      "name": "fk_user_user_id_drive_account_year",
+      "startTableId": "iQFqGdInJgyvsPYtzN8e7",
+      "endTableId": "XFF7TCLjtJ3GFEDgLmp4e",
+      "fields": [
+        {
+          "startFieldId": "pqV1TrVibES_Fxd97ITl6",
+          "endFieldId": "Xi-GgmwwHSC8KvKqKReX9"
+        }
+      ],
+      "endFieldId": "Xi-GgmwwHSC8KvKqKReX9",
+      "startFieldId": "pqV1TrVibES_Fxd97ITl6",
+      "id": "rel_user_drive_account_year",
+      "updateConstraint": "No action",
+      "deleteConstraint": "No action",
+      "cardinality": "one_to_many"
+    },
+    {
+      "name": "fk_car_car_id_drive_log_month_total",
+      "startTableId": "CIkfRE6yNoEsGrOasSfSx",
+      "endTableId": "H5eFdPKwKVqFwFFoPt2Jh",
+      "fields": [
+        {
+          "startFieldId": "fXJc6wP2mxt7YWs_6FRs_",
+          "endFieldId": "aJMcZCY7Z7QIYwI9CiSwR"
+        }
+      ],
+      "endFieldId": "aJMcZCY7Z7QIYwI9CiSwR",
+      "startFieldId": "fXJc6wP2mxt7YWs_6FRs_",
+      "id": "rel_car_drive_log_month_total",
+      "updateConstraint": "No action",
+      "deleteConstraint": "No action",
+      "cardinality": "one_to_many"
+    },
+    {
+      "name": "fk_user_user_id_drive_log_month_total",
+      "startTableId": "iQFqGdInJgyvsPYtzN8e7",
+      "endTableId": "H5eFdPKwKVqFwFFoPt2Jh",
+      "fields": [
+        {
+          "startFieldId": "pqV1TrVibES_Fxd97ITl6",
+          "endFieldId": "vkr9YxBNgafVrBQLGP2ID"
+        }
+      ],
+      "endFieldId": "vkr9YxBNgafVrBQLGP2ID",
+      "startFieldId": "pqV1TrVibES_Fxd97ITl6",
+      "id": "rel_user_drive_log_month_total",
+      "updateConstraint": "No action",
+      "deleteConstraint": "No action",
+      "cardinality": "one_to_many"
+    },
+    {
+      "name": "fk_car_car_id_cost_total_car_year",
+      "startTableId": "CIkfRE6yNoEsGrOasSfSx",
+      "endTableId": "ipTxWgUAdzxFAKR7wKnV4",
+      "fields": [
+        {
+          "startFieldId": "fXJc6wP2mxt7YWs_6FRs_",
+          "endFieldId": "ydqOPKPtSyFHvt3ynzdG-"
+        }
+      ],
+      "endFieldId": "ydqOPKPtSyFHvt3ynzdG-",
+      "startFieldId": "fXJc6wP2mxt7YWs_6FRs_",
+      "id": "rel_car_cost_total_car_year",
+      "updateConstraint": "No action",
+      "deleteConstraint": "No action",
+      "cardinality": "one_to_many"
+    },
+    {
+      "name": "fk_car_car_id_user_cost_factor_year",
+      "startTableId": "CIkfRE6yNoEsGrOasSfSx",
+      "endTableId": "BEUyyWQY1hwd6e8lr1kEP",
+      "fields": [
+        {
+          "startFieldId": "fXJc6wP2mxt7YWs_6FRs_",
+          "endFieldId": "FYMfbC0djrWkv9t1V0RpR"
+        }
+      ],
+      "endFieldId": "FYMfbC0djrWkv9t1V0RpR",
+      "startFieldId": "fXJc6wP2mxt7YWs_6FRs_",
+      "id": "rel_car_user_cost_factor_year",
+      "updateConstraint": "No action",
+      "deleteConstraint": "No action",
+      "cardinality": "one_to_many"
+    },
+    {
+      "name": "fk_user_user_id_user_cost_factor_year",
+      "startTableId": "iQFqGdInJgyvsPYtzN8e7",
+      "endTableId": "BEUyyWQY1hwd6e8lr1kEP",
+      "fields": [
+        {
+          "startFieldId": "pqV1TrVibES_Fxd97ITl6",
+          "endFieldId": "n76UW_r_fkVOKiVKSTSq1"
+        }
+      ],
+      "endFieldId": "n76UW_r_fkVOKiVKSTSq1",
+      "startFieldId": "pqV1TrVibES_Fxd97ITl6",
+      "id": "rel_user_user_cost_factor_year",
+      "updateConstraint": "No action",
+      "deleteConstraint": "No action",
+      "cardinality": "one_to_many"
+    },
+    {
+      "name": "fk_user_user_id_expenses_user_year",
+      "startTableId": "iQFqGdInJgyvsPYtzN8e7",
+      "endTableId": "rYKy3octW78XZPZbPUHf6",
+      "fields": [
+        {
+          "startFieldId": "pqV1TrVibES_Fxd97ITl6",
+          "endFieldId": "jIwqW-uGwfRcn3j_pC_AI"
+        }
+      ],
+      "endFieldId": "jIwqW-uGwfRcn3j_pC_AI",
+      "startFieldId": "pqV1TrVibES_Fxd97ITl6",
+      "id": "rel_user_expenses_user_year",
+      "updateConstraint": "No action",
+      "deleteConstraint": "No action",
+      "cardinality": "one_to_many"
+    },
+    {
+      "name": "fk_user_user_id_cost_distribution_log_year",
+      "startTableId": "iQFqGdInJgyvsPYtzN8e7",
+      "endTableId": "LqA5nL0cE6mi8R7uqkj1M",
+      "fields": [
+        {
+          "startFieldId": "pqV1TrVibES_Fxd97ITl6",
+          "endFieldId": "YTjPFV0BtOJ-QkoJuc4LO"
+        }
+      ],
+      "endFieldId": "YTjPFV0BtOJ-QkoJuc4LO",
+      "startFieldId": "pqV1TrVibES_Fxd97ITl6",
+      "id": "rel_user_cost_distribution_log_year",
       "updateConstraint": "No action",
       "deleteConstraint": "No action",
       "cardinality": "one_to_many"

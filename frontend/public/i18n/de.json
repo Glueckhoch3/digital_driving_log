@@ -4,6 +4,7 @@
     "menu": {
       "entryOverview": "Managementübersicht",
       "chooseCar": "Auto auswählen",
+      "calculations": "Berechnungen",
       "manageUsers": "Benutzer verwalten",
       "manageCars": "Autos verwalten"
     },
@@ -202,6 +203,110 @@
         "quantity": "Menge",
         "type": "Typ"
       }
+    }
+  },
+  "calculations": {
+    "back": "← Zurück zu den Berechnungen",
+    "loading": "Wird geladen…",
+    "notCalculated": "Für diese Auswahl gibt es noch keine Berechnung. Starte sie auf der Aktionsseite.",
+    "hub": {
+      "title": "Berechnungen",
+      "subtitle": "Distanzen, Faktoren und Abrechnungen ansehen oder eine Monats- oder Jahresberechnung starten.",
+      "viewResults": "Ergebnisse ansehen",
+      "takeAction": "Aktion ausführen",
+      "yearlyTitle": "Jahresabrechnung",
+      "yearlyDesc": "Schuldenaufteilung eines Autos pro Fahrer — fix und variabel.",
+      "combinedTitle": "Gesamtabrechnung",
+      "combinedDesc": "Nettosaldo jedes Fahrers über alle seine Autos.",
+      "monthlyTitle": "Monatsdistanzen",
+      "monthlyDesc": "Kilometer pro Fahrer und Monat für ein Auto.",
+      "factorsTitle": "Verteilungsfaktoren",
+      "factorsDesc": "Die variablen und fixen Faktoren pro Fahrer (schreibgeschützt).",
+      "runTitle": "Berechnung starten",
+      "runDesc": "Einen Monat aggregieren, ein Jahr berechnen oder einen Lauf löschen."
+    },
+    "run": {
+      "title": "Berechnung starten",
+      "subtitle": "Jede Aktion steht für sich. Eine Periode wird nur einmal berechnet — ein vorhandener Lauf muss vor einer Neuberechnung gelöscht werden.",
+      "monthlyTitle": "Einen Monat aggregieren",
+      "monthlyDesc": "Fasst die Fahrten dieses Autos zu Monatsdistanzen pro Fahrer zusammen. Nur Distanzen, keine Kosten.",
+      "aggregateBtn": "Monat aggregieren",
+      "monthlyExistsWarn": "Dieser Monat ist bereits aggregiert. Lösche ihn unten, bevor du ihn neu berechnest.",
+      "yearlyTitle": "Ein Jahr berechnen",
+      "yearlyDesc": "Fasst die Monate des Jahres zusammen, summiert Fix- und variable Kosten, leitet Faktoren ab und schreibt die Gesamtabrechnung.",
+      "calculateBtn": "Jahr berechnen",
+      "yearlyHint": "Aggregiere zuerst alle Monate des Jahres. Fixkostenfaktoren werden gleichmäßig aufgeteilt und sind nur von einem Admin in der Datenbank anpassbar.",
+      "yearlyExistsWarn": "Dieses Jahr ist für dieses Auto bereits berechnet. Lösche es unten, bevor du es neu berechnest.",
+      "deleteTitle": "Eine Berechnung löschen",
+      "deleteDesc": "Entfernt einen gespeicherten Monats- oder Jahreslauf, damit seine Periode neu berechnet werden kann.",
+      "deleteBtn": "Lauf löschen"
+    },
+    "fields": {
+      "car": "Auto",
+      "year": "Jahr",
+      "month": "Monat",
+      "period": "Periode",
+      "periodMonthly": "Monatlich",
+      "periodYearly": "Jährlich"
+    },
+    "months": {
+      "1": "Januar",
+      "2": "Februar",
+      "3": "März",
+      "4": "April",
+      "5": "Mai",
+      "6": "Juni",
+      "7": "Juli",
+      "8": "August",
+      "9": "September",
+      "10": "Oktober",
+      "11": "November",
+      "12": "Dezember"
+    },
+    "messages": {
+      "monthAggregated": "Monat aggregiert.",
+      "monthExists": "Dieser Monat ist bereits aggregiert. Lösche ihn zuerst, um ihn neu zu berechnen.",
+      "yearCalculated": "Jahr berechnet.",
+      "yearExists": "Dieses Jahr ist bereits berechnet. Lösche es zuerst, um es neu zu berechnen.",
+      "deleted": "Berechnung gelöscht.",
+      "actionFailed": "Die Aktion konnte nicht abgeschlossen werden. Bitte versuche es erneut.",
+      "loadFailed": "Die Berechnungsergebnisse konnten nicht geladen werden."
+    },
+    "cols": {
+      "driver": "Fahrer",
+      "distance": "Distanz (km)",
+      "varFactor": "Var. Faktor",
+      "fixFactor": "Fix. Faktor",
+      "variableOwed": "Variabel geschuldet (€)",
+      "fixedOwed": "Fix geschuldet (€)",
+      "totalOwed": "Gesamt geschuldet (€)",
+      "total": "Gesamt",
+      "paid": "Bezahlt (€)",
+      "variableDiff": "Variable Differenz (€)",
+      "fixedDiff": "Fixe Differenz (€)",
+      "netBalance": "Nettosaldo (€)",
+      "month": "Monat"
+    },
+    "yearly": {
+      "title": "Jahresabrechnung",
+      "subtitle": "Schuldenaufteilung eines Autos pro Fahrer für das Jahr.",
+      "explainer": "Variabel geschuldet = variabler Faktor × variable Gesamtkosten des Autos (der Faktor folgt der Distanz, also zahlt auch, wer nicht tankt, für gefahrene Kilometer). Fix geschuldet = fixer Faktor × fixe Gesamtkosten des Autos. Diese Ansicht zeigt, was jeder Fahrer schuldet; Bezahltes und Nettosaldo werden über alle Autos zusammengefasst — siehe Gesamtabrechnung."
+    },
+    "combined": {
+      "title": "Gesamtabrechnung",
+      "subtitle": "Nettosaldo pro Fahrer über alle Autos seiner Gruppe.",
+      "explainer": "Variable / fixe Differenz = was ein Fahrer von dieser Kostenart bezahlt hat minus was er schuldet, summiert über alle berechneten Autos. Nettosaldo = Summe der beiden Differenzen; positiv bedeutet, die Gruppe schuldet dem Fahrer. Jede Spalte summiert sich zu null."
+    },
+    "monthly": {
+      "title": "Monatsdistanzen",
+      "subtitle": "Kilometer pro Fahrer und Monat für ein Auto.",
+      "empty": "Keine aggregierten Monate für dieses Auto und Jahr."
+    },
+    "factors": {
+      "title": "Verteilungsfaktoren",
+      "subtitle": "Die Faktoren, die die Jahreskosten des Autos aufteilen. Variabel folgt der Distanz; fix wird gleichmäßig aufgeteilt.",
+      "adminOnly": "admin-seitig in DB angepasst",
+      "explainer": "Faktoren werden vom Jahreslauf berechnet und sind hier schreibgeschützt. Nur ein Admin passt den fixen Faktor direkt in der Datenbank an."
     }
   }
 }

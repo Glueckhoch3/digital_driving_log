@@ -8,6 +8,12 @@ import { CostFormComponent } from './pages/cost-form/cost-form.component';
 import { AdminOverviewComponent } from './pages/admin-overview/admin-overview.component';
 import { CarManagementComponent } from './pages/car-management/car-management.component';
 import { UserManagementComponent } from './pages/user-management/user-management.component';
+import { CalculationHubComponent } from './pages/calculations/calculation-hub.component';
+import { CalculationRunComponent } from './pages/calculations/calculation-run.component';
+import { YearlySettlementComponent } from './pages/calculations/yearly-settlement.component';
+import { CombinedSettlementComponent } from './pages/calculations/combined-settlement.component';
+import { MonthlyDistancesComponent } from './pages/calculations/monthly-distances.component';
+import { DistributionFactorsComponent } from './pages/calculations/distribution-factors.component';
 import { carResolver } from './resolvers/car.resolver';
 import { usersResolver } from './resolvers/users.resolver';
 
@@ -28,5 +34,16 @@ export const routes: Routes = [
   { path: 'manage/cars', component: CarManagementComponent },
   { path: 'manage/users', component: UserManagementComponent },
   { path: 'overview', component: AdminOverviewComponent },
+  {
+    path: 'calculations',
+    children: [
+      { path: '', component: CalculationHubComponent },
+      { path: 'run', component: CalculationRunComponent },
+      { path: 'yearly', component: YearlySettlementComponent },
+      { path: 'combined', component: CombinedSettlementComponent },
+      { path: 'monthly', component: MonthlyDistancesComponent },
+      { path: 'factors', component: DistributionFactorsComponent },
+    ],
+  },
   { path: '**', redirectTo: '' },
 ];
