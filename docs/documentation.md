@@ -74,12 +74,12 @@
 **So that** the total kilometers/miles are recorded for cost distribution
 
 **Acceptance Criteria:**
-- [ ] User can access a form to enter driving distance
+- [X] User can access a form to enter driving distance
 - [ ] Form validates that distance is a positive number
-- [ ] User can specify the date of the drive
-- [ ] User can add optional notes about the drive
-- [ ] Data is saved to the database
-- [ ] User receives confirmation of successful submission
+- [X] User can specify the date of the drive
+- [X] User can add optional notes about the drive
+- [X] Data is saved to the database
+- [X] User receives confirmation of successful submission
 
 **Technical Requirements:**
 - Create REST endpoint: `POST /api/drives`
@@ -95,11 +95,11 @@
 **So that** fuel consumption and costs are accurately tracked
 
 **Acceptance Criteria:**
-- [ ] User can add fuel refill information to a drive
+- [X] User can add fuel refill information to a drive
 - [ ] Form captures: refill date, liters/gallons, cost, fuel type
-- [ ] System calculates cost per liter
-- [ ] Fuel data is linked to the corresponding drive
-- [ ] Historical fuel data is displayed in a list
+- [ ] System calculates cost per liter/gallon (amount unit)
+- [X] Fuel data is linked to the corresponding drive (car)
+- [X] Historical fuel data is displayed in a list
 
 **Technical Requirements:**
 - Create REST endpoint: `POST /api/fuel-refills`
@@ -116,12 +116,12 @@
 **So that** I can verify accuracy and track overall vehicle usage
 
 **Acceptance Criteria:**
-- [ ] User can see a list of all drives
-- [ ] List displays: date, driver, distance, notes
+- [X] User can see a list of all drives
+- [X] List displays: date, driver, distance, notes
 - [ ] List is sortable by date, driver, or distance
 - [ ] User can filter drives by date range
 - [ ] User can filter drives by specific driver
-- [ ] Total distance is displayed
+- [X] Total distance (odometer) is displayed
 
 **Technical Requirements:**
 - Create REST endpoint: `GET /api/drives`
@@ -140,8 +140,8 @@
 **So that** these costs can be distributed equally among all shareholders
 
 **Acceptance Criteria:**
-- [ ] User can enter fixed cost information
-- [ ] Form captures: cost type, amount, date, description
+- [X] User can enter fixed cost information
+- [X] Form captures: cost type, amount, date, description
 - [ ] Fixed costs are marked as non-divisible by distance
 - [ ] Cost is automatically distributed equally among active shareholders
 - [ ] Users can view how much they owe for fixed costs
@@ -161,7 +161,7 @@
 **So that** these costs are distributed proportionally to distance driven
 
 **Acceptance Criteria:**
-- [ ] User can enter variable cost information
+- [X] User can enter variable cost information
 - [ ] Form captures: cost type, amount, date, description, affected distance period
 - [ ] Variable costs are distributed based on distance driven
 - [ ] System calculates cost per kilometer/mile

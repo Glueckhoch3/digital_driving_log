@@ -17,6 +17,7 @@ interface FieldErrorEntry {
 })
 export class FieldErrorComponent {
   readonly control = input<AbstractControl | null>(null);
+  readonly id = input<string | null>(null);
 
   readonly visible = computed(() => {
     const control = this.control();

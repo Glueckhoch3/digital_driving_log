@@ -2,7 +2,6 @@
   "header": {
     "title": "Digitales Fahrtenbuch",
     "menu": {
-      "start": "Start",
       "entryOverview": "Managementübersicht",
       "chooseCar": "Auto auswählen",
       "manageUsers": "Benutzer verwalten",
@@ -13,21 +12,12 @@
       "de": "Deutsch"
     }
   },
-  "start": {
-    "title": "Willkommen",
-    "description": "Wähle deinen Ablauf für Einträge und Übersichten.",
-    "actions": {
-      "entryOverview": "Managementübersicht",
-      "chooseCar": "Auto auswählen",
-      "manageUsers": "Benutzerverwaltung",
-      "manageCars": "Autoverwaltung"
-    }
-  },
   "common": {
     "pagination": {
       "previous": "Zurück",
       "next": "Weiter",
-      "pageOf": "Seite {{current}} von {{total}}"
+      "pageOf": "Seite {{current}} von {{total}}",
+      "navLabel": "Seitennavigation"
     },
     "yes": "Ja",
     "no": "Nein",
@@ -140,6 +130,14 @@
   "carWorkspace": {
     "loading": "Fahrzeugdaten werden geladen...",
     "loadError": "Fahrzeugdaten konnten nicht geladen werden.",
+    "hub": {
+      "navLabel": "Fahrzeugbereiche",
+      "viewDrives": "Fahrten ansehen",
+      "addDrive": "Fahrt hinzufügen",
+      "viewCosts": "Kosten ansehen",
+      "addCost": "Kosten hinzufügen",
+      "backToHub": "Zurück zur Fahrzeugübersicht"
+    },
     "messages": {
       "driveSaved": "Fahrt gespeichert.",
       "driveSaveFailed": "Fahrt konnte nicht gespeichert werden.",
@@ -166,7 +164,8 @@
       "fuelDate": "Tank-Transaktionsdatum",
       "fuelBuyer": "Käufer",
       "fuelNotes": "Tank-Notizen",
-      "submit": "Fahrt speichern"
+      "submit": "Fahrt speichern",
+      "backToList": "Zurück zur Fahrtenliste"
     },
     "transactionForm": {
       "title": "Transaktion erfassen",
@@ -177,11 +176,13 @@
       "price": "Preis",
       "quantity": "Menge",
       "notes": "Notizen",
-      "submit": "Transaktion speichern"
+      "submit": "Transaktion speichern",
+      "backToList": "Zurück zur Transaktionsliste"
     },
     "drives": {
       "title": "Fahrten",
       "empty": "Keine Fahrten für dieses Auto.",
+      "addLink": "Fahrt hinzufügen",
       "headers": {
         "date": "Datum",
         "driver": "Fahrer",
@@ -192,6 +193,7 @@
     "transactions": {
       "title": "Transaktionen",
       "empty": "Keine Transaktionen für dieses Auto.",
+      "addLink": "Transaktion hinzufügen",
       "headers": {
         "date": "Datum",
         "buyer": "Käufer",

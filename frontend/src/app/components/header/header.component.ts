@@ -36,9 +36,8 @@ export class HeaderComponent {
   }
 
   readonly menuItems = [
-    { labelKey: 'header.menu.start', route: '/' },
     { labelKey: 'header.menu.entryOverview', route: '/overview' },
-    { labelKey: 'header.menu.chooseCar', route: '/cars/select' },
+    { labelKey: 'header.menu.chooseCar', route: '/' },
     { labelKey: 'header.menu.manageUsers', route: '/manage/users' },
     { labelKey: 'header.menu.manageCars', route: '/manage/cars' },
   ];

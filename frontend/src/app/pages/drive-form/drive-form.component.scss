@@ -1,0 +1,44 @@
+.drive-form-page {
+  max-width: 40rem;
+  margin: 2rem auto;
+  padding: 1rem;
+
+  &__message {
+    color: #0a7d32;
+  }
+
+  &__error {
+    color: #b02020;
+  }
+
+  &__fuel {
+    border: 1px solid #d9d9d9;
+    border-radius: 0.5rem;
+    padding: 0.75rem 1rem;
+    margin: 0.5rem 0;
+  }
+
+  label,
+  input,
+  select,
+  textarea,
+  button {
+    width: 100%;
+    margin-top: 0.35rem;
+  }
+
+  &__checkbox {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+
+    input {
+      width: auto;
+    }
+  }
+
+  input[aria-invalid='true'],
+  select[aria-invalid='true'] {
+    border-color: #b02020;
+  }
+}

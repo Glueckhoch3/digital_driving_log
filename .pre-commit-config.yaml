@@ -22,7 +22,7 @@ repos:
       - id: prettier-frontend
         name: prettier (frontend)
         language: system
-        entry: npx --prefix frontend prettier --check
+        entry: npx --prefix frontend prettier --write
         files: ^frontend/(src|public)/.*\.(ts|html|scss|json)$
 
       - id: backend-tests
