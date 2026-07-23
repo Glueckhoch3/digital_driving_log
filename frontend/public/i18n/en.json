@@ -27,7 +27,8 @@
     "pagination": {
       "previous": "Previous",
       "next": "Next",
-      "pageOf": "Page {{current}} of {{total}}"
+      "pageOf": "Page {{current}} of {{total}}",
+      "navLabel": "Pagination"
     },
     "yes": "Yes",
     "no": "No",
@@ -140,6 +141,14 @@
   "carWorkspace": {
     "loading": "Loading car data...",
     "loadError": "Failed to load car workspace data.",
+    "hub": {
+      "navLabel": "Car sections",
+      "viewDrives": "View drives",
+      "addDrive": "Add drive",
+      "viewCosts": "View costs",
+      "addCost": "Add cost",
+      "backToHub": "Back to car overview"
+    },
     "messages": {
       "driveSaved": "Drive saved.",
       "driveSaveFailed": "Failed to save drive.",
@@ -166,7 +175,8 @@
       "fuelDate": "Fuel transaction date",
       "fuelBuyer": "Fuel buyer",
       "fuelNotes": "Fuel notes",
-      "submit": "Save drive"
+      "submit": "Save drive",
+      "backToList": "Back to drives list"
     },
     "transactionForm": {
       "title": "Transaction entry",
@@ -177,11 +187,13 @@
       "price": "Price",
       "quantity": "Quantity",
       "notes": "Notes",
-      "submit": "Save transaction"
+      "submit": "Save transaction",
+      "backToList": "Back to transactions list"
     },
     "drives": {
       "title": "Drives",
       "empty": "No drives for this car.",
+      "addLink": "Add drive",
       "headers": {
         "date": "Date",
         "driver": "Driver",
@@ -192,6 +204,7 @@
     "transactions": {
       "title": "Transactions",
       "empty": "No transactions for this car.",
+      "addLink": "Add transaction",
       "headers": {
         "date": "Date",
         "buyer": "Buyer",

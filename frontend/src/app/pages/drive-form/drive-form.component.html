@@ -1,0 +1,175 @@
+<section class="drive-form-page">
+  @if (car()) {
+    <h2>{{ 'carWorkspace.driveForm.title' | translate }} — {{ car().name }}</h2>
+  }
+
+  <a [routerLink]="['/cars', car().carId, 'drives']">{{
+    'carWorkspace.driveForm.backToList' | translate
+  }}</a>
+
+  @if (message()) {
+    <p
+      #statusRegion
+      class="drive-form-page__message"
+      role="status"
+      aria-live="polite"
+      tabindex="-1"
+    >
+      {{ message() | translate }}
+    </p>
+  }
+
+  @if (error()) {
+    <p class="drive-form-page__error" role="alert" aria-live="assertive">
+      {{ error() | translate }}
+    </p>
+  }
+
+  <form #driveFormEl [formGroup]="driveForm" (ngSubmit)="saveDrive()">
+    <label for="drive-driveDate">{{ 'carWorkspace.driveForm.driveDate' | translate }}</label>
+    <input
+      id="drive-driveDate"
+      type="date"
+      formControlName="driveDate"
+      [attr.aria-invalid]="
+        driveForm.controls.driveDate.invalid && driveForm.controls.driveDate.touched
+      "
+      [attr.aria-describedby]="
+        driveForm.controls.driveDate.invalid && driveForm.controls.driveDate.touched
+          ? 'drive-driveDate-error'
+          : null
+      "
+    />
+    <app-field-error id="drive-driveDate-error" [control]="driveForm.controls.driveDate" />
+
+    <label for="drive-odometer">{{ 'carWorkspace.driveForm.odometer' | translate }}</label>
+    <input
+      id="drive-odometer"
+      type="number"
+      formControlName="odometer"
+      min="1"
+      [attr.aria-invalid]="
+        driveForm.controls.odometer.invalid && driveForm.controls.odometer.touched
+      "
+      [attr.aria-describedby]="
+        driveForm.controls.odometer.invalid && driveForm.controls.odometer.touched
+          ? 'drive-odometer-error'
+          : null
+      "
+    />
+    <app-field-error id="drive-odometer-error" [control]="driveForm.controls.odometer" />
+
+    <label for="drive-driverId">{{ 'carWorkspace.driveForm.driver' | translate }}</label>
+    <select
+      id="drive-driverId"
+      formControlName="driverId"
+      [attr.aria-invalid]="
+        driveForm.controls.driverId.invalid && driveForm.controls.driverId.touched
+      "
+      [attr.aria-describedby]="
+        driveForm.controls.driverId.invalid && driveForm.controls.driverId.touched
+          ? 'drive-driverId-error'
+          : null
+      "
+    >
+      @for (user of users(); track user.userId) {
+        <option [value]="user.userId">{{ user.firstname }} {{ user.lastname }}</option>
+      }
+    </select>
+    <app-field-error id="drive-driverId-error" [control]="driveForm.controls.driverId" />
+
+    <label for="drive-notes">{{ 'carWorkspace.driveForm.notes' | translate }}</label>
+    <textarea id="drive-notes" rows="3" formControlName="notes"></textarea>
+
+    <label class="drive-form-page__checkbox" for="drive-includeFuel">
+      <input id="drive-includeFuel" type="checkbox" formControlName="includeFuel" />
+      {{ 'carWorkspace.driveForm.includeFuel' | translate }}
+    </label>
+
+    @if (driveForm.value.includeFuel) {
+      <fieldset class="drive-form-page__fuel">
+        <legend>{{ 'carWorkspace.driveForm.includeFuel' | translate }}</legend>
+
+        <label for="drive-fuelPrice">{{ 'carWorkspace.driveForm.fuelPrice' | translate }}</label>
+        <input
+          id="drive-fuelPrice"
+          type="number"
+          formControlName="fuelPrice"
+          min="0"
+          step="0.01"
+          [attr.aria-invalid]="
+            driveForm.controls.fuelPrice.invalid && driveForm.controls.fuelPrice.touched
+          "
+          [attr.aria-describedby]="
+            driveForm.controls.fuelPrice.invalid && driveForm.controls.fuelPrice.touched
+              ? 'drive-fuelPrice-error'
+              : null
+          "
+        />
+        <app-field-error id="drive-fuelPrice-error" [control]="driveForm.controls.fuelPrice" />
+
+        <label for="drive-fuelQuantity">{{
+          'carWorkspace.driveForm.fuelQuantity' | translate
+        }}</label>
+        <input
+          id="drive-fuelQuantity"
+          type="number"
+          formControlName="fuelQuantity"
+          min="1"
+          [attr.aria-invalid]="
+            driveForm.controls.fuelQuantity.invalid && driveForm.controls.fuelQuantity.touched
+          "
+          [attr.aria-describedby]="
+            driveForm.controls.fuelQuantity.invalid && driveForm.controls.fuelQuantity.touched
+              ? 'drive-fuelQuantity-error'
+              : null
+          "
+        />
+        <app-field-error
+          id="drive-fuelQuantity-error"
+          [control]="driveForm.controls.fuelQuantity"
+        />
+
+        <label for="drive-fuelDate">{{ 'carWorkspace.driveForm.fuelDate' | translate }}</label>
+        <input
+          id="drive-fuelDate"
+          type="date"
+          formControlName="fuelDate"
+          [attr.aria-invalid]="
+            driveForm.controls.fuelDate.invalid && driveForm.controls.fuelDate.touched
+          "
+          [attr.aria-describedby]="
+            driveForm.controls.fuelDate.invalid && driveForm.controls.fuelDate.touched
+              ? 'drive-fuelDate-error'
+              : null
+          "
+        />
+        <app-field-error id="drive-fuelDate-error" [control]="driveForm.controls.fuelDate" />
+
+        <label for="drive-fuelBuyerId">{{ 'carWorkspace.driveForm.fuelBuyer' | translate }}</label>
+        <select
+          id="drive-fuelBuyerId"
+          formControlName="fuelBuyerId"
+          [attr.aria-invalid]="
+            driveForm.controls.fuelBuyerId.invalid && driveForm.controls.fuelBuyerId.touched
+          "
+          [attr.aria-describedby]="
+            driveForm.controls.fuelBuyerId.invalid && driveForm.controls.fuelBuyerId.touched
+              ? 'drive-fuelBuyerId-error'
+              : null
+          "
+        >
+          @for (user of users(); track user.userId) {
+            <option [value]="user.userId">{{ user.firstname }} {{ user.lastname }}</option>
+          }
+        </select>
+        <app-field-error id="drive-fuelBuyerId-error" [control]="driveForm.controls.fuelBuyerId" />
+
+        <label for="drive-fuelNotes">{{ 'carWorkspace.driveForm.fuelNotes' | translate }}</label>
+        <textarea id="drive-fuelNotes" rows="2" formControlName="fuelNotes"></textarea>
+      </fieldset>
+    }
+
+    <button type="submit">{{ 'carWorkspace.driveForm.submit' | translate }}</button>
+  </form>
+</section>

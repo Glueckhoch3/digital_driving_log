@@ -1,83 +1,46 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
-import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { provideTranslateService } from '@ngx-translate/core';
+import { provideRouter } from '@angular/router';
 import { of, throwError } from 'rxjs';
 import { vi, Mocked } from 'vitest';
-import { CarWorkspaceComponent } from './car-workspace.component';
-import { CarService } from '../../services/car.service';
-import { UserService } from '../../services/user.service';
+import { DriveFormComponent } from './drive-form.component';
 import { DriveService } from '../../services/drive.service';
 import { CostService } from '../../services/cost.service';
 import { CarDto } from '../../models/cars';
 import { UserDto } from '../../models/users';
-import { Page } from '../../models/page';
 import { DriveDto } from '../../models/drives';
 import { CostDto } from '../../models/costs';
 
-describe('CarWorkspaceComponent', () => {
-  let fixture: ComponentFixture<CarWorkspaceComponent>;
-  let component: CarWorkspaceComponent;
-  let carService: Mocked<Pick<CarService, 'getCarById'>>;
-  let userService: Mocked<Pick<UserService, 'getUsers'>>;
-  let driveService: Mocked<Pick<DriveService, 'getDrivesForCar' | 'createDrive'>>;
-  let costService: Mocked<Pick<CostService, 'getCostsForCar' | 'createCost'>>;
+describe('DriveFormComponent', () => {
+  let fixture: ComponentFixture<DriveFormComponent>;
+  let component: DriveFormComponent;
+  let driveService: Mocked<Pick<DriveService, 'createDrive'>>;
+  let costService: Mocked<Pick<CostService, 'createCost'>>;
 
   const car: CarDto = { carId: 5, name: 'City Car', plateNumber: 'M-AB-1', ownerId: 1, data: null };
   const users: UserDto[] = [
     { userId: 1, firstname: 'Anna', lastname: 'Meyer', driverLicense: true, birthday: null },
   ];
-  const emptyDrivePage: Page<DriveDto> = {
-    content: [],
-    totalElements: 0,
-    totalPages: 0,
-    number: 0,
-    size: 10,
-  };
-  const emptyCostPage: Page<CostDto> = {
-    content: [],
-    totalElements: 0,
-    totalPages: 0,
-    number: 0,
-    size: 10,
-  };
 
   beforeEach(async () => {
-    carService = { getCarById: vi.fn().mockReturnValue(of(car)) };
-    userService = { getUsers: vi.fn().mockReturnValue(of(users)) };
-    driveService = {
-      getDrivesForCar: vi.fn().mockReturnValue(of(emptyDrivePage)),
-      createDrive: vi.fn().mockReturnValue(of({} as DriveDto)),
-    };
-    costService = {
-      getCostsForCar: vi.fn().mockReturnValue(of(emptyCostPage)),
-      createCost: vi.fn().mockReturnValue(of({} as CostDto)),
-    };
+    driveService = { createDrive: vi.fn().mockReturnValue(of({} as DriveDto)) };
+    costService = { createCost: vi.fn().mockReturnValue(of({} as CostDto)) };
 
     await TestBed.configureTestingModule({
-      imports: [CarWorkspaceComponent],
+      imports: [DriveFormComponent],
       providers: [
         provideTranslateService(),
-        { provide: CarService, useValue: carService },
-        { provide: UserService, useValue: userService },
+        provideRouter([]),
         { provide: DriveService, useValue: driveService },
         { provide: CostService, useValue: costService },
-        {
-          provide: ActivatedRoute,
-          useValue: { paramMap: of(convertToParamMap({ carId: '5' })) },
-        },
       ],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(CarWorkspaceComponent);
+    fixture = TestBed.createComponent(DriveFormComponent);
     component = fixture.componentInstance;
+    fixture.componentRef.setInput('car', car);
+    fixture.componentRef.setInput('users', users);
     fixture.detectChanges();
-  });
-
-  it('loads the car, users and entries on init', () => {
-    expect(carService.getCarById).toHaveBeenCalledWith(5);
-    expect(component.car()).toEqual(car);
-    expect(component.users()).toEqual(users);
-    expect(component.loading()).toBe(false);
   });
 
   it('rejects odometer = 0 client-side', () => {
@@ -166,27 +129,6 @@ describe('CarWorkspaceComponent', () => {
 
     expect(component.message()).toBe('');
     expect(fixture.nativeElement.textContent).not.toContain('carWorkspace.messages.driveSaved');
-  });
-
-  it('does not submit an invalid transaction form', () => {
-    component.transactionForm.setValue({
-      buyerId: 0,
-      description: '',
-      price: 0,
-      quantity: 1,
-      dayOfTransaction: '2025-01-01',
-      costType: 'VARIABLE',
-      notes: '',
-    });
-
-    component.saveTransaction();
-    fixture.detectChanges();
-
-    expect(costService.createCost).not.toHaveBeenCalled();
-    expect(component.error()).toBe('carWorkspace.messages.transactionFormInvalid');
-    expect(fixture.nativeElement.textContent).toContain(
-      'carWorkspace.messages.transactionFormInvalid',
-    );
   });
 
   it('surfaces the backend detail message when saving a drive fails', () => {

@@ -1,0 +1,139 @@
+<section class="cost-form-page">
+  @if (car()) {
+    <h2>{{ 'carWorkspace.transactionForm.title' | translate }} — {{ car().name }}</h2>
+  }
+
+  <a [routerLink]="['/cars', car().carId, 'costs']">{{
+    'carWorkspace.transactionForm.backToList' | translate
+  }}</a>
+
+  @if (message()) {
+    <p #statusRegion class="cost-form-page__message" role="status" aria-live="polite" tabindex="-1">
+      {{ message() | translate }}
+    </p>
+  }
+
+  @if (error()) {
+    <p class="cost-form-page__error" role="alert" aria-live="assertive">
+      {{ error() | translate }}
+    </p>
+  }
+
+  <form #transactionFormEl [formGroup]="transactionForm" (ngSubmit)="saveTransaction()">
+    <label for="cost-dayOfTransaction">{{ 'carWorkspace.transactionForm.date' | translate }}</label>
+    <input
+      id="cost-dayOfTransaction"
+      type="date"
+      formControlName="dayOfTransaction"
+      [attr.aria-invalid]="
+        transactionForm.controls.dayOfTransaction.invalid &&
+        transactionForm.controls.dayOfTransaction.touched
+      "
+      [attr.aria-describedby]="
+        transactionForm.controls.dayOfTransaction.invalid &&
+        transactionForm.controls.dayOfTransaction.touched
+          ? 'cost-dayOfTransaction-error'
+          : null
+      "
+    />
+    <app-field-error
+      id="cost-dayOfTransaction-error"
+      [control]="transactionForm.controls.dayOfTransaction"
+    />
+
+    <label for="cost-buyerId">{{ 'carWorkspace.transactionForm.buyer' | translate }}</label>
+    <select
+      id="cost-buyerId"
+      formControlName="buyerId"
+      [attr.aria-invalid]="
+        transactionForm.controls.buyerId.invalid && transactionForm.controls.buyerId.touched
+      "
+      [attr.aria-describedby]="
+        transactionForm.controls.buyerId.invalid && transactionForm.controls.buyerId.touched
+          ? 'cost-buyerId-error'
+          : null
+      "
+    >
+      @for (user of users(); track user.userId) {
+        <option [value]="user.userId">{{ user.firstname }} {{ user.lastname }}</option>
+      }
+    </select>
+    <app-field-error id="cost-buyerId-error" [control]="transactionForm.controls.buyerId" />
+
+    <label for="cost-description">{{
+      'carWorkspace.transactionForm.description' | translate
+    }}</label>
+    <input
+      id="cost-description"
+      type="text"
+      formControlName="description"
+      [attr.aria-invalid]="
+        transactionForm.controls.description.invalid && transactionForm.controls.description.touched
+      "
+      [attr.aria-describedby]="
+        transactionForm.controls.description.invalid && transactionForm.controls.description.touched
+          ? 'cost-description-error'
+          : null
+      "
+    />
+    <app-field-error id="cost-description-error" [control]="transactionForm.controls.description" />
+
+    <label for="cost-costType">{{ 'carWorkspace.transactionForm.type' | translate }}</label>
+    <select
+      id="cost-costType"
+      formControlName="costType"
+      [attr.aria-invalid]="
+        transactionForm.controls.costType.invalid && transactionForm.controls.costType.touched
+      "
+      [attr.aria-describedby]="
+        transactionForm.controls.costType.invalid && transactionForm.controls.costType.touched
+          ? 'cost-costType-error'
+          : null
+      "
+    >
+      <option value="VARIABLE">{{ 'carWorkspace.costTypes.VARIABLE' | translate }}</option>
+      <option value="FIXED">{{ 'carWorkspace.costTypes.FIXED' | translate }}</option>
+    </select>
+    <app-field-error id="cost-costType-error" [control]="transactionForm.controls.costType" />
+
+    <label for="cost-price">{{ 'carWorkspace.transactionForm.price' | translate }}</label>
+    <input
+      id="cost-price"
+      type="number"
+      formControlName="price"
+      min="0"
+      step="0.01"
+      [attr.aria-invalid]="
+        transactionForm.controls.price.invalid && transactionForm.controls.price.touched
+      "
+      [attr.aria-describedby]="
+        transactionForm.controls.price.invalid && transactionForm.controls.price.touched
+          ? 'cost-price-error'
+          : null
+      "
+    />
+    <app-field-error id="cost-price-error" [control]="transactionForm.controls.price" />
+
+    <label for="cost-quantity">{{ 'carWorkspace.transactionForm.quantity' | translate }}</label>
+    <input
+      id="cost-quantity"
+      type="number"
+      formControlName="quantity"
+      min="1"
+      [attr.aria-invalid]="
+        transactionForm.controls.quantity.invalid && transactionForm.controls.quantity.touched
+      "
+      [attr.aria-describedby]="
+        transactionForm.controls.quantity.invalid && transactionForm.controls.quantity.touched
+          ? 'cost-quantity-error'
+          : null
+      "
+    />
+    <app-field-error id="cost-quantity-error" [control]="transactionForm.controls.quantity" />
+
+    <label for="cost-notes">{{ 'carWorkspace.transactionForm.notes' | translate }}</label>
+    <textarea id="cost-notes" rows="3" formControlName="notes"></textarea>
+
+    <button type="submit">{{ 'carWorkspace.transactionForm.submit' | translate }}</button>
+  </form>
+</section>

@@ -1,0 +1,53 @@
+<section class="drives-list">
+  <h2>{{ 'carWorkspace.drives.title' | translate }}</h2>
+
+  <div class="drives-list__actions">
+    <a routerLink="..">{{ 'carWorkspace.hub.backToHub' | translate }}</a>
+    <a routerLink="new">{{ 'carWorkspace.drives.addLink' | translate }}</a>
+  </div>
+
+  @if (loading()) {
+    <p>{{ 'carWorkspace.loading' | translate }}</p>
+  } @else if (errorMessage()) {
+    <p class="drives-list__error" role="alert" aria-live="assertive">
+      {{ errorMessage() | translate }}
+    </p>
+  } @else if (driveRows().length === 0) {
+    <p>{{ 'carWorkspace.drives.empty' | translate }}</p>
+  } @else {
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">{{ 'carWorkspace.drives.headers.date' | translate }}</th>
+          <th scope="col">{{ 'carWorkspace.drives.headers.driver' | translate }}</th>
+          <th scope="col">{{ 'carWorkspace.drives.headers.odometer' | translate }}</th>
+          <th scope="col">{{ 'carWorkspace.drives.headers.distance' | translate }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (row of driveRows(); track row.drive.driveId) {
+          <tr>
+            <td>{{ row.drive.driveDate }}</td>
+            <td>{{ userLabelById().get(row.drive.driverId) || row.drive.driverId }}</td>
+            <td>{{ row.drive.odometer }}</td>
+            <td>{{ row.distance ?? '-' }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+
+    @if (totalPages() > 1) {
+      <nav class="drives-list__pager" aria-label="{{ 'common.pagination.navLabel' | translate }}">
+        <button type="button" (click)="changePage(-1)" [disabled]="page() === 0">
+          {{ 'common.pagination.previous' | translate }}
+        </button>
+        <span aria-live="polite">
+          {{ 'common.pagination.pageOf' | translate: { current: page() + 1, total: totalPages() } }}
+        </span>
+        <button type="button" (click)="changePage(1)" [disabled]="page() + 1 >= totalPages()">
+          {{ 'common.pagination.next' | translate }}
+        </button>
+      </nav>
+    }
+  }
+</section>

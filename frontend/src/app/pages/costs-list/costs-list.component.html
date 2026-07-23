@@ -1,0 +1,57 @@
+<section class="costs-list">
+  <h2>{{ 'carWorkspace.transactions.title' | translate }}</h2>
+
+  <div class="costs-list__actions">
+    <a routerLink="..">{{ 'carWorkspace.hub.backToHub' | translate }}</a>
+    <a routerLink="new">{{ 'carWorkspace.transactions.addLink' | translate }}</a>
+  </div>
+
+  @if (loading()) {
+    <p>{{ 'carWorkspace.loading' | translate }}</p>
+  } @else if (errorMessage()) {
+    <p class="costs-list__error" role="alert" aria-live="assertive">
+      {{ errorMessage() | translate }}
+    </p>
+  } @else if (costs().length === 0) {
+    <p>{{ 'carWorkspace.transactions.empty' | translate }}</p>
+  } @else {
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">{{ 'carWorkspace.transactions.headers.date' | translate }}</th>
+          <th scope="col">{{ 'carWorkspace.transactions.headers.buyer' | translate }}</th>
+          <th scope="col">{{ 'carWorkspace.transactions.headers.description' | translate }}</th>
+          <th scope="col">{{ 'carWorkspace.transactions.headers.price' | translate }}</th>
+          <th scope="col">{{ 'carWorkspace.transactions.headers.quantity' | translate }}</th>
+          <th scope="col">{{ 'carWorkspace.transactions.headers.type' | translate }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (cost of costs(); track cost.costId) {
+          <tr>
+            <td>{{ cost.dayOfTransaction }}</td>
+            <td>{{ userLabelById().get(cost.buyerId) || cost.buyerId }}</td>
+            <td>{{ cost.description }}</td>
+            <td>{{ cost.price | number: '1.2-2' }}</td>
+            <td>{{ cost.quantity }}</td>
+            <td>{{ 'carWorkspace.costTypes.' + cost.costType | translate }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+
+    @if (totalPages() > 1) {
+      <nav class="costs-list__pager" aria-label="{{ 'common.pagination.navLabel' | translate }}">
+        <button type="button" (click)="changePage(-1)" [disabled]="page() === 0">
+          {{ 'common.pagination.previous' | translate }}
+        </button>
+        <span aria-live="polite">
+          {{ 'common.pagination.pageOf' | translate: { current: page() + 1, total: totalPages() } }}
+        </span>
+        <button type="button" (click)="changePage(1)" [disabled]="page() + 1 >= totalPages()">
+          {{ 'common.pagination.next' | translate }}
+        </button>
+      </nav>
+    }
+  }
+</section>

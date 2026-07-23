@@ -60,4 +60,16 @@ describe('FieldErrorComponent', () => {
 
     expect(component.entries()).toEqual([{ key: 'validation.min', params: { min: 1 } }]);
   });
+
+  it('renders the given id on the error paragraph for aria-describedby wiring', () => {
+    const control = new FormControl('', Validators.required);
+    control.markAsTouched();
+    fixture.componentRef.setInput('control', control);
+    fixture.componentRef.setInput('id', 'odometer-error');
+    fixture.detectChanges();
+
+    const paragraph = fixture.nativeElement.querySelector('p.field-error');
+    expect(paragraph.id).toBe('odometer-error');
+    expect(paragraph.getAttribute('role')).toBe('alert');
+  });
 });
