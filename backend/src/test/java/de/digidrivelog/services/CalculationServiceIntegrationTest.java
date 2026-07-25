@@ -166,6 +166,20 @@ class CalculationServiceIntegrationTest {
     }
 
     @Test
+    void yearlyCalculation_aggregatesMissingMonthsFirst() {
+        // Only January was aggregated manually; February must be filled in by the yearly run.
+        calculationService.aggregateMonth(car.getCarId(), YEAR, 1);
+        calculationService.calculateYear(car.getCarId(), YEAR);
+
+        assertThat(calculationService.monthlyExists(car.getCarId(), YEAR, 2)).isTrue();
+        Map<Long, YearlySettlementRowDto> owed = calculationService
+                .getYearlySettlement(car.getCarId(), YEAR).stream()
+                .collect(Collectors.toMap(YearlySettlementRowDto::getUserId, Function.identity()));
+        assertThat(owed.get(anna.getUserId()).getDistance()).isEqualTo(100);
+        assertThat(owed.get(ben.getUserId()).getDistance()).isEqualTo(200);
+    }
+
+    @Test
     void calculatingYearTwice_conflicts() {
         aggregateAndCalculate();
         assertThatThrownBy(() -> calculationService.calculateYear(car.getCarId(), YEAR))

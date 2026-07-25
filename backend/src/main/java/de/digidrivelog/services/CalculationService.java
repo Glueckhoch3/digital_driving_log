@@ -86,7 +86,9 @@ public class CalculationService {
                     "Year already calculated for this car. Delete it before recalculating.");
         }
 
-        // 1. Roll the aggregated months up into per-driver yearly distances.
+        // 1. Aggregate every month that has drives but was never run, then roll the
+        //    aggregated months up into per-driver yearly distances.
+        aggregateMissingMonths(carId, year);
         Map<Long, Integer> distanceByDriver = new LinkedHashMap<>();
         for (DriveLogMonthTotal m : monthTotalRepository.findByYearAndCarIdOrderByMonthAsc(year, carId)) {
             distanceByDriver.merge(m.getUserId(), m.getTotalDistanceMonth(), Integer::sum);
@@ -284,22 +286,44 @@ public class CalculationService {
         logRepository.saveAll(logs);
     }
 
+    /**
+     * Aggregates every month of the year that has drives but no persisted month total, so a
+     * yearly run never silently drops a month the user forgot to aggregate. Months already
+     * aggregated are left untouched — manual corrections survive.
+     */
+    private void aggregateMissingMonths(Long carId, Integer year) {
+        List<DriveLogMonthTotal> rows = new ArrayList<>();
+        distanceByMonthAndDriver(carId, year).forEach((month, distanceByDriver) -> {
+            if (monthTotalRepository.existsByYearAndMonthAndCarId(year, month, carId)) {
+                return;
+            }
+            distanceByDriver.forEach((userId, distance) ->
+                    rows.add(new DriveLogMonthTotal(year, month, userId, carId, distance)));
+        });
+        monthTotalRepository.saveAll(rows);
+    }
+
     /** Per-driver monthly distance from consecutive odometer readings (see the frontend rule). */
     private Map<Long, Integer> monthlyDistanceByDriver(Long carId, Integer year, Integer month) {
-        Map<Long, Integer> distanceByDriver = new LinkedHashMap<>();
+        return distanceByMonthAndDriver(carId, year).getOrDefault(month, Map.of());
+    }
+
+    /** One pass over the car's drives, bucketing each odometer delta by month and driver. */
+    private Map<Integer, Map<Long, Integer>> distanceByMonthAndDriver(Long carId, Integer year) {
+        Map<Integer, Map<Long, Integer>> byMonth = new LinkedHashMap<>();
         Integer previousOdometer = null;
         for (Drive drive : driveRepository.findByCarCarIdOrderByOdometerAscDriveDateAsc(carId)) {
             if (previousOdometer != null) {
                 int delta = drive.getOdometer() - previousOdometer;
-                if (delta > 0
-                        && drive.getDriveDate().getYear() == year
-                        && drive.getDriveDate().getMonthValue() == month) {
-                    distanceByDriver.merge(drive.getDriver().getUserId(), delta, Integer::sum);
+                if (delta > 0 && drive.getDriveDate().getYear() == year) {
+                    byMonth.computeIfAbsent(drive.getDriveDate().getMonthValue(),
+                                    m -> new LinkedHashMap<>())
+                            .merge(drive.getDriver().getUserId(), delta, Integer::sum);
                 }
             }
             previousOdometer = drive.getOdometer();
         }
-        return distanceByDriver;
+        return byMonth;
     }
 
     /**

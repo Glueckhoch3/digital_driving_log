@@ -5,8 +5,7 @@ import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { CalculationService } from '../../services/calculation.service';
 import { CombinedSettlementRow } from '../../models/calculations';
-
-const YEARS_BACK = 6;
+import { selectableYears } from '../../utils/selectable-years';
 
 @Component({
   selector: 'app-combined-settlement',
@@ -17,8 +16,8 @@ const YEARS_BACK = 6;
 export class CombinedSettlementComponent implements OnInit {
   private readonly calculationService = inject(CalculationService);
 
-  readonly years: number[] = [];
-  year = 0;
+  readonly years: number[] = selectableYears();
+  year = new Date().getFullYear();
 
   readonly rows = signal<CombinedSettlementRow[]>([]);
   readonly loading = signal(false);
@@ -33,14 +32,6 @@ export class CombinedSettlementComponent implements OnInit {
       net: rows.reduce((sum, r) => sum + r.netBalance, 0),
     };
   });
-
-  constructor() {
-    const current = new Date().getFullYear();
-    for (let y = current; y > current - YEARS_BACK; y--) {
-      this.years.push(y);
-    }
-    this.year = current;
-  }
 
   ngOnInit(): void {
     this.load();
