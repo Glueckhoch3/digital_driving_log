@@ -208,6 +208,6 @@ class CalculationServiceIntegrationTest {
 
     private void createCost(UserDto buyer, String description, String price, CostType type, LocalDate date) {
         costService.createCost(new CreateCostRequest(car.getCarId(), buyer.getUserId(), description,
-                new java.math.BigDecimal(price), 1, date, type, null));
+                new java.math.BigDecimal(price), java.math.BigDecimal.ONE, date, type, null));
     }
 }

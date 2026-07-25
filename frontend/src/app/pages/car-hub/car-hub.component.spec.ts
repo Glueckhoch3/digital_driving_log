@@ -25,10 +25,10 @@ describe('CarHubComponent', () => {
     expect(fixture.nativeElement.textContent).toContain('M-AB-1');
   });
 
-  it('renders links to all four child pages', () => {
+  it('renders links to all child pages', () => {
     const hrefs = Array.from(fixture.nativeElement.querySelectorAll('a')).map((a) =>
       (a as HTMLAnchorElement).getAttribute('routerLink'),
     );
-    expect(hrefs).toEqual(['drives', 'drives/new', 'costs', 'costs/new']);
+    expect(hrefs).toEqual(['drives', 'drives/new', 'costs', 'costs/new', 'upload']);
   });
 });

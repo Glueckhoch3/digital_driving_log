@@ -429,6 +429,106 @@ paths:
         '404':
           description: Vehicle not found
 
+  /vehicles/{carId}/drives/import:
+    post:
+      tags:
+        - imports
+      summary: Import drives from a CSV file
+      description: >
+        Bulk-import drives for a car from a semicolon-separated CSV with columns
+        `km-end;firstname;lastname;date`. Names are matched to existing users
+        (case-insensitive); an optional header row is skipped. The import is
+        all-or-nothing: if any row fails validation nothing is persisted and the
+        response lists the per-line errors.
+      parameters:
+        - name: carId
+          in: path
+          required: true
+          schema:
+            type: number
+            format: int64
+        - name: locale
+          in: query
+          required: false
+          description: Number format of the file (`en`, default, uses `.` as decimal; `de` uses `,`).
+          schema:
+            type: string
+            enum: [en, de]
+            default: en
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+              required:
+                - file
+      responses:
+        '200':
+          description: Import processed; check `errors` to distinguish success from a rejected file
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ImportResult'
+        '400':
+          description: Missing or unreadable file
+        '404':
+          description: Vehicle not found
+
+  /vehicles/{carId}/costs/import:
+    post:
+      tags:
+        - imports
+      summary: Import costs from a CSV file
+      description: >
+        Bulk-import fuel and cost entries for a car from a semicolon-separated
+        CSV with columns `firstname;lastname;date;amount;price;description;cost_type`.
+        `amount` and `price` are read using the `locale` number format; `cost_type`
+        accepts `Fix`/`Var` (or `FIXED`/`VARIABLE`). Same all-or-nothing semantics
+        as the drives import.
+      parameters:
+        - name: carId
+          in: path
+          required: true
+          schema:
+            type: number
+            format: int64
+        - name: locale
+          in: query
+          required: false
+          description: Number format of the file (`en`, default, uses `.` as decimal; `de` uses `,`).
+          schema:
+            type: string
+            enum: [en, de]
+            default: en
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+              required:
+                - file
+      responses:
+        '200':
+          description: Import processed; check `errors` to distinguish success from a rejected file
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ImportResult'
+        '400':
+          description: Missing or unreadable file
+        '404':
+          description: Vehicle not found
+
   /users/{userId}/costs:
     get:
       tags:
@@ -622,6 +722,35 @@ components:
          - plateNumber
          - ownerId
 
+    ImportResult:
+      type: object
+      description: >
+        Outcome of a CSV import. All-or-nothing: when `errors` is non-empty
+        nothing was persisted and `imported` is 0.
+      properties:
+        imported:
+          type: integer
+          description: Number of rows written (0 when the file was rejected).
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/RowError'
+      required:
+        - imported
+        - errors
+
+    RowError:
+      type: object
+      properties:
+        line:
+          type: integer
+          description: 1-based line number in the uploaded file (counts a header row, if present).
+        message:
+          type: string
+      required:
+        - line
+        - message
+
     CreateCost:
       type: object
       properties:
@@ -643,6 +772,7 @@ components:
           enum: [VARIABLE, FIXED]
         quantity:
           type: number
+          description: Decimal quantity (e.g. litres of fuel); must be positive.
         notes:
           type: string
       required:

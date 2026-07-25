@@ -5,6 +5,7 @@ import { DrivesListComponent } from './pages/drives-list/drives-list.component';
 import { DriveFormComponent } from './pages/drive-form/drive-form.component';
 import { CostsListComponent } from './pages/costs-list/costs-list.component';
 import { CostFormComponent } from './pages/cost-form/cost-form.component';
+import { UploadComponent } from './pages/upload/upload.component';
 import { AdminOverviewComponent } from './pages/admin-overview/admin-overview.component';
 import { CarManagementComponent } from './pages/car-management/car-management.component';
 import { UserManagementComponent } from './pages/user-management/user-management.component';
@@ -29,6 +30,7 @@ export const routes: Routes = [
       { path: 'drives/new', component: DriveFormComponent },
       { path: 'costs', component: CostsListComponent },
       { path: 'costs/new', component: CostFormComponent },
+      { path: 'upload', component: UploadComponent },
     ],
   },
   { path: 'manage/cars', component: CarManagementComponent },

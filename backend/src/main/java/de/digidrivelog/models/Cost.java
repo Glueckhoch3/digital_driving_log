@@ -66,11 +66,11 @@ public class Cost {
     @Column(name = "cost_type", nullable = false, length = 20)
     private CostType costType;
 
-    /** Quantity purchased (e.g. litres of fuel, number of tyres). */
+    /** Quantity purchased (e.g. litres of fuel, number of tyres). Decimal to allow fractional fuel amounts. */
     @NotNull
     @Positive
-    @Column(name = "quantity", nullable = false)
-    private Integer quantity;
+    @Column(name = "quantity", nullable = false, precision = 10, scale = 2)
+    private BigDecimal quantity;
 
     @Column(name = "notes", columnDefinition = "TEXT")
     private String notes;

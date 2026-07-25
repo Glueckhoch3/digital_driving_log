@@ -19,6 +19,7 @@ import { CarDto } from '../../models/cars';
 import { UserDto } from '../../models/users';
 import { CreateCostRequest, CostType } from '../../models/costs';
 import { extractApiErrorMessage } from '../../models/api-error';
+import { localeDecimalValidator, parseLocaleNumber } from '../../models/locale-number';
 import { FieldErrorComponent } from '../../components/field-error/field-error.component';
 
 @Component({
@@ -45,8 +46,8 @@ export class CostFormComponent implements OnInit {
   readonly transactionForm = this.fb.group({
     buyerId: [0, [Validators.required, Validators.min(1)]],
     description: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(63)]],
-    price: [0, [Validators.required, Validators.min(0)]],
-    quantity: [1, [Validators.required, Validators.min(1)]],
+    price: ['0', [Validators.required, localeDecimalValidator(0)]],
+    quantity: ['1', [Validators.required, localeDecimalValidator(0)]],
     dayOfTransaction: [new Date().toISOString().slice(0, 10), Validators.required],
     costType: ['VARIABLE' as CostType, Validators.required],
     notes: [''],
@@ -93,8 +94,8 @@ export class CostFormComponent implements OnInit {
       carId,
       buyerId: Number(value.buyerId),
       description: value.description ?? '',
-      price: Number(value.price),
-      quantity: Number(value.quantity),
+      price: parseLocaleNumber(value.price) ?? 0,
+      quantity: parseLocaleNumber(value.quantity) ?? 0,
       dayOfTransaction: value.dayOfTransaction ?? new Date().toISOString().slice(0, 10),
       costType: (value.costType ?? 'VARIABLE') as CostType,
       notes: value.notes ?? undefined,
@@ -106,8 +107,8 @@ export class CostFormComponent implements OnInit {
         this.transactionForm.reset({
           buyerId: this.users()[0]?.userId ?? 0,
           description: '',
-          price: 0,
-          quantity: 1,
+          price: '0',
+          quantity: '1',
           dayOfTransaction: new Date().toISOString().slice(0, 10),
           costType: 'VARIABLE',
           notes: '',

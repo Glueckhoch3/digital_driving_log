@@ -99,10 +99,9 @@
     <label for="cost-price">{{ 'carWorkspace.transactionForm.price' | translate }}</label>
     <input
       id="cost-price"
-      type="number"
+      type="text"
+      inputmode="decimal"
       formControlName="price"
-      min="0"
-      step="0.01"
       [attr.aria-invalid]="
         transactionForm.controls.price.invalid && transactionForm.controls.price.touched
       "
@@ -117,9 +116,9 @@
     <label for="cost-quantity">{{ 'carWorkspace.transactionForm.quantity' | translate }}</label>
     <input
       id="cost-quantity"
-      type="number"
+      type="text"
+      inputmode="decimal"
       formControlName="quantity"
-      min="1"
       [attr.aria-invalid]="
         transactionForm.controls.quantity.invalid && transactionForm.controls.quantity.touched
       "

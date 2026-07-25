@@ -21,6 +21,7 @@ import { UserDto } from '../../models/users';
 import { CreateDriveRequest } from '../../models/drives';
 import { CreateCostRequest } from '../../models/costs';
 import { extractApiErrorMessage } from '../../models/api-error';
+import { localeDecimalValidator, parseLocaleNumber } from '../../models/locale-number';
 import { FieldErrorComponent } from '../../components/field-error/field-error.component';
 
 @Component({
@@ -51,8 +52,8 @@ export class DriveFormComponent implements OnInit {
     driverId: [0, [Validators.required, Validators.min(1)]],
     notes: [''],
     includeFuel: [false],
-    fuelPrice: [0],
-    fuelQuantity: [0],
+    fuelPrice: ['0'],
+    fuelQuantity: ['0'],
     fuelDate: [new Date().toISOString().slice(0, 10)],
     fuelBuyerId: [0],
     fuelNotes: [''],
@@ -81,8 +82,8 @@ export class DriveFormComponent implements OnInit {
   private setFuelValidatorsEnabled(enabled: boolean): void {
     const { fuelBuyerId, fuelPrice, fuelQuantity, fuelDate } = this.driveForm.controls;
     fuelBuyerId.setValidators(enabled ? [Validators.required, Validators.min(1)] : []);
-    fuelPrice.setValidators(enabled ? [Validators.required, Validators.min(0)] : []);
-    fuelQuantity.setValidators(enabled ? [Validators.required, Validators.min(1)] : []);
+    fuelPrice.setValidators(enabled ? [Validators.required, localeDecimalValidator(0)] : []);
+    fuelQuantity.setValidators(enabled ? [Validators.required, localeDecimalValidator(0)] : []);
     fuelDate.setValidators(enabled ? [Validators.required] : []);
     fuelBuyerId.updateValueAndValidity();
     fuelPrice.updateValueAndValidity();
@@ -127,8 +128,8 @@ export class DriveFormComponent implements OnInit {
             carId,
             buyerId: Number(value.fuelBuyerId),
             description: 'Fuel',
-            price: Number(value.fuelPrice),
-            quantity: Number(value.fuelQuantity),
+            price: parseLocaleNumber(value.fuelPrice) ?? 0,
+            quantity: parseLocaleNumber(value.fuelQuantity) ?? 0,
             dayOfTransaction: value.fuelDate ?? new Date().toISOString().slice(0, 10),
             costType: 'VARIABLE',
             notes: value.fuelNotes ?? undefined,
@@ -162,8 +163,8 @@ export class DriveFormComponent implements OnInit {
       driverId: this.users()[0]?.userId ?? 0,
       notes: '',
       includeFuel: false,
-      fuelPrice: 0,
-      fuelQuantity: 0,
+      fuelPrice: '0',
+      fuelQuantity: '0',
       fuelDate: new Date().toISOString().slice(0, 10),
       fuelBuyerId: this.users()[0]?.userId ?? 0,
       fuelNotes: '',

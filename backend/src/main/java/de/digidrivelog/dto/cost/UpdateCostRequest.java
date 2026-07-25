@@ -33,7 +33,7 @@ public class UpdateCostRequest {
 
     @NotNull
     @Positive
-    private Integer quantity;
+    private BigDecimal quantity;
 
     @NotNull
     private LocalDate dayOfTransaction;

@@ -78,7 +78,7 @@ class CostServiceIntegrationTest {
                 buyer.getUserId(),
                 "Fuel",
                 new BigDecimal("54.90"),
-                40,
+                new BigDecimal("40"),
                 LocalDate.of(2025, 4, 2),
                 CostType.VARIABLE,
                 "full tank"
@@ -89,7 +89,7 @@ class CostServiceIntegrationTest {
         assertThat(created.getBuyerId()).isEqualTo(buyer.getUserId());
         assertThat(created.getDescription()).isEqualTo("Fuel");
         assertThat(created.getPrice()).isEqualByComparingTo("54.90");
-        assertThat(created.getQuantity()).isEqualTo(40);
+        assertThat(created.getQuantity()).isEqualByComparingTo("40");
         assertThat(created.getDayOfTransaction()).isEqualTo(LocalDate.of(2025, 4, 2));
         assertThat(created.getCostType()).isEqualTo(CostType.VARIABLE);
         assertThat(created.getNotes()).isEqualTo("full tank");
@@ -145,7 +145,7 @@ class CostServiceIntegrationTest {
                 otherBuyer.getUserId(),
                 "Insurance",
                 new BigDecimal("300.00"),
-                1,
+                new BigDecimal("1"),
                 LocalDate.of(2025, 7, 1),
                 CostType.FIXED,
                 "yearly"
@@ -156,7 +156,7 @@ class CostServiceIntegrationTest {
         assertThat(updated.getBuyerId()).isEqualTo(otherBuyer.getUserId());
         assertThat(updated.getDescription()).isEqualTo("Insurance");
         assertThat(updated.getPrice()).isEqualByComparingTo("300.00");
-        assertThat(updated.getQuantity()).isEqualTo(1);
+        assertThat(updated.getQuantity()).isEqualByComparingTo("1");
         assertThat(updated.getDayOfTransaction()).isEqualTo(LocalDate.of(2025, 7, 1));
         assertThat(updated.getCostType()).isEqualTo(CostType.FIXED);
         assertThat(updated.getNotes()).isEqualTo("yearly");
@@ -169,7 +169,7 @@ class CostServiceIntegrationTest {
                 buyer.getUserId(),
                 "Fuel",
                 new BigDecimal("10.00"),
-                1,
+                new BigDecimal("1"),
                 LocalDate.of(2025, 4, 2),
                 CostType.VARIABLE,
                 null
@@ -223,7 +223,7 @@ class CostServiceIntegrationTest {
                 buyerId,
                 "Tires",
                 new BigDecimal("120.00"),
-                4,
+                new BigDecimal("4"),
                 LocalDate.of(2025, 5, 20),
                 CostType.VARIABLE,
                 null

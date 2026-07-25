@@ -229,7 +229,7 @@ class CostControllerWebTest {
                 buyer.getUserId(),
                 description,
                 new BigDecimal("42.00"),
-                1,
+                new BigDecimal("1"),
                 LocalDate.of(2025, 5, 5),
                 CostType.VARIABLE,
                 null
