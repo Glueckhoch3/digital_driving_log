@@ -42,8 +42,8 @@ describe('CostFormComponent', () => {
     component.transactionForm.setValue({
       buyerId: 0,
       description: '',
-      price: 0,
-      quantity: 1,
+      price: '0',
+      quantity: '1',
       dayOfTransaction: '2025-01-01',
       costType: 'VARIABLE',
       notes: '',
@@ -63,8 +63,8 @@ describe('CostFormComponent', () => {
     component.transactionForm.setValue({
       buyerId: 1,
       description: 'Oil change',
-      price: 42,
-      quantity: 1,
+      price: '42',
+      quantity: '1',
       dayOfTransaction: '2025-01-01',
       costType: 'FIXED',
       notes: '',

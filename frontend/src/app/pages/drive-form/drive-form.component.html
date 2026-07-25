@@ -93,10 +93,9 @@
         <label for="drive-fuelPrice">{{ 'carWorkspace.driveForm.fuelPrice' | translate }}</label>
         <input
           id="drive-fuelPrice"
-          type="number"
+          type="text"
+          inputmode="decimal"
           formControlName="fuelPrice"
-          min="0"
-          step="0.01"
           [attr.aria-invalid]="
             driveForm.controls.fuelPrice.invalid && driveForm.controls.fuelPrice.touched
           "
@@ -113,9 +112,9 @@
         }}</label>
         <input
           id="drive-fuelQuantity"
-          type="number"
+          type="text"
+          inputmode="decimal"
           formControlName="fuelQuantity"
-          min="1"
           [attr.aria-invalid]="
             driveForm.controls.fuelQuantity.invalid && driveForm.controls.fuelQuantity.touched
           "

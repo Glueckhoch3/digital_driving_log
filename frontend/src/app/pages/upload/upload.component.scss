@@ -1,0 +1,211 @@
+.upload-page {
+  --up-surface: #ffffff;
+  --up-surface-2: #f6f8f9;
+  --up-ink: #2c3e50;
+  --up-ink-soft: #5c6b7a;
+  --up-line: #d9e0e4;
+  --up-accent: #2980b9;
+  --up-accent-ink: #1f6391;
+  --up-accent-soft: #eaf2f8;
+  --up-good: #16a085;
+  --up-good-soft: #e6f5f1;
+  --up-bad: #c0392b;
+  --up-bad-soft: #fbeae8;
+  --up-radius: 8px;
+
+  max-width: 56rem;
+  margin: 2rem auto;
+  padding: 0 1.25rem;
+  color: var(--up-ink);
+
+  &__back {
+    display: inline-block;
+    margin-bottom: 1rem;
+    color: var(--up-accent-ink);
+    text-decoration: none;
+    font-size: 0.85rem;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  h2 {
+    font-size: 1.4rem;
+    margin: 0 0 0.3rem;
+  }
+
+  &__intro {
+    margin: 0 0 1.4rem;
+    color: var(--up-ink-soft);
+    font-size: 0.9rem;
+    max-width: 52ch;
+  }
+
+  &__locale {
+    border: 0;
+    padding: 0;
+    margin: 0 0 1.5rem;
+
+    legend {
+      font-size: 0.72rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--up-ink-soft);
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      padding: 0;
+    }
+  }
+
+  &__toggle {
+    display: inline-flex;
+    border: 1px solid var(--up-line);
+    border-radius: var(--up-radius);
+    overflow: hidden;
+
+    button {
+      border: 0;
+      background: var(--up-surface);
+      color: var(--up-ink-soft);
+      font: inherit;
+      font-weight: 600;
+      font-size: 0.85rem;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+
+      &.active {
+        background: var(--up-accent);
+        color: #fff;
+      }
+
+      &:focus-visible {
+        outline: 2px solid var(--up-accent-ink);
+        outline-offset: -2px;
+      }
+    }
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+    gap: 1.25rem;
+  }
+}
+
+.upload-card {
+  background: var(--up-surface);
+  border: 1px solid var(--up-line);
+  border-radius: var(--up-radius);
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+
+  h3 {
+    margin: 0;
+    font-size: 1.05rem;
+  }
+
+  &__format {
+    display: block;
+    font-family: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+    font-size: 0.78rem;
+    background: var(--up-surface-2);
+    border: 1px solid var(--up-line);
+    border-radius: 6px;
+    padding: 0.5rem 0.65rem;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  &__hint {
+    margin: 0;
+    font-size: 0.82rem;
+    color: var(--up-ink-soft);
+  }
+
+  &__file input[type='file'] {
+    width: 100%;
+    font-size: 0.85rem;
+  }
+
+  &__submit {
+    align-self: flex-start;
+    background: var(--up-accent);
+    color: #fff;
+    border: 1px solid var(--up-accent);
+    border-radius: var(--up-radius);
+    font: inherit;
+    font-weight: 600;
+    font-size: 0.85rem;
+    padding: 0.5rem 1.1rem;
+    cursor: pointer;
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: default;
+    }
+
+    &:not(:disabled):hover {
+      background: var(--up-accent-ink);
+    }
+  }
+
+  &__error {
+    margin: 0;
+    color: var(--up-bad);
+    font-size: 0.85rem;
+  }
+
+  &__success {
+    margin: 0;
+    background: var(--up-good-soft);
+    color: var(--up-good);
+    border-radius: 6px;
+    padding: 0.6rem 0.75rem;
+    font-size: 0.88rem;
+    font-weight: 600;
+  }
+
+  &__failure {
+    background: var(--up-bad-soft);
+    border: 1px solid color-mix(in srgb, var(--up-bad) 35%, var(--up-line));
+    border-radius: 6px;
+    padding: 0.6rem 0.75rem;
+    font-size: 0.83rem;
+
+    > p {
+      margin: 0 0 0.5rem;
+      font-weight: 600;
+      color: var(--up-bad);
+    }
+
+    ul {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 0.35rem;
+    }
+
+    .line {
+      font-family: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+      font-weight: 700;
+      color: var(--up-bad);
+      margin-right: 0.4rem;
+    }
+  }
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

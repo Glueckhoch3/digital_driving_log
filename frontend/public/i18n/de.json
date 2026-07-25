@@ -30,7 +30,8 @@
     "maxLength": "Darf höchstens {{max}} Zeichen lang sein.",
     "minLength": "Muss mindestens {{min}} Zeichen lang sein.",
     "min": "Muss mindestens {{min}} sein.",
-    "pastDate": "Muss ein Datum in der Vergangenheit sein."
+    "pastDate": "Muss ein Datum in der Vergangenheit sein.",
+    "decimal": "Bitte eine Zahl eingeben (, oder . als Dezimaltrennzeichen)."
   },
   "userManagement": {
     "title": "Benutzerverwaltung",
@@ -137,7 +138,8 @@
       "addDrive": "Fahrt hinzufügen",
       "viewCosts": "Kosten ansehen",
       "addCost": "Kosten hinzufügen",
-      "backToHub": "Zurück zur Fahrzeugübersicht"
+      "backToHub": "Zurück zur Fahrzeugübersicht",
+      "upload": "CSV importieren"
     },
     "messages": {
       "driveSaved": "Fahrt gespeichert.",
@@ -202,6 +204,29 @@
         "price": "Preis",
         "quantity": "Menge",
         "type": "Typ"
+      }
+    },
+    "upload": {
+      "title": "CSV importieren",
+      "back": "Zurück zur Fahrzeugübersicht",
+      "intro": "Fahrten und Kosten für dieses Fahrzeug aus semikolongetrennten Dateien importieren. Jede Zeile wird zuerst geprüft — es wird nichts importiert, solange nicht die gesamte Datei gültig ist.",
+      "formatLabel": "Zahlenformat",
+      "formatEn": "Englisch  1,234.56",
+      "formatDe": "Deutsch  1.234,56",
+      "importDrives": "Fahrten importieren",
+      "importCosts": "Kosten importieren",
+      "importing": "Importiere…",
+      "imported": "{{count}} Zeilen importiert.",
+      "rejected": "Datei abgelehnt — {{count}} Zeilen müssen korrigiert werden. Es wurde nichts importiert.",
+      "line": "Zeile {{line}}:",
+      "importFailed": "Der Import konnte nicht abgeschlossen werden.",
+      "drives": {
+        "title": "Fahrten",
+        "hint": "Spalten: Kilometerstand, Vor- und Nachname der fahrenden Person und Fahrtdatum."
+      },
+      "costs": {
+        "title": "Tanken & Kosten",
+        "hint": "Spalten: Name der kaufenden Person, Datum, Menge (Dezimalzahlen erlaubt), Preis, Beschreibung und Kostenart (Fix oder Var)."
       }
     }
   },

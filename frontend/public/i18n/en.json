@@ -30,7 +30,8 @@
     "maxLength": "Must be at most {{max}} characters.",
     "minLength": "Must be at least {{min}} characters.",
     "min": "Must be at least {{min}}.",
-    "pastDate": "Must be a date in the past."
+    "pastDate": "Must be a date in the past.",
+    "decimal": "Enter a number (use , or . for decimals)."
   },
   "userManagement": {
     "title": "User management",
@@ -137,7 +138,8 @@
       "addDrive": "Add drive",
       "viewCosts": "View costs",
       "addCost": "Add cost",
-      "backToHub": "Back to car overview"
+      "backToHub": "Back to car overview",
+      "upload": "Import from CSV"
     },
     "messages": {
       "driveSaved": "Drive saved.",
@@ -202,6 +204,29 @@
         "price": "Price",
         "quantity": "Quantity",
         "type": "Type"
+      }
+    },
+    "upload": {
+      "title": "Import from CSV",
+      "back": "Back to car overview",
+      "intro": "Bulk-load drives and costs for this car from semicolon-separated files. Every row is checked first — nothing is imported unless the whole file is valid.",
+      "formatLabel": "Number format",
+      "formatEn": "English  1,234.56",
+      "formatDe": "Deutsch  1.234,56",
+      "importDrives": "Import drives",
+      "importCosts": "Import costs",
+      "importing": "Importing…",
+      "imported": "{{count}} rows imported.",
+      "rejected": "File rejected — {{count}} rows need fixing. Nothing was imported.",
+      "line": "Line {{line}}:",
+      "importFailed": "The import could not be completed.",
+      "drives": {
+        "title": "Drives",
+        "hint": "Columns: odometer reading, driver first and last name, and drive date."
+      },
+      "costs": {
+        "title": "Fuel & costs",
+        "hint": "Columns: buyer name, date, amount (decimals allowed), price, description, and cost type (Fix or Var)."
       }
     }
   },

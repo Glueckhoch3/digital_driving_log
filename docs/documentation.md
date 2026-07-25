@@ -426,14 +426,35 @@ API Documentation see: [api_doc](./api_doc.yaml)
 - `CreateDriveRequest`/`UpdateDriveRequest`: `carId`, `odometer`, `driverId`, `driveDate`, optional `notes`
   - `odometer` is the **total odometer reading** at the time of the drive (cumulative, monotonically increasing), not the distance driven on the single trip.
 - `CreateCostRequest`/`UpdateCostRequest`: `carId`, `buyerId`, `description`, `price`, `quantity`, `dayOfTransaction`, `costType`, optional `notes`
+  - `quantity` is a **decimal** (e.g. `36.89` litres of fuel), must be positive.
 - `costType` accepts `fixed` or `variable` (case-insensitive); responses return enum values in uppercase
 - **List endpoints are paginated.** The drive/cost list endpoints (`/vehicles/{carId}/drives`, `/users/{userId}/drives`, `/vehicles/{carId}/users/{userId}/drives`, `/costs`, `/vehicles/{carId}/costs`, `/users/{userId}/costs`) return a Spring `Page` object (`content` array plus `totalElements`, `totalPages`, `number`, `size`). They accept `?page`, `?size` and `?sort`; drives default to `driveDate` desc, costs to `dayOfTransaction` desc, page size 50.
+
+### CSV import
+
+Two `multipart/form-data` endpoints bulk-load historical data for a car. They are **all-or-nothing**: every row is validated first, and only a fully valid file is written. A file with any invalid row is rejected in full — the response's `errors` array lists the offending line numbers and nothing is persisted, so re-uploading a corrected file never creates duplicates.
+
+- `POST /vehicles/{carId}/drives/import` — columns `km-end;firstname;lastname;date`
+- `POST /vehicles/{carId}/costs/import` — columns `firstname;lastname;date;amount;price;description;cost_type`
+
+Both return an `ImportResult` (`{ imported, errors: [{ line, message }] }`). Field structure and restrictions:
+
+| Field | Rules |
+| --- | --- |
+| separator | Fields are separated by `;`. A header row (first line naming the columns) is optional and skipped automatically. |
+| `km-end` | Whole number — the total odometer reading. |
+| `firstname` / `lastname` | Matched case-insensitively to an existing user; **the user must already exist**. |
+| `date` | `dd.MM.yyyy` or ISO `yyyy-MM-dd`. |
+| `amount` / `price` | Decimals, read per the `?locale` query param: `en` (default) uses `.` as the decimal separator and `,` for thousands; `de` uses `,` as decimal and `.` for thousands. |
+| `description` | 1–63 characters. |
+| `cost_type` | `Fix`/`Var` or `FIXED`/`VARIABLE` (case-insensitive, surrounding spaces ignored). |
 
 ### Frontend routes
 - `/` - Start page
 - `/overview` - Management overview
 - `/cars/select` - Car selection
 - `/cars/{carId}` - Car workspace
+- `/cars/{carId}/upload` - CSV import (drives and costs)
 - `/manage/users` - User management (create/update/delete)
 - `/manage/cars` - Car management (create/update/delete)
 
