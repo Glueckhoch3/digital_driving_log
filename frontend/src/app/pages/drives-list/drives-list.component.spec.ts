@@ -54,7 +54,7 @@ describe('DrivesListComponent', () => {
     expect(driveService.getDrivesForCar).toHaveBeenCalledWith(5, {
       page: 0,
       size: 10,
-      sort: 'driveDate,desc',
+      sort: ['odometer,desc', 'driveDate,desc'],
     });
     expect(fixture.nativeElement.textContent).toContain('carWorkspace.drives.empty');
   });
@@ -89,7 +89,7 @@ describe('DrivesListComponent', () => {
     expect(driveService.getDrivesForCar).toHaveBeenCalledWith(5, {
       page: 1,
       size: 10,
-      sort: 'driveDate,desc',
+      sort: ['odometer,desc', 'driveDate,desc'],
     });
   });
 });

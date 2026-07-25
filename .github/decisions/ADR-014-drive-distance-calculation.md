@@ -2,7 +2,7 @@
 name: ADR-014
 title: "Drive distance calculation: derive from odometer delta vs. log begin+end odometer"
 date: 2026-07-18
-status: proposed
+status: accepted
 domain: backend
 agent: Claude Sonnet 5
 decisionBy: TBD
@@ -35,8 +35,9 @@ Log both `odometerStart` and `odometer` (end) per drive.
 
 ### Decision
 
-**Not yet decided.** Recorded here to track the trade-off for future discussion.
+Option 1 is chosen due to easier use and implementation.
 
 ### Consequences
 
 - Pending a decision, distance/cost-per-km reporting remains only as accurate as the "next-lowest odometer" heuristic in Option 1, with the known misattribution risk described above.
+- The first Milage per car has to be the start Milage since it is not included into the calculation, because of a missing lower entry.

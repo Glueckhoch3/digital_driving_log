@@ -15,7 +15,7 @@ const PAGE_SIZE = 10;
 /** A drive row enriched with the distance derived from consecutive odometer readings. */
 interface DriveRow {
   drive: DriveDto;
-  /** Distance since the previous (older) drive on this page, or null when unknown. */
+  /** Distance since the previous (lower-odometer) drive on this page, or null when unknown. */
   distance: number | null;
 }
 
@@ -41,7 +41,7 @@ export class DrivesListComponent {
       this.driveService.getDrivesForCar(params.carId, {
         page: params.page,
         size: PAGE_SIZE,
-        sort: 'driveDate,desc',
+        sort: ['odometer,desc', 'driveDate,desc'],
       }),
   });
 
@@ -62,9 +62,10 @@ export class DrivesListComponent {
   });
 
   /**
-   * Enriches each drive with a driven distance. Drives arrive sorted by date
-   * descending, so a row's distance is its odometer minus the next (older) row's.
-   * The oldest row on the page has no in-page predecessor, so its distance is null.
+   * Enriches each drive with a driven distance. Drives arrive sorted by odometer
+   * descending (date descending as tie-breaker), so a row's distance is its
+   * odometer minus the next row's. The last row on the page has no in-page
+   * predecessor, so its distance is null.
    */
   readonly driveRows = computed<DriveRow[]>(() => {
     const drives = this.drivesResource.value()?.content ?? [];

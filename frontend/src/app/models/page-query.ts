@@ -5,8 +5,11 @@ export interface PageQuery {
   /** Zero-based page index. */
   page?: number;
   size?: number;
-  /** Sort expression, e.g. `driveDate,desc`. */
-  sort?: string;
+  /**
+   * Sort expression, e.g. `driveDate,desc`. Pass an array for a multi-key sort;
+   * each entry becomes its own `sort` parameter, applied in order.
+   */
+  sort?: string | string[];
 }
 
 /** Builds `HttpParams`, omitting any undefined field so backend defaults apply. */
@@ -22,7 +25,9 @@ export function toHttpParams(query?: PageQuery): HttpParams {
     params = params.set('size', query.size);
   }
   if (query.sort !== undefined) {
-    params = params.set('sort', query.sort);
+    for (const sort of Array.isArray(query.sort) ? query.sort : [query.sort]) {
+      params = params.append('sort', sort);
+    }
   }
   return params;
 }
