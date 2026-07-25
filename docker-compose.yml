@@ -25,10 +25,14 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+    env_file:
+      - path: ./backend/.env
+        required: false
     environment:
       PORT: 8080
       SPRING_PROFILES_ACTIVE: dev
-      ALLOWED_ORIGIN: http://localhost:4200
+      # Inside the compose network the DB is reachable as `postgres`, never localhost,
+      # so this overrides whatever backend/.env says.
       DATABASE_URL: jdbc:postgresql://postgres:5432/digidrivelog
       POSTGRES_USER: digidrivelog
       POSTGRES_PASSWORD: digidrivelog

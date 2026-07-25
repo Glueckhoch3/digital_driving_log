@@ -17,7 +17,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
-@TestPropertySource(properties = "ALLOWED_ORIGIN=http://allowed.example")
+@TestPropertySource(properties =
+        "ALLOWED_ORIGINS=http://allowed.example, http://192.168.178.*:4200")
 class CorsConfigWebTest {
 
     @Autowired
@@ -37,6 +38,24 @@ class CorsConfigWebTest {
     void preflightFromOtherOrigin_isRejected() throws Exception {
         mockMvc.perform(options("/ddl/api/users")
                         .header(HttpHeaders.ORIGIN, "http://evil.example")
+                        .header(HttpHeaders.ACCESS_CONTROL_REQUEST_METHOD, "POST"))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void preflightFromOriginMatchingSubnetPattern_isAccepted() throws Exception {
+        mockMvc.perform(options("/ddl/api/users")
+                        .header(HttpHeaders.ORIGIN, "http://192.168.178.42:4200")
+                        .header(HttpHeaders.ACCESS_CONTROL_REQUEST_METHOD, "POST"))
+                .andExpect(status().isOk())
+                .andExpect(header().string(
+                        HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "http://192.168.178.42:4200"));
+    }
+
+    @Test
+    void preflightFromOriginOutsideSubnetPattern_isRejected() throws Exception {
+        mockMvc.perform(options("/ddl/api/users")
+                        .header(HttpHeaders.ORIGIN, "http://192.168.179.42:4200")
                         .header(HttpHeaders.ACCESS_CONTROL_REQUEST_METHOD, "POST"))
                 .andExpect(status().isForbidden());
     }

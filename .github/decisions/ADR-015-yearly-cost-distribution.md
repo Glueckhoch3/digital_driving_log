@@ -2,7 +2,7 @@
 name: ADR-015
 title: "Yearly cost distribution: distance-weighted variable, equal-split fixed factors"
 date: 2026-07-23
-status: proposed
+status: accepted
 domain: backend
 agent: Claude Opus 4.8
 decisionBy: TBD

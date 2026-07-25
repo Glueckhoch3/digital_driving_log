@@ -13,5 +13,7 @@
 | ADR-011 | SBOM generation and vulnerability scanning: cdxgen + trivy | security | accepted | 2026-07-09 | |
 | ADR-012 | Schema management: ddl-auto validate in prod, Flyway planned | backend | accepted | 2026-07-09 | |
 | ADR-013 | Allowed drivers: rejected CarUser join entity, any User can drive any Car | backend | accepted | 2026-07-18 | |
-| ADR-014 | Drive distance calculation: odometer-delta vs. begin+end odometer | backend | proposed | 2026-07-18 | |
-| ADR-015 | Yearly cost distribution: distance-weighted variable, equal-split fixed factors | backend | proposed | 2026-07-23 | Issue #20 |
+| ADR-014 | Drive distance calculation: odometer-delta vs. begin+end odometer | backend | pending review | 2026-07-18 | |
+| ADR-015 | Yearly cost distribution: distance-weighted variable, equal-split fixed factors | backend | accepted | 2026-07-23 | Issue #20 |
+| ADR-016 | CORS allowed origins: comma-separated origin patterns, fixed ports, fail-closed | security | accepted | 2026-07-25 | Extends ADR-011 |
+| ADR-017 | API access: relative apiUrl behind an nginx reverse proxy | frontend | accepted | 2026-07-25 | Follows ADR-016 |
