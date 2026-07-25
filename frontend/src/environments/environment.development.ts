@@ -1,3 +1,5 @@
 export const environment = {
-  apiUrl: 'http://localhost:8080/ddl/api',
+  // Relative path: the API is reached through the same origin that serves the app
+  // (nginx proxies /ddl/api to the backend, `ng serve` does the same via proxy.conf.json).
+  apiUrl: '/ddl/api',
 };
