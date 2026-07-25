@@ -6,11 +6,9 @@ import { TranslateModule } from '@ngx-translate/core';
 import { CarService } from '../../services/car.service';
 import { CalculationService } from '../../services/calculation.service';
 import { CarDto } from '../../models/cars';
+import { selectableYears } from '../../utils/selectable-years';
 
 type Message = { type: 'ok' | 'error' | 'warn'; key: string } | null;
-
-/** How many past years (plus the current one) the year dropdowns offer. */
-const YEARS_BACK = 6;
 
 @Component({
   selector: 'app-calculation-run',
@@ -23,7 +21,7 @@ export class CalculationRunComponent implements OnInit {
   private readonly calculationService = inject(CalculationService);
 
   readonly cars = signal<CarDto[]>([]);
-  readonly years: number[] = [];
+  readonly years: number[] = selectableYears();
   readonly months = Array.from({ length: 12 }, (_, i) => i + 1);
 
   // Monthly panel
@@ -51,9 +49,6 @@ export class CalculationRunComponent implements OnInit {
 
   constructor() {
     const current = new Date().getFullYear();
-    for (let y = current; y > current - YEARS_BACK; y--) {
-      this.years.push(y);
-    }
     this.monthlyYear = current;
     this.yearlyYear = current;
     this.deleteYear = current;

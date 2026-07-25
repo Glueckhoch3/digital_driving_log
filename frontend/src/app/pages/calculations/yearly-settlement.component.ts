@@ -8,8 +8,7 @@ import { CarService } from '../../services/car.service';
 import { CalculationService } from '../../services/calculation.service';
 import { CarDto } from '../../models/cars';
 import { YearlySettlementRow } from '../../models/calculations';
-
-const YEARS_BACK = 6;
+import { selectableYears } from '../../utils/selectable-years';
 
 @Component({
   selector: 'app-yearly-settlement',
@@ -22,9 +21,9 @@ export class YearlySettlementComponent implements OnInit {
   private readonly calculationService = inject(CalculationService);
 
   readonly cars = signal<CarDto[]>([]);
-  readonly years: number[] = [];
+  readonly years: number[] = selectableYears();
   carId = 0;
-  year = 0;
+  year = new Date().getFullYear();
 
   readonly rows = signal<YearlySettlementRow[]>([]);
   readonly loading = signal(false);
@@ -40,14 +39,6 @@ export class YearlySettlementComponent implements OnInit {
       totalOwed: rows.reduce((sum, r) => sum + r.totalOwed, 0),
     };
   });
-
-  constructor() {
-    const current = new Date().getFullYear();
-    for (let y = current; y > current - YEARS_BACK; y--) {
-      this.years.push(y);
-    }
-    this.year = current;
-  }
 
   ngOnInit(): void {
     this.carService.getCars().subscribe({
