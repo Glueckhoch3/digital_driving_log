@@ -18,6 +18,6 @@ public class CostDto {
     private BigDecimal price;
     private LocalDate dayOfTransaction;
     private CostType costType;
-    private Integer quantity;
+    private BigDecimal quantity;
     private String notes;
 }
