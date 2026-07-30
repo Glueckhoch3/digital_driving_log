@@ -14,6 +14,17 @@
     </div>
   </div>
 
+  @if (carStatuses().length > 0) {
+    <p class="calc__eyebrow">{{ 'calculations.combined.calculatedCars' | translate }}</p>
+    <div class="calc__chips">
+      @for (status of carStatuses(); track status.carId) {
+        <span class="calc__chip" [class.calc__chip--stored]="status.calculated">{{
+          status.name
+        }}</span>
+      }
+    </div>
+  }
+
   @if (loading()) {
     <p>{{ 'calculations.loading' | translate }}</p>
   } @else if (error()) {

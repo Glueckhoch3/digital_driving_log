@@ -1,0 +1,50 @@
+<section class="calc">
+  <a class="calc__back" routerLink="/calculations">{{ 'calculations.back' | translate }}</a>
+  <h2 class="calc__title">{{ 'calculations.results.title' | translate }}</h2>
+  <p class="calc__sub">{{ 'calculations.results.subtitle' | translate }}</p>
+
+  <div class="calc__panel">
+    <div class="calc__panel-body">
+      <app-calc-period-select [(carId)]="carId" [(year)]="year" />
+    </div>
+  </div>
+
+  <div class="calc__tabs">
+    <button
+      type="button"
+      class="calc__tab"
+      [class.calc__tab--active]="tab() === 'yearly'"
+      (click)="selectTab('yearly')"
+    >
+      {{ 'calculations.results.tabYearly' | translate }}
+    </button>
+    <button
+      type="button"
+      class="calc__tab"
+      [class.calc__tab--active]="tab() === 'monthly'"
+      (click)="selectTab('monthly')"
+    >
+      {{ 'calculations.results.tabMonthly' | translate }}
+    </button>
+    <button
+      type="button"
+      class="calc__tab"
+      [class.calc__tab--active]="tab() === 'factors'"
+      (click)="selectTab('factors')"
+    >
+      {{ 'calculations.results.tabFactors' | translate }}
+    </button>
+  </div>
+
+  @if (carId()) {
+    <div [hidden]="tab() !== 'yearly'">
+      <app-yearly-settlement [carId]="carId()" [year]="year()" />
+    </div>
+    <div [hidden]="tab() !== 'monthly'">
+      <app-monthly-distances [carId]="carId()" [year]="year()" />
+    </div>
+    <div [hidden]="tab() !== 'factors'">
+      <app-distribution-factors [carId]="carId()" [year]="year()" />
+    </div>
+  }
+</section>

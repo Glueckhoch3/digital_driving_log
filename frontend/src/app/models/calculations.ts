@@ -35,6 +35,7 @@ export interface FactorRow {
   userName: string;
   factorVariableCost: number;
   factorFixCost: number;
+  manuallyAdded: boolean;
 }
 
 /** One driver's combined settlement across every calculated car in a year. */
@@ -45,4 +46,43 @@ export interface CombinedSettlementRow {
   differenceVariableCost: number;
   differenceFixCost: number;
   netBalance: number;
+}
+
+/** DTOs for the participant management + availability feature (issue #32). */
+
+export interface ParticipantRow {
+  userId: number;
+  userName: string;
+  participating: boolean;
+  manuallyAdded: boolean;
+  hasDrives: boolean;
+  distance: number;
+  fixShare: number | null;
+  varShare: number | null;
+}
+
+export interface ParticipantSet {
+  carId: number;
+  year: number;
+  stored: boolean;
+  rows: ParticipantRow[];
+}
+
+export interface ParticipantUpdateRequest {
+  carId: number;
+  year: number;
+  userIds: number[];
+}
+
+export interface YearAvailability {
+  year: number;
+  yearCalculated: boolean;
+  participantsStored: boolean;
+  aggregatedMonths: number[];
+  monthsWithDrives: number[];
+}
+
+export interface CarAvailability {
+  carId: number;
+  years: YearAvailability[];
 }

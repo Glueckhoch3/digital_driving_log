@@ -4,10 +4,13 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import {
+  CarAvailability,
   CombinedSettlementRow,
   FactorRow,
   MonthlyCalculationRequest,
   MonthlyDistance,
+  ParticipantSet,
+  ParticipantUpdateRequest,
   YearlyCalculationRequest,
   YearlySettlementRow,
 } from '../models/calculations';
@@ -73,5 +76,28 @@ export class CalculationService {
   getCombined(year: number): Observable<CombinedSettlementRow[]> {
     const params = new HttpParams().set('year', year);
     return this.http.get<CombinedSettlementRow[]>(`${this.apiUrl}/combined`, { params });
+  }
+
+  // --- participants ---
+
+  getParticipants(carId: number, year: number): Observable<ParticipantSet> {
+    const params = new HttpParams().set('carId', carId).set('year', year);
+    return this.http.get<ParticipantSet>(`${this.apiUrl}/participants`, { params });
+  }
+
+  saveParticipants(request: ParticipantUpdateRequest): Observable<void> {
+    return this.http.put<void>(`${this.apiUrl}/participants`, request);
+  }
+
+  deleteParticipants(carId: number, year: number): Observable<void> {
+    const params = new HttpParams().set('carId', carId).set('year', year);
+    return this.http.delete<void>(`${this.apiUrl}/participants`, { params });
+  }
+
+  // --- availability ---
+
+  getAvailability(carId: number): Observable<CarAvailability> {
+    const params = new HttpParams().set('carId', carId);
+    return this.http.get<CarAvailability>(`${this.apiUrl}/availability`, { params });
   }
 }

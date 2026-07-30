@@ -1,169 +1,137 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Component, computed, effect, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
-import { TranslateModule } from '@ngx-translate/core';
-import { CarService } from '../../services/car.service';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { CalculationService } from '../../services/calculation.service';
-import { CarDto } from '../../models/cars';
-import { selectableYears } from '../../utils/selectable-years';
+import { AvailabilityStore } from './availability.store';
+import { CalcPeriodSelectComponent } from './calc-period-select.component';
 
 type Message = { type: 'ok' | 'error' | 'warn'; key: string } | null;
 
+/**
+ * One selection (car + year + month), a status strip reading the availability
+ * store, and a grid of the four period actions (issue #32). Redoing a year stays
+ * two deliberate steps — delete, then calculate — there is no recalculate action.
+ */
 @Component({
   selector: 'app-calculation-run',
   standalone: true,
-  imports: [FormsModule, RouterLink, TranslateModule],
+  imports: [RouterLink, TranslateModule, CalcPeriodSelectComponent],
   templateUrl: './calculation-run.component.html',
 })
-export class CalculationRunComponent implements OnInit {
-  private readonly carService = inject(CarService);
+export class CalculationRunComponent {
   private readonly calculationService = inject(CalculationService);
+  private readonly translate = inject(TranslateService);
+  readonly store = inject(AvailabilityStore);
 
-  readonly cars = signal<CarDto[]>([]);
-  readonly years: number[] = selectableYears();
-  readonly months = Array.from({ length: 12 }, (_, i) => i + 1);
+  readonly carId = signal(0);
+  readonly year = signal(new Date().getFullYear());
+  readonly month = signal(new Date().getMonth() + 1);
 
-  // Monthly panel
-  monthlyCarId = 0;
-  monthlyYear = 0;
-  monthlyMonth = 1;
-  readonly monthlyExists = signal(false);
-  readonly monthlyMessage = signal<Message>(null);
-  readonly monthlyBusy = signal(false);
+  readonly busy = signal(false);
+  readonly message = signal<Message>(null);
 
-  // Yearly panel
-  yearlyCarId = 0;
-  yearlyYear = 0;
-  readonly yearlyExists = signal(false);
-  readonly yearlyMessage = signal<Message>(null);
-  readonly yearlyBusy = signal(false);
+  readonly participantCount = signal(0);
+  readonly participantAddedCount = signal(0);
 
-  // Delete panel
-  deleteCarId = 0;
-  deletePeriod: 'monthly' | 'yearly' = 'yearly';
-  deleteYear = 0;
-  deleteMonth = 1;
-  readonly deleteMessage = signal<Message>(null);
-  readonly deleteBusy = signal(false);
+  readonly monthAggregated = computed(
+    () => this.store.monthState(this.year(), this.month()) === 'stored',
+  );
+  readonly yearCalculated = computed(() => this.store.yearCalculated(this.year()));
 
   constructor() {
-    const current = new Date().getFullYear();
-    this.monthlyYear = current;
-    this.yearlyYear = current;
-    this.deleteYear = current;
-    this.monthlyMonth = new Date().getMonth() + 1;
-  }
-
-  ngOnInit(): void {
-    this.carService.getCars().subscribe({
-      next: (cars) => {
-        this.cars.set(cars);
-        if (cars.length > 0) {
-          const first = cars[0].carId;
-          this.monthlyCarId = first;
-          this.yearlyCarId = first;
-          this.deleteCarId = first;
-          this.refreshMonthlyExists();
-          this.refreshYearlyExists();
-        }
-      },
+    effect(() => {
+      const carId = this.carId();
+      const year = this.year();
+      if (carId && year) {
+        this.calculationService.getParticipants(carId, year).subscribe({
+          next: (set) => {
+            const participating = set.rows.filter((r) => r.participating);
+            this.participantCount.set(participating.length);
+            this.participantAddedCount.set(participating.filter((r) => r.manuallyAdded).length);
+          },
+        });
+      }
     });
   }
 
-  // --- existence checks ---
-
-  refreshMonthlyExists(): void {
-    if (!this.monthlyCarId) return;
-    this.calculationService
-      .monthlyExists(this.monthlyCarId, this.monthlyYear, this.monthlyMonth)
-      .subscribe({ next: (exists) => this.monthlyExists.set(exists) });
-  }
-
-  refreshYearlyExists(): void {
-    if (!this.yearlyCarId) return;
-    this.calculationService
-      .yearlyExists(this.yearlyCarId, this.yearlyYear)
-      .subscribe({ next: (exists) => this.yearlyExists.set(exists) });
-  }
-
-  // --- submit handlers ---
-
   aggregateMonth(): void {
-    this.monthlyMessage.set(null);
-    this.monthlyBusy.set(true);
+    this.message.set(null);
+    this.busy.set(true);
     this.calculationService
-      .aggregateMonth({
-        carId: this.monthlyCarId,
-        year: this.monthlyYear,
-        month: this.monthlyMonth,
-      })
+      .aggregateMonth({ carId: this.carId(), year: this.year(), month: this.month() })
       .subscribe({
         next: () => {
-          this.monthlyBusy.set(false);
-          this.monthlyMessage.set({ type: 'ok', key: 'calculations.messages.monthAggregated' });
-          this.refreshMonthlyExists();
+          this.busy.set(false);
+          this.message.set({ type: 'ok', key: 'calculations.messages.monthAggregated' });
+          this.store.refresh();
         },
         error: (err: HttpErrorResponse) => {
-          this.monthlyBusy.set(false);
-          this.monthlyMessage.set({
+          this.busy.set(false);
+          this.message.set({
             type: 'error',
             key:
               err.status === 409
                 ? 'calculations.messages.monthExists'
                 : 'calculations.messages.actionFailed',
           });
-          this.refreshMonthlyExists();
         },
       });
+  }
+
+  deleteMonth(): void {
+    if (!window.confirm(this.translate.instant('calculations.run.confirmDeleteMonth'))) return;
+    this.message.set(null);
+    this.busy.set(true);
+    this.calculationService.deleteMonth(this.carId(), this.year(), this.month()).subscribe({
+      next: () => {
+        this.busy.set(false);
+        this.message.set({ type: 'ok', key: 'calculations.messages.deleted' });
+        this.store.refresh();
+      },
+      error: () => {
+        this.busy.set(false);
+        this.message.set({ type: 'error', key: 'calculations.messages.actionFailed' });
+      },
+    });
   }
 
   calculateYear(): void {
-    this.yearlyMessage.set(null);
-    this.yearlyBusy.set(true);
-    this.calculationService
-      .calculateYear({ carId: this.yearlyCarId, year: this.yearlyYear })
-      .subscribe({
-        next: () => {
-          this.yearlyBusy.set(false);
-          this.yearlyMessage.set({ type: 'ok', key: 'calculations.messages.yearCalculated' });
-          this.refreshYearlyExists();
-        },
-        error: (err: HttpErrorResponse) => {
-          this.yearlyBusy.set(false);
-          this.yearlyMessage.set({
-            type: 'error',
-            key:
-              err.status === 409
-                ? 'calculations.messages.yearExists'
-                : 'calculations.messages.actionFailed',
-          });
-          this.refreshYearlyExists();
-        },
-      });
+    this.message.set(null);
+    this.busy.set(true);
+    this.calculationService.calculateYear({ carId: this.carId(), year: this.year() }).subscribe({
+      next: () => {
+        this.busy.set(false);
+        this.message.set({ type: 'ok', key: 'calculations.messages.yearCalculated' });
+        this.store.refresh();
+      },
+      error: (err: HttpErrorResponse) => {
+        this.busy.set(false);
+        this.message.set({
+          type: 'error',
+          key:
+            err.status === 409
+              ? 'calculations.messages.yearExists'
+              : 'calculations.messages.actionFailed',
+        });
+      },
+    });
   }
 
-  deleteRun(): void {
-    this.deleteMessage.set(null);
-    this.deleteBusy.set(true);
-    const done = {
+  deleteYear(): void {
+    if (!window.confirm(this.translate.instant('calculations.run.confirmDeleteYear'))) return;
+    this.message.set(null);
+    this.busy.set(true);
+    this.calculationService.deleteYear(this.carId(), this.year()).subscribe({
       next: () => {
-        this.deleteBusy.set(false);
-        this.deleteMessage.set({ type: 'ok', key: 'calculations.messages.deleted' });
-        this.refreshMonthlyExists();
-        this.refreshYearlyExists();
+        this.busy.set(false);
+        this.message.set({ type: 'ok', key: 'calculations.messages.deleted' });
+        this.store.refresh();
       },
       error: () => {
-        this.deleteBusy.set(false);
-        this.deleteMessage.set({ type: 'error', key: 'calculations.messages.actionFailed' });
+        this.busy.set(false);
+        this.message.set({ type: 'error', key: 'calculations.messages.actionFailed' });
       },
-    };
-    if (this.deletePeriod === 'monthly') {
-      this.calculationService
-        .deleteMonth(this.deleteCarId, this.deleteYear, this.deleteMonth)
-        .subscribe(done);
-    } else {
-      this.calculationService.deleteYear(this.deleteCarId, this.deleteYear).subscribe(done);
-    }
+    });
   }
 }

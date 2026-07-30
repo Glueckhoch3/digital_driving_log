@@ -11,10 +11,9 @@ import { CarManagementComponent } from './pages/car-management/car-management.co
 import { UserManagementComponent } from './pages/user-management/user-management.component';
 import { CalculationHubComponent } from './pages/calculations/calculation-hub.component';
 import { CalculationRunComponent } from './pages/calculations/calculation-run.component';
-import { YearlySettlementComponent } from './pages/calculations/yearly-settlement.component';
+import { CalculationResultsComponent } from './pages/calculations/calculation-results.component';
 import { CombinedSettlementComponent } from './pages/calculations/combined-settlement.component';
-import { MonthlyDistancesComponent } from './pages/calculations/monthly-distances.component';
-import { DistributionFactorsComponent } from './pages/calculations/distribution-factors.component';
+import { participantsDirtyGuard } from './pages/calculations/participants-dirty.guard';
 import { carResolver } from './resolvers/car.resolver';
 import { usersResolver } from './resolvers/users.resolver';
 
@@ -39,12 +38,13 @@ export const routes: Routes = [
   {
     path: 'calculations',
     children: [
-      { path: '', component: CalculationHubComponent },
+      { path: '', component: CalculationHubComponent, canDeactivate: [participantsDirtyGuard] },
       { path: 'run', component: CalculationRunComponent },
-      { path: 'yearly', component: YearlySettlementComponent },
+      { path: 'results', component: CalculationResultsComponent },
       { path: 'combined', component: CombinedSettlementComponent },
-      { path: 'monthly', component: MonthlyDistancesComponent },
-      { path: 'factors', component: DistributionFactorsComponent },
+      { path: 'yearly', redirectTo: () => '/calculations/results?tab=yearly' },
+      { path: 'monthly', redirectTo: () => '/calculations/results?tab=monthly' },
+      { path: 'factors', redirectTo: () => '/calculations/results?tab=factors' },
     ],
   },
   { path: '**', redirectTo: '' },

@@ -1,27 +1,4 @@
-<section class="calc">
-  <a class="calc__back" routerLink="/calculations">{{ 'calculations.back' | translate }}</a>
-  <h2 class="calc__title">{{ 'calculations.monthly.title' | translate }}</h2>
-  <p class="calc__sub">{{ 'calculations.monthly.subtitle' | translate }}</p>
-
-  <div class="calc__fields" style="margin-bottom: 1.3rem">
-    <div class="calc__field">
-      <label>{{ 'calculations.fields.car' | translate }}</label>
-      <select class="calc__control" [(ngModel)]="carId" (ngModelChange)="load()">
-        @for (car of cars(); track car.carId) {
-          <option [ngValue]="car.carId">{{ car.name }} · {{ car.plateNumber }}</option>
-        }
-      </select>
-    </div>
-    <div class="calc__field">
-      <label>{{ 'calculations.fields.year' | translate }}</label>
-      <select class="calc__control" [(ngModel)]="year" (ngModelChange)="load()">
-        @for (y of years; track y) {
-          <option [ngValue]="y">{{ y }}</option>
-        }
-      </select>
-    </div>
-  </div>
-
+<div>
   @if (loading()) {
     <p>{{ 'calculations.loading' | translate }}</p>
   } @else if (error()) {
@@ -50,4 +27,4 @@
       </table>
     </div>
   }
-</section>
+</div>
