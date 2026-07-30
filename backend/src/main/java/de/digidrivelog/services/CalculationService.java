@@ -1,8 +1,13 @@
 package de.digidrivelog.services;
 
+import de.digidrivelog.dto.calculation.CarAvailabilityDto;
 import de.digidrivelog.dto.calculation.CombinedSettlementRowDto;
 import de.digidrivelog.dto.calculation.FactorRowDto;
 import de.digidrivelog.dto.calculation.MonthlyDistanceDto;
+import de.digidrivelog.dto.calculation.ParticipantRowDto;
+import de.digidrivelog.dto.calculation.ParticipantSetDto;
+import de.digidrivelog.dto.calculation.ParticipantUpdateRequest;
+import de.digidrivelog.dto.calculation.YearAvailabilityDto;
 import de.digidrivelog.dto.calculation.YearlySettlementRowDto;
 import de.digidrivelog.models.CostDistributionLogYear;
 import de.digidrivelog.models.CostTotalCarYear;
@@ -26,10 +31,15 @@ import de.digidrivelog.repositories.UserRepository;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -99,8 +109,15 @@ public class CalculationService {
         BigDecimal fixTotal = costRepository.sumPriceByCarYearAndType(carId, year, CostType.FIXED);
         costTotalRepository.save(new CostTotalCarYear(year, carId, money(fixTotal), money(varTotal)));
 
-        // 3. The car's driver group for the year, in a stable order (remainder lands on the last).
-        List<Long> drivers = new ArrayList<>(new TreeSet<>(distanceByDriver.keySet()));
+        // 3. The car's driver group for the year: everyone who drove, plus anyone explicitly
+        //    added as a participant (they take an equal share of the fixed costs and, having no
+        //    distance, a 0.00% variable factor).
+        Map<Long, Boolean> manualByUser = new LinkedHashMap<>();
+        factorRepository.findByYearAndCarId(year, carId)
+                .forEach(f -> manualByUser.put(f.getUserId(), f.getManuallyAdded()));
+        TreeSet<Long> group = new TreeSet<>(distanceByDriver.keySet());
+        group.addAll(manualByUser.keySet());
+        List<Long> drivers = new ArrayList<>(group);
 
         // 4. Persist yearly distances.
         List<DriveAccountYear> accountRows = new ArrayList<>();
@@ -119,7 +136,8 @@ public class CalculationService {
         List<UserCostFactorYear> factorRows = new ArrayList<>();
         for (Long userId : drivers) {
             factorRows.add(new UserCostFactorYear(year, userId, carId,
-                    variableFactors.get(userId), fixedFactors.get(userId)));
+                    variableFactors.get(userId), fixedFactors.get(userId),
+                    Boolean.TRUE.equals(manualByUser.get(userId))));
         }
         factorRepository.saveAll(factorRows);
 
@@ -132,12 +150,176 @@ public class CalculationService {
         monthTotalRepository.deleteByYearAndMonthAndCarId(year, month, carId);
     }
 
+    /**
+     * Deletes a car's yearly run but keeps any manually added participant rows — reset
+     * to {@code 0.00 / 0.00} rather than removed — so redoing the year (delete, then
+     * calculate) never silently drops the stored participant group.
+     */
     @Transactional
     public void deleteYear(Long carId, Integer year) {
         accountYearRepository.deleteByYearAndCarId(year, carId);
-        factorRepository.deleteByYearAndCarId(year, carId);
+        factorRepository.deleteByYearAndCarIdAndManuallyAddedFalse(year, carId);
+        factorRepository.findByYearAndCarId(year, carId).forEach(f -> {
+            f.setFactorVariableCost(ZERO_MONEY);
+            f.setFactorFixCost(ZERO_MONEY);
+        });
         costTotalRepository.deleteByYearAndCarId(year, carId);
         recomputeCombined(year);
+    }
+
+    // ------------------------------------------------------------ participants
+
+    /**
+     * The participant picture for a car-year: every user, marked with whether they
+     * participate today (a stored set if one exists, otherwise the drivers) and a
+     * preview of the resulting factors computed with the same allocation the run uses.
+     */
+    @Transactional(readOnly = true)
+    public ParticipantSetDto getParticipants(Long carId, Integer year) {
+        requireCar(carId);
+        Map<Long, Integer> distanceByDriver = yearlyDistanceByDriver(carId, year);
+
+        List<UserCostFactorYear> storedFactors = factorRepository.findByYearAndCarId(year, carId);
+        Map<Long, Boolean> manualByUser = new LinkedHashMap<>();
+        storedFactors.forEach(f -> manualByUser.put(f.getUserId(), f.getManuallyAdded()));
+        boolean hasStoredSet = manualByUser.values().stream().anyMatch(Boolean.TRUE::equals);
+
+        // drivers for the yearly run = (users with aggregated distance) ∪ (stored participants) — D1.
+        Set<Long> participatingIds = new LinkedHashSet<>(distanceByDriver.keySet());
+        manualByUser.forEach((userId, manuallyAdded) -> {
+            if (Boolean.TRUE.equals(manuallyAdded)) {
+                participatingIds.add(userId);
+            }
+        });
+        List<Long> participants = new ArrayList<>(participatingIds);
+
+        Map<Long, BigDecimal> fixPreview = equalPercentages(participants);
+        Map<Long, BigDecimal> weights = new LinkedHashMap<>();
+        participants.forEach(u -> weights.put(u, BigDecimal.valueOf(distanceByDriver.getOrDefault(u, 0))));
+        Map<Long, BigDecimal> varPreview = percentagesByWeight(participants, weights);
+
+        Map<Long, String> names = userNames();
+        List<ParticipantRowDto> rows = new ArrayList<>();
+        for (User u : userRepository.findAll()) {
+            Long userId = u.getUserId();
+            boolean hasDrives = distanceByDriver.containsKey(userId);
+            boolean participating = participatingIds.contains(userId);
+            rows.add(new ParticipantRowDto(userId, names.get(userId), participating,
+                    Boolean.TRUE.equals(manualByUser.get(userId)), hasDrives,
+                    distanceByDriver.getOrDefault(userId, 0),
+                    participating ? fixPreview.get(userId) : null,
+                    participating ? varPreview.get(userId) : null));
+        }
+        rows.sort((a, b) -> {
+            if (a.isHasDrives() != b.isHasDrives()) {
+                return a.isHasDrives() ? -1 : 1;
+            }
+            if (a.isHasDrives()) {
+                return Integer.compare(b.getDistance(), a.getDistance());
+            }
+            return a.getUserName().compareToIgnoreCase(b.getUserName());
+        });
+        return new ParticipantSetDto(carId, year, hasStoredSet, rows);
+    }
+
+    /**
+     * Replaces the stored participant set. Every driver who actually drove that year
+     * must stay in — removing them would silently drop their distance from the split.
+     * Rows a run produced are never touched here; only {@code manuallyAdded} rows are
+     * written, so an existing calculation keeps its factors until deleted and rerun.
+     */
+    @Transactional
+    public void saveParticipants(ParticipantUpdateRequest request) {
+        Long carId = request.getCarId();
+        Integer year = request.getYear();
+        requireCar(carId);
+
+        Set<Long> newSet = new LinkedHashSet<>(request.getUserIds());
+        for (Long userId : newSet) {
+            if (!userRepository.existsById(userId)) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found: " + userId);
+            }
+        }
+
+        Map<Long, Integer> distanceByDriver = yearlyDistanceByDriver(carId, year);
+        for (Long driverId : distanceByDriver.keySet()) {
+            if (!newSet.contains(driverId)) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "participants.driverRequired");
+            }
+        }
+
+        List<UserCostFactorYear> existingManual = factorRepository.findByYearAndCarId(year, carId).stream()
+                .filter(UserCostFactorYear::getManuallyAdded)
+                .toList();
+        Set<Long> existingManualIds = existingManual.stream()
+                .map(UserCostFactorYear::getUserId).collect(Collectors.toSet());
+
+        List<UserCostFactorYear> toRemove = existingManual.stream()
+                .filter(f -> !newSet.contains(f.getUserId()))
+                .toList();
+        factorRepository.deleteAll(toRemove);
+
+        List<UserCostFactorYear> toAdd = new ArrayList<>();
+        for (Long userId : newSet) {
+            if (distanceByDriver.containsKey(userId) || existingManualIds.contains(userId)) {
+                continue;
+            }
+            toAdd.add(new UserCostFactorYear(year, userId, carId, ZERO_MONEY, ZERO_MONEY, true));
+        }
+        factorRepository.saveAll(toAdd);
+    }
+
+    /** Drops every manually added row for a car-year — back to drivers-only membership. */
+    @Transactional
+    public void deleteParticipants(Long carId, Integer year) {
+        requireCar(carId);
+        List<UserCostFactorYear> manual = factorRepository.findByYearAndCarId(year, carId).stream()
+                .filter(UserCostFactorYear::getManuallyAdded)
+                .toList();
+        factorRepository.deleteAll(manual);
+    }
+
+    // ------------------------------------------------------------ availability
+
+    /** Everything the frontend needs to colour a car's year/month selectors. */
+    @Transactional(readOnly = true)
+    public CarAvailabilityDto getAvailability(Long carId) {
+        requireCar(carId);
+
+        Set<Integer> calculatedYears = new HashSet<>();
+        costTotalRepository.findByCarId(carId).forEach(c -> calculatedYears.add(c.getYear()));
+
+        Set<Integer> participantYears = new HashSet<>();
+        factorRepository.findByCarId(carId).stream()
+                .filter(UserCostFactorYear::getManuallyAdded)
+                .forEach(f -> participantYears.add(f.getYear()));
+
+        TreeSet<Integer> years = new TreeSet<>(Comparator.reverseOrder());
+        years.addAll(driveRepository.findDistinctYearsByCarId(carId));
+        years.addAll(monthTotalRepository.findDistinctYearsByCarId(carId));
+        years.addAll(calculatedYears);
+        years.addAll(participantYears);
+
+        List<YearAvailabilityDto> out = new ArrayList<>();
+        for (Integer year : years) {
+            List<Integer> aggregatedMonths = monthTotalRepository
+                    .findByYearAndCarIdOrderByMonthAsc(year, carId).stream()
+                    .map(DriveLogMonthTotal::getMonth).distinct().sorted().toList();
+            List<Integer> monthsWithDrives = new ArrayList<>(distanceByMonthAndDriver(carId, year).keySet());
+            monthsWithDrives.sort(null);
+            out.add(new YearAvailabilityDto(year, calculatedYears.contains(year),
+                    participantYears.contains(year), aggregatedMonths, monthsWithDrives));
+        }
+        return new CarAvailabilityDto(carId, out);
+    }
+
+    /** A car-year's per-driver distance rolled up from aggregated month totals. */
+    private Map<Long, Integer> yearlyDistanceByDriver(Long carId, Integer year) {
+        Map<Long, Integer> distanceByDriver = new LinkedHashMap<>();
+        for (DriveLogMonthTotal m : monthTotalRepository.findByYearAndCarIdOrderByMonthAsc(year, carId)) {
+            distanceByDriver.merge(m.getUserId(), m.getTotalDistanceMonth(), Integer::sum);
+        }
+        return distanceByDriver;
     }
 
     // ----------------------------------------------------------------- checks
@@ -208,7 +390,8 @@ public class CalculationService {
         return factorRepository.findByYearAndCarId(year, carId).stream()
                 .sorted((a, b) -> Long.compare(a.getUserId(), b.getUserId()))
                 .map(f -> new FactorRowDto(f.getUserId(), names.get(f.getUserId()),
-                        f.getFactorVariableCost(), f.getFactorFixCost()))
+                        f.getFactorVariableCost(), f.getFactorFixCost(),
+                        Boolean.TRUE.equals(f.getManuallyAdded())))
                 .toList();
     }
 
