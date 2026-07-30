@@ -22,6 +22,13 @@ tags:
   - name: costs
     description: Access for Cost data creation and retrieval.
 
+  - name: calculations
+    description: >-
+      Yearly/monthly cost calculation pipeline (issue #20) plus the participant-management
+      and availability endpoints added for issue #32. Only the newer participant/availability
+      endpoints are documented here; the older aggregate/calculate/settlement endpoints
+      predate this file's coverage.
+
 paths:
   /drives:
     post:
@@ -659,8 +666,205 @@ paths:
         '404':
           description: User not found
 
+  /calculations/participants:
+    get:
+      tags:
+        - calculations
+      summary: Get a car-year's participant set
+      description: >-
+        Every user, marked with whether they participate today (drivers plus anyone
+        manually added) and a preview of the resulting factors. `stored` is true once
+        at least one participant has been added by hand.
+      parameters:
+        - name: carId
+          in: query
+          required: true
+          schema:
+            type: number
+            format: int64
+        - name: year
+          in: query
+          required: true
+          schema:
+            type: number
+            format: int32
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ParticipantSet'
+        '404':
+          description: Car not found
+    put:
+      tags:
+        - calculations
+      summary: Replace a car-year's participant set
+      description: >-
+        Replaces the full membership with the given user ids. Every driver with
+        recorded distance for that year must stay in the list — dropping one returns
+        400. Rows a completed run produced are never touched; only manually added rows
+        are written.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ParticipantUpdateRequest'
+      responses:
+        '200':
+          description: Participant set saved
+        '400':
+          description: A driver with recorded distance was dropped from the list
+        '404':
+          description: Car or user not found
+    delete:
+      tags:
+        - calculations
+      summary: Reset a car-year to drivers only
+      description: Drops every manually added participant row for the car-year.
+      parameters:
+        - name: carId
+          in: query
+          required: true
+          schema:
+            type: number
+            format: int64
+        - name: year
+          in: query
+          required: true
+          schema:
+            type: number
+            format: int32
+      responses:
+        '204':
+          description: Participant set reset
+        '404':
+          description: Car not found
+
+  /calculations/availability:
+    get:
+      tags:
+        - calculations
+      summary: Get a car's per-year availability
+      description: >-
+        Everything the frontend needs to colour its car/year/month selectors:
+        which years are calculated, which have a stored participant set, and which
+        months are aggregated versus merely have raw drives.
+      parameters:
+        - name: carId
+          in: query
+          required: true
+          schema:
+            type: number
+            format: int64
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CarAvailability'
+        '404':
+          description: Car not found
+
 components:
   schemas:
+    ParticipantRow:
+      type: object
+      properties:
+        userId:
+          type: number
+          format: int64
+        userName:
+          type: string
+        participating:
+          type: boolean
+        manuallyAdded:
+          type: boolean
+        hasDrives:
+          type: boolean
+        distance:
+          type: number
+          format: int32
+        fixShare:
+          type: number
+          format: double
+          nullable: true
+        varShare:
+          type: number
+          format: double
+          nullable: true
+
+    ParticipantSet:
+      type: object
+      properties:
+        carId:
+          type: number
+          format: int64
+        year:
+          type: number
+          format: int32
+        stored:
+          type: boolean
+        rows:
+          type: array
+          items:
+            $ref: '#/components/schemas/ParticipantRow'
+
+    ParticipantUpdateRequest:
+      type: object
+      properties:
+        carId:
+          type: number
+          format: int64
+        year:
+          type: number
+          format: int32
+        userIds:
+          type: array
+          items:
+            type: number
+            format: int64
+      required:
+        - carId
+        - year
+        - userIds
+
+    YearAvailability:
+      type: object
+      properties:
+        year:
+          type: number
+          format: int32
+        yearCalculated:
+          type: boolean
+        participantsStored:
+          type: boolean
+        aggregatedMonths:
+          type: array
+          items:
+            type: number
+            format: int32
+        monthsWithDrives:
+          type: array
+          items:
+            type: number
+            format: int32
+
+    CarAvailability:
+      type: object
+      properties:
+        carId:
+          type: number
+          format: int64
+        years:
+          type: array
+          items:
+            $ref: '#/components/schemas/YearAvailability'
+
+
     CreateCar:
       type: object
       properties:

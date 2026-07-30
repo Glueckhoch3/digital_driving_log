@@ -1,7 +1,7 @@
 # Interaction Improvement — Calculations Area (Issue #32)
 
 **Created:** 2026-07-26
-**Status:** Planned — not implemented
+**Status:** Implemented (2026-07-30)
 **Issue:** [#32 — User selection on Year calculation + better overviews](https://github.com/Glueckhoch3/digital_driving_log/issues/32) (labels: frontend, backend, enhancement, documentation)
 **Scope:** `frontend/src/app/pages/calculations/**`, `frontend/src/app/services/calculation.service.ts`, `frontend/src/app/models/calculations.ts`, `frontend/src/styles.scss`, `frontend/public/i18n/{en,de}.json`, `backend/.../calculation` (controller, service, dto, one column on `UserCostFactorYear` + repository methods), `docs/`.
 **Suggested branch:** `feat/32-calculation-interaction`
