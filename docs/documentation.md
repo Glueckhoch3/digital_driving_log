@@ -457,6 +457,27 @@ Both return an `ImportResult` (`{ imported, errors: [{ line, message }] }`). Fie
 - `/cars/{carId}/upload` - CSV import (drives and costs)
 - `/manage/users` - User management (create/update/delete)
 - `/manage/cars` - Car management (create/update/delete)
+- `/calculations` - Calculation hub: links to results/combined/run, plus per-car-year participant management (issue #32)
+- `/calculations/run` - Aggregate a month, calculate a year, delete a month/year, for one car/year/month selection
+- `/calculations/results?tab=yearly|monthly|factors` - Yearly settlement, monthly distances and distribution factors for one car/year, as tabs
+- `/calculations/combined` - Combined settlement across all calculated cars for a year
+
+### Calculations: participant management (issue #32)
+
+A car-year's fixed-cost split is always an equal share, but *who* is in that split
+is now user-controlled instead of being derived purely from `DriveLogMonthTotal`:
+
+```
+drivers for the yearly run = (users with aggregated distance) ∪ (stored participants)
+```
+
+`GET/PUT/DELETE /calculations/participants` manage that stored set (a user is simply a
+row in `user_cost_factor_year` with `manually_added = true`); `GET /calculations/availability`
+returns the per-year/per-month colouring (calculated, aggregated, participants stored) the
+frontend needs for `/calculations/run`, `/calculations/results` and the hub. See
+`docs/api_doc.yaml` for the request/response shapes and `docs/sql/V_issue32_participants.sql`
+for the schema change (`user_cost_factor_year.manually_added`, apply before deploying —
+`ddl-auto=validate` in prod).
 
 ---
 

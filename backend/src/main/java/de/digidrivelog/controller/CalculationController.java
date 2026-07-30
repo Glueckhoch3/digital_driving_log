@@ -1,9 +1,12 @@
 package de.digidrivelog.controller;
 
+import de.digidrivelog.dto.calculation.CarAvailabilityDto;
 import de.digidrivelog.dto.calculation.CombinedSettlementRowDto;
 import de.digidrivelog.dto.calculation.FactorRowDto;
 import de.digidrivelog.dto.calculation.MonthlyCalculationRequest;
 import de.digidrivelog.dto.calculation.MonthlyDistanceDto;
+import de.digidrivelog.dto.calculation.ParticipantSetDto;
+import de.digidrivelog.dto.calculation.ParticipantUpdateRequest;
 import de.digidrivelog.dto.calculation.YearlyCalculationRequest;
 import de.digidrivelog.dto.calculation.YearlySettlementRowDto;
 import de.digidrivelog.services.CalculationService;
@@ -16,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -53,6 +57,33 @@ public class CalculationController {
     public ResponseEntity<Void> deleteYear(@RequestParam Long carId, @RequestParam Integer year) {
         calculationService.deleteYear(carId, year);
         return ResponseEntity.noContent().build();
+    }
+
+    // ------------------------------------------------------------ participants
+
+    @GetMapping("/participants")
+    public ResponseEntity<ParticipantSetDto> getParticipants(@RequestParam Long carId,
+            @RequestParam Integer year) {
+        return ResponseEntity.ok(calculationService.getParticipants(carId, year));
+    }
+
+    @PutMapping("/participants")
+    public ResponseEntity<Void> saveParticipants(@Valid @RequestBody ParticipantUpdateRequest request) {
+        calculationService.saveParticipants(request);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/participants")
+    public ResponseEntity<Void> deleteParticipants(@RequestParam Long carId, @RequestParam Integer year) {
+        calculationService.deleteParticipants(carId, year);
+        return ResponseEntity.noContent().build();
+    }
+
+    // ------------------------------------------------------------ availability
+
+    @GetMapping("/availability")
+    public ResponseEntity<CarAvailabilityDto> availability(@RequestParam Long carId) {
+        return ResponseEntity.ok(calculationService.getAvailability(carId));
     }
 
     // ------------------------------------------------------------------ checks

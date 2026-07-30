@@ -3,188 +3,78 @@
   <h2 class="calc__title">{{ 'calculations.run.title' | translate }}</h2>
   <p class="calc__sub">{{ 'calculations.run.subtitle' | translate }}</p>
 
-  <!-- 1. Aggregate month -->
+  <!-- 1. Selection -->
   <div class="calc__panel">
-    <div class="calc__panel-head">
-      <span class="calc__panel-num">1</span>
-      <div>
-        <h3>{{ 'calculations.run.monthlyTitle' | translate }}</h3>
-        <p>{{ 'calculations.run.monthlyDesc' | translate }}</p>
-      </div>
-    </div>
     <div class="calc__panel-body">
-      <div class="calc__fields">
-        <div class="calc__field">
-          <label>{{ 'calculations.fields.car' | translate }}</label>
-          <select
-            class="calc__control"
-            [(ngModel)]="monthlyCarId"
-            (ngModelChange)="refreshMonthlyExists()"
-          >
-            @for (car of cars(); track car.carId) {
-              <option [ngValue]="car.carId">{{ car.name }} · {{ car.plateNumber }}</option>
-            }
-          </select>
-        </div>
-        <div class="calc__field">
-          <label>{{ 'calculations.fields.year' | translate }}</label>
-          <select
-            class="calc__control"
-            [(ngModel)]="monthlyYear"
-            (ngModelChange)="refreshMonthlyExists()"
-          >
-            @for (y of years; track y) {
-              <option [ngValue]="y">{{ y }}</option>
-            }
-          </select>
-        </div>
-        <div class="calc__field">
-          <label>{{ 'calculations.fields.month' | translate }}</label>
-          <select
-            class="calc__control"
-            [(ngModel)]="monthlyMonth"
-            (ngModelChange)="refreshMonthlyExists()"
-          >
-            @for (m of months; track m) {
-              <option [ngValue]="m">{{ 'calculations.months.' + m | translate }}</option>
-            }
-          </select>
-        </div>
-        <div class="calc__field calc__field--auto">
-          <button
-            class="calc__btn calc__btn--primary"
-            [disabled]="monthlyBusy()"
-            (click)="aggregateMonth()"
-          >
-            {{ 'calculations.run.aggregateBtn' | translate }}
-          </button>
-        </div>
-      </div>
-
-      @if (monthlyExists()) {
-        <div class="calc__note calc__note--warn">
-          {{ 'calculations.run.monthlyExistsWarn' | translate }}
-        </div>
-      }
-      @if (monthlyMessage(); as msg) {
-        <div class="calc__note calc__note--{{ msg.type }}">{{ msg.key | translate }}</div>
-      }
+      <app-calc-period-select
+        [showMonth]="true"
+        [(carId)]="carId"
+        [(year)]="year"
+        [(month)]="month"
+      />
     </div>
   </div>
 
-  <!-- 2. Calculate year -->
+  <!-- 2. Status strip -->
   <div class="calc__panel">
-    <div class="calc__panel-head">
-      <span class="calc__panel-num">2</span>
-      <div>
-        <h3>{{ 'calculations.run.yearlyTitle' | translate }}</h3>
-        <p>{{ 'calculations.run.yearlyDesc' | translate }}</p>
-      </div>
-    </div>
     <div class="calc__panel-body">
-      <div class="calc__fields">
-        <div class="calc__field">
-          <label>{{ 'calculations.fields.car' | translate }}</label>
-          <select
-            class="calc__control"
-            [(ngModel)]="yearlyCarId"
-            (ngModelChange)="refreshYearlyExists()"
-          >
-            @for (car of cars(); track car.carId) {
-              <option [ngValue]="car.carId">{{ car.name }} · {{ car.plateNumber }}</option>
-            }
-          </select>
-        </div>
-        <div class="calc__field">
-          <label>{{ 'calculations.fields.year' | translate }}</label>
-          <select
-            class="calc__control"
-            [(ngModel)]="yearlyYear"
-            (ngModelChange)="refreshYearlyExists()"
-          >
-            @for (y of years; track y) {
-              <option [ngValue]="y">{{ y }}</option>
-            }
-          </select>
-        </div>
-        <div class="calc__field calc__field--auto">
-          <button
-            class="calc__btn calc__btn--primary"
-            [disabled]="yearlyBusy()"
-            (click)="calculateYear()"
-          >
-            {{ 'calculations.run.calculateBtn' | translate }}
-          </button>
-        </div>
+      <div class="calc__chips">
+        <span class="calc__badge" [class.calc__badge--stored]="yearCalculated()">
+          {{ year() }} ·
+          {{
+            (yearCalculated() ? 'calculations.legend.calculated' : 'calculations.notCalculated')
+              | translate
+          }}
+        </span>
+        <span class="calc__badge" [class.calc__badge--stored]="participantAddedCount() > 0">
+          <a routerLink="/calculations">
+            {{
+              participantAddedCount() > 0
+                ? ('calculations.run.participantsBadge'
+                  | translate: { count: participantCount(), added: participantAddedCount() })
+                : ('calculations.participants.driversOnly' | translate)
+            }}
+          </a>
+        </span>
       </div>
-
-      <div class="calc__note calc__note--info">{{ 'calculations.run.yearlyHint' | translate }}</div>
-      @if (yearlyExists()) {
-        <div class="calc__note calc__note--warn">
-          {{ 'calculations.run.yearlyExistsWarn' | translate }}
-        </div>
-      }
-      @if (yearlyMessage(); as msg) {
-        <div class="calc__note calc__note--{{ msg.type }}">{{ msg.key | translate }}</div>
-      }
     </div>
   </div>
 
-  <!-- 3. Delete a calculation -->
+  <!-- 3. Actions -->
   <div class="calc__panel">
-    <div class="calc__panel-head">
-      <span class="calc__panel-num">3</span>
-      <div>
-        <h3>{{ 'calculations.run.deleteTitle' | translate }}</h3>
-        <p>{{ 'calculations.run.deleteDesc' | translate }}</p>
-      </div>
-    </div>
     <div class="calc__panel-body">
-      <div class="calc__fields">
-        <div class="calc__field">
-          <label>{{ 'calculations.fields.car' | translate }}</label>
-          <select class="calc__control" [(ngModel)]="deleteCarId">
-            @for (car of cars(); track car.carId) {
-              <option [ngValue]="car.carId">{{ car.name }} · {{ car.plateNumber }}</option>
-            }
-          </select>
-        </div>
-        <div class="calc__field">
-          <label>{{ 'calculations.fields.period' | translate }}</label>
-          <select class="calc__control" [(ngModel)]="deletePeriod">
-            <option value="monthly">{{ 'calculations.fields.periodMonthly' | translate }}</option>
-            <option value="yearly">{{ 'calculations.fields.periodYearly' | translate }}</option>
-          </select>
-        </div>
-        <div class="calc__field">
-          <label>{{ 'calculations.fields.year' | translate }}</label>
-          <select class="calc__control" [(ngModel)]="deleteYear">
-            @for (y of years; track y) {
-              <option [ngValue]="y">{{ y }}</option>
-            }
-          </select>
-        </div>
-        @if (deletePeriod === 'monthly') {
-          <div class="calc__field">
-            <label>{{ 'calculations.fields.month' | translate }}</label>
-            <select class="calc__control" [(ngModel)]="deleteMonth">
-              @for (m of months; track m) {
-                <option [ngValue]="m">{{ 'calculations.months.' + m | translate }}</option>
-              }
-            </select>
-          </div>
-        }
-        <div class="calc__field calc__field--auto">
-          <button
-            class="calc__btn calc__btn--danger"
-            [disabled]="deleteBusy()"
-            (click)="deleteRun()"
-          >
-            {{ 'calculations.run.deleteBtn' | translate }}
-          </button>
-        </div>
+      <div class="calc__actions-grid">
+        <button
+          class="calc__btn calc__btn--primary"
+          [disabled]="busy() || monthAggregated()"
+          (click)="aggregateMonth()"
+        >
+          {{ 'calculations.run.aggregateBtn' | translate }}
+        </button>
+        <button
+          class="calc__btn calc__btn--danger"
+          [disabled]="busy() || !monthAggregated()"
+          (click)="deleteMonth()"
+        >
+          {{ 'calculations.run.deleteMonthBtn' | translate }}
+        </button>
+        <button
+          class="calc__btn calc__btn--primary"
+          [disabled]="busy() || yearCalculated()"
+          (click)="calculateYear()"
+        >
+          {{ 'calculations.run.calculateBtn' | translate }}
+        </button>
+        <button
+          class="calc__btn calc__btn--danger"
+          [disabled]="busy() || !yearCalculated()"
+          (click)="deleteYear()"
+        >
+          {{ 'calculations.run.deleteYearBtn' | translate }}
+        </button>
       </div>
-      @if (deleteMessage(); as msg) {
+
+      @if (message(); as msg) {
         <div class="calc__note calc__note--{{ msg.type }}">{{ msg.key | translate }}</div>
       }
     </div>

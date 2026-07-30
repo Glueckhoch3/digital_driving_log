@@ -186,6 +186,11 @@
       background: var(--calc-accent);
       color: #fff;
     }
+    &:not(&--primary):not(&--danger) {
+      background: var(--calc-surface);
+      border-color: var(--calc-line-strong);
+      color: var(--calc-ink);
+    }
     &--danger {
       background: var(--calc-neg);
       color: #fff;
@@ -281,5 +286,98 @@
   }
   &__muted {
     color: var(--calc-ink-faint);
+  }
+
+  /* issue #32: tabs, chip strip, badges, participant checkboxes, action grid */
+  &__tabs {
+    display: flex;
+    gap: 0.4rem;
+    border-bottom: 1px solid var(--calc-line);
+    margin-bottom: 1.2rem;
+  }
+  &__tab {
+    font: inherit;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--calc-ink-soft);
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    padding: 0.6rem 0.9rem;
+    cursor: pointer;
+    &--active {
+      color: var(--calc-accent-ink);
+      border-bottom-color: var(--calc-accent);
+    }
+    &:hover:not(&--active) {
+      color: var(--calc-ink);
+    }
+  }
+
+  &__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    margin: 0.6rem 0;
+  }
+  &__chip {
+    font-size: 0.74rem;
+    font-weight: 600;
+    padding: 0.22rem 0.55rem;
+    border-radius: 6px;
+    background: var(--calc-surface-2);
+    color: var(--calc-ink-faint);
+    border: 1px solid var(--calc-line);
+    &::before {
+      content: '○ ';
+    }
+    &--data {
+      color: var(--calc-ink-soft);
+      &::before {
+        content: '● ';
+        color: var(--calc-ink-faint);
+      }
+    }
+    &--stored {
+      background: var(--calc-warn-soft);
+      color: var(--calc-ink);
+      border-color: rgba(230, 126, 34, 0.35);
+      &::before {
+        content: '● ';
+        color: var(--calc-warn);
+      }
+    }
+  }
+
+  &__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 0.3rem 0.65rem;
+    border-radius: 999px;
+    background: var(--calc-surface-2);
+    color: var(--calc-ink-soft);
+    border: 1px solid var(--calc-line);
+    &--stored {
+      background: var(--calc-warn-soft);
+      color: var(--calc-ink);
+      border-color: rgba(230, 126, 34, 0.35);
+    }
+  }
+
+  &__check {
+    text-align: center !important;
+    input[type='checkbox'] {
+      width: 1.05rem;
+      height: 1.05rem;
+    }
+  }
+
+  &__actions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr));
+    gap: 0.75rem;
   }
 }

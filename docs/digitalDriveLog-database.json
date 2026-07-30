@@ -797,6 +797,20 @@
           "increment": false,
           "comment": "",
           "size": "3,3"
+        },
+        {
+          "id": "issue32ManuallyAddedFlag",
+          "name": "manually_added",
+          "type": "BOOLEAN",
+          "default": "false",
+          "check": "",
+          "primary": false,
+          "unique": false,
+          "notNull": true,
+          "increment": false,
+          "comment": "set on rows created by the participants screen (issue #32); deleteYear preserves these rows",
+          "size": "",
+          "values": []
         }
       ],
       "comment": "",

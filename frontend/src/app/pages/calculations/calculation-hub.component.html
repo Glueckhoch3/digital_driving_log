@@ -5,21 +5,13 @@
   <div class="calc__group">
     <p class="calc__eyebrow">{{ 'calculations.hub.viewResults' | translate }}</p>
     <div class="calc__card-grid">
-      <a class="calc__link-card" routerLink="yearly">
-        <h4>{{ 'calculations.hub.yearlyTitle' | translate }}</h4>
-        <p>{{ 'calculations.hub.yearlyDesc' | translate }}</p>
+      <a class="calc__link-card" routerLink="results">
+        <h4>{{ 'calculations.hub.resultsTitle' | translate }}</h4>
+        <p>{{ 'calculations.hub.resultsDesc' | translate }}</p>
       </a>
       <a class="calc__link-card" routerLink="combined">
         <h4>{{ 'calculations.hub.combinedTitle' | translate }}</h4>
         <p>{{ 'calculations.hub.combinedDesc' | translate }}</p>
-      </a>
-      <a class="calc__link-card" routerLink="monthly">
-        <h4>{{ 'calculations.hub.monthlyTitle' | translate }}</h4>
-        <p>{{ 'calculations.hub.monthlyDesc' | translate }}</p>
-      </a>
-      <a class="calc__link-card" routerLink="factors">
-        <h4>{{ 'calculations.hub.factorsTitle' | translate }}</h4>
-        <p>{{ 'calculations.hub.factorsDesc' | translate }}</p>
       </a>
     </div>
   </div>
@@ -31,6 +23,119 @@
         <h4>{{ 'calculations.hub.runTitle' | translate }}</h4>
         <p>{{ 'calculations.hub.runDesc' | translate }}</p>
       </a>
+    </div>
+  </div>
+
+  <div class="calc__panel">
+    <div class="calc__panel-head">
+      <div>
+        <h3>{{ 'calculations.participants.title' | translate }}</h3>
+        <p>{{ 'calculations.participants.subtitle' | translate }}</p>
+      </div>
+    </div>
+    <div class="calc__panel-body">
+      <app-calc-period-select [(carId)]="carId" [(year)]="year" />
+
+      @if (store.storedYears().length > 0) {
+        <p class="calc__note calc__note--info">
+          {{
+            'calculations.participants.storedYears'
+              | translate: { years: store.storedYears().join(' · ') }
+          }}
+        </p>
+      } @else {
+        <p class="calc__note calc__note--info">
+          {{ 'calculations.participants.defaultsHint' | translate }}
+        </p>
+      }
+
+      @if (loading()) {
+        <p>{{ 'calculations.loading' | translate }}</p>
+      } @else {
+        <div class="calc__tbl-wrap">
+          <table class="calc__table">
+            <thead>
+              <tr>
+                <th class="calc__check"></th>
+                <th>{{ 'calculations.participants.driverCol' | translate }}</th>
+                <th class="num">{{ 'calculations.participants.distanceCol' | translate }}</th>
+                <th class="num">{{ 'calculations.participants.fixShareCol' | translate }}</th>
+                <th class="num">{{ 'calculations.participants.varShareCol' | translate }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (row of rows(); track row.userId) {
+                <tr>
+                  <td class="calc__check">
+                    <input
+                      type="checkbox"
+                      [checked]="checkedIds().has(row.userId)"
+                      [disabled]="row.hasDrives"
+                      [attr.title]="
+                        row.hasDrives
+                          ? ('calculations.participants.lockedDriver' | translate)
+                          : null
+                      "
+                      (change)="toggle(row)"
+                    />
+                  </td>
+                  <td>
+                    {{ row.userName }}
+                    @if (row.hasDrives) {
+                      <span class="calc__pill calc__pill--ok">{{
+                        'calculations.participants.drove' | translate
+                      }}</span>
+                    } @else {
+                      <span class="calc__muted">
+                        {{ 'calculations.participants.noDrives' | translate: { year: year() } }}
+                      </span>
+                    }
+                  </td>
+                  <td class="num">{{ row.distance | number }}</td>
+                  <td class="num">
+                    @if (checkedIds().has(row.userId)) {
+                      {{ preview().fix.get(row.userId) | number: '1.2-2' }}%
+                    } @else {
+                      —
+                    }
+                  </td>
+                  <td class="num">
+                    @if (checkedIds().has(row.userId)) {
+                      {{ preview().varr.get(row.userId) | number: '1.2-2' }}%
+                    } @else {
+                      —
+                    }
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+
+        <div class="calc__actions-grid" style="margin-top: 1rem">
+          <button class="calc__btn calc__btn--primary" [disabled]="busy()" (click)="save()">
+            {{ 'calculations.participants.save' | translate }}
+          </button>
+          <button class="calc__btn" [disabled]="busy()" (click)="reset()">
+            {{ 'calculations.participants.reset' | translate }}
+          </button>
+          @if (yearCalculated()) {
+            <button
+              class="calc__btn calc__btn--danger"
+              [disabled]="busy()"
+              (click)="deleteCalculation()"
+            >
+              {{ 'calculations.participants.deleteRunBtn' | translate: { year: year() } }}
+            </button>
+          }
+        </div>
+
+        @if (message(); as msg) {
+          <div class="calc__note calc__note--{{ msg.type }}">
+            {{ msg.key | translate: msg.params }}
+          </div>
+        }
+      }
     </div>
   </div>
 </section>

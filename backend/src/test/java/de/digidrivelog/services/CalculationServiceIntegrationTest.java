@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import de.digidrivelog.dto.calculation.CombinedSettlementRowDto;
 import de.digidrivelog.dto.calculation.FactorRowDto;
+import de.digidrivelog.dto.calculation.ParticipantUpdateRequest;
 import de.digidrivelog.dto.calculation.YearlySettlementRowDto;
 import de.digidrivelog.dto.car.CarDto;
 import de.digidrivelog.dto.car.CreateCarRequest;
@@ -65,6 +66,7 @@ class CalculationServiceIntegrationTest {
     private CarDto car;
     private UserDto anna;
     private UserDto ben;
+    private UserDto carla;
 
     @BeforeEach
     void setUp() {
@@ -81,6 +83,7 @@ class CalculationServiceIntegrationTest {
 
         anna = createUser("Anna", "Becker");
         ben = createUser("Ben", "Schulz");
+        carla = createUser("Carla", "Weber");
         car = carService.createCar(new CreateCarRequest("Golf", "WOB-AB-123", anna.getUserId(), null));
 
         // Odometer sequence: Anna drives 100 km in January, Ben drives 200 km in February.
@@ -199,12 +202,125 @@ class CalculationServiceIntegrationTest {
         assertThat(calculationService.getCombined(YEAR)).isEmpty();
     }
 
+    @Test
+    void addedNonDriver_getsEqualFixedShareAndZeroVariable() {
+        aggregateMonths();
+        calculationService.saveParticipants(new ParticipantUpdateRequest(
+                car.getCarId(), YEAR, List.of(anna.getUserId(), ben.getUserId(), carla.getUserId())));
+        calculationService.calculateYear(car.getCarId(), YEAR);
+
+        Map<Long, FactorRowDto> factors = calculationService.getFactors(car.getCarId(), YEAR).stream()
+                .collect(Collectors.toMap(FactorRowDto::getUserId, Function.identity()));
+        assertThat(factors.get(anna.getUserId()).getFactorFixCost()).isEqualByComparingTo("33.33");
+        assertThat(factors.get(ben.getUserId()).getFactorFixCost()).isEqualByComparingTo("33.33");
+        assertThat(factors.get(carla.getUserId()).getFactorFixCost()).isEqualByComparingTo("33.34");
+        assertThat(factors.get(carla.getUserId()).getFactorVariableCost()).isEqualByComparingTo("0.00");
+
+        Map<Long, YearlySettlementRowDto> owed = calculationService
+                .getYearlySettlement(car.getCarId(), YEAR).stream()
+                .collect(Collectors.toMap(YearlySettlementRowDto::getUserId, Function.identity()));
+        assertThat(owed.get(carla.getUserId()).getVariableOwed()).isEqualByComparingTo("0.00");
+        assertThat(owed.get(carla.getUserId()).getDistance()).isZero();
+        assertThat(owed.get(carla.getUserId()).getFixedOwed()).isGreaterThan(java.math.BigDecimal.ZERO);
+    }
+
+    @Test
+    void noStoredParticipantSet_behavesLikeBeforeTheFeature() {
+        aggregateAndCalculate();
+        Map<Long, FactorRowDto> factors = calculationService.getFactors(car.getCarId(), YEAR).stream()
+                .collect(Collectors.toMap(FactorRowDto::getUserId, Function.identity()));
+        assertThat(factors).containsOnlyKeys(anna.getUserId(), ben.getUserId());
+        assertThat(factors.get(anna.getUserId()).getFactorFixCost()).isEqualByComparingTo("50.00");
+    }
+
+    @Test
+    void addedParticipant_appearsInDriveAccountYearWithZeroDistance() {
+        aggregateMonths();
+        calculationService.saveParticipants(new ParticipantUpdateRequest(
+                car.getCarId(), YEAR, List.of(anna.getUserId(), ben.getUserId(), carla.getUserId())));
+        calculationService.calculateYear(car.getCarId(), YEAR);
+
+        assertThat(accountYearRepository.findByYearAndCarId(YEAR, car.getCarId()))
+                .anySatisfy(a -> {
+                    assertThat(a.getUserId()).isEqualTo(carla.getUserId());
+                    assertThat(a.getTotalDistanceYear()).isZero();
+                });
+    }
+
+    @Test
+    void combinedSettlement_netsToZeroWithZeroDistanceParticipant() {
+        aggregateMonths();
+        calculationService.saveParticipants(new ParticipantUpdateRequest(
+                car.getCarId(), YEAR, List.of(anna.getUserId(), ben.getUserId(), carla.getUserId())));
+        calculationService.calculateYear(car.getCarId(), YEAR);
+
+        List<CombinedSettlementRowDto> combined = calculationService.getCombined(YEAR);
+        assertThat(sum(combined, CombinedSettlementRowDto::getDifferenceVariableCost)).isCloseTo(0.0, org.assertj.core.data.Offset.offset(0.001));
+        assertThat(sum(combined, CombinedSettlementRowDto::getDifferenceFixCost)).isCloseTo(0.0, org.assertj.core.data.Offset.offset(0.001));
+        assertThat(sum(combined, CombinedSettlementRowDto::getNetBalance)).isCloseTo(0.0, org.assertj.core.data.Offset.offset(0.001));
+    }
+
+    @Test
+    void deleteYear_keepsManualRowsResetToZero_andRemovesRunProducedRows() {
+        aggregateMonths();
+        calculationService.saveParticipants(new ParticipantUpdateRequest(
+                car.getCarId(), YEAR, List.of(anna.getUserId(), ben.getUserId(), carla.getUserId())));
+        calculationService.calculateYear(car.getCarId(), YEAR);
+
+        calculationService.deleteYear(car.getCarId(), YEAR);
+
+        List<de.digidrivelog.models.UserCostFactorYear> remaining =
+                factorRepository.findByYearAndCarId(YEAR, car.getCarId());
+        assertThat(remaining).hasSize(1);
+        assertThat(remaining.get(0).getUserId()).isEqualTo(carla.getUserId());
+        assertThat(remaining.get(0).getManuallyAdded()).isTrue();
+        assertThat(remaining.get(0).getFactorFixCost()).isEqualByComparingTo("0.00");
+        assertThat(remaining.get(0).getFactorVariableCost()).isEqualByComparingTo("0.00");
+    }
+
+    @Test
+    void deleteThenCalculateYear_withAddedParticipant_survivesTheRoundTrip() {
+        aggregateMonths();
+        calculationService.saveParticipants(new ParticipantUpdateRequest(
+                car.getCarId(), YEAR, List.of(anna.getUserId(), ben.getUserId(), carla.getUserId())));
+        calculationService.calculateYear(car.getCarId(), YEAR);
+        Map<Long, FactorRowDto> before = calculationService.getFactors(car.getCarId(), YEAR).stream()
+                .collect(Collectors.toMap(FactorRowDto::getUserId, Function.identity()));
+
+        calculationService.deleteYear(car.getCarId(), YEAR);
+        calculationService.calculateYear(car.getCarId(), YEAR);
+
+        Map<Long, FactorRowDto> after = calculationService.getFactors(car.getCarId(), YEAR).stream()
+                .collect(Collectors.toMap(FactorRowDto::getUserId, Function.identity()));
+        assertThat(after.keySet()).isEqualTo(before.keySet());
+        assertThat(after.get(carla.getUserId()).getFactorFixCost())
+                .isEqualByComparingTo(before.get(carla.getUserId()).getFactorFixCost());
+    }
+
+    @Test
+    void manuallyAddedFlag_survivesTheRun() {
+        aggregateMonths();
+        calculationService.saveParticipants(new ParticipantUpdateRequest(
+                car.getCarId(), YEAR, List.of(anna.getUserId(), ben.getUserId(), carla.getUserId())));
+        calculationService.calculateYear(car.getCarId(), YEAR);
+
+        de.digidrivelog.models.UserCostFactorYear carlaRow = factorRepository
+                .findByYearAndCarId(YEAR, car.getCarId()).stream()
+                .filter(f -> f.getUserId().equals(carla.getUserId()))
+                .findFirst().orElseThrow();
+        assertThat(carlaRow.getManuallyAdded()).isTrue();
+    }
+
     // --- helpers ---
 
     private void aggregateAndCalculate() {
+        aggregateMonths();
+        calculationService.calculateYear(car.getCarId(), YEAR);
+    }
+
+    private void aggregateMonths() {
         calculationService.aggregateMonth(car.getCarId(), YEAR, 1);
         calculationService.aggregateMonth(car.getCarId(), YEAR, 2);
-        calculationService.calculateYear(car.getCarId(), YEAR);
     }
 
     private double sum(List<CombinedSettlementRowDto> rows,

@@ -14,5 +14,11 @@ public interface UserCostFactorYearRepository
 
     List<UserCostFactorYear> findByYear(Integer year);
 
+    List<UserCostFactorYear> findByCarId(Long carId);
+
+    boolean existsByYearAndCarIdAndManuallyAddedTrue(Integer year, Long carId);
+
     void deleteByYearAndCarId(Integer year, Long carId);
+
+    void deleteByYearAndCarIdAndManuallyAddedFalse(Integer year, Long carId);
 }

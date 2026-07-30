@@ -17,9 +17,11 @@ import lombok.Setter;
  * (0..100, each column totals 100.00 per car-year).
  *
  * <p>{@code factorVariableCost} is derived from the driver's share of the year's
- * distance. {@code factorFixCost} defaults to an equal split (remainder on the last
- * driver). Both are computed by the yearly run and are read-only in the application —
- * only an admin adjusts {@code factorFixCost} directly in the database.
+ * distance. {@code factorFixCost} is an equal split (remainder on the last driver)
+ * over the car-year's participant set — everyone with aggregated distance, plus
+ * anyone the participants screen (issue #32) added. Both factors are computed by the
+ * yearly run; {@code manuallyAdded} marks rows a user added by hand rather than the
+ * run, which is what lets {@code deleteYear} preserve the participant set.
  */
 @Entity
 @Table(name = "user_cost_factor_year")
@@ -47,6 +49,10 @@ public class UserCostFactorYear {
 
     @Column(name = "factor_fix_cost", nullable = false, precision = 5, scale = 2)
     private BigDecimal factorFixCost;
+
+    /** Set on rows created by the participants screen (issue #32); survives {@code deleteYear}. */
+    @Column(name = "manually_added", nullable = false)
+    private Boolean manuallyAdded = false;
 
     @Data
     @NoArgsConstructor
