@@ -6,7 +6,7 @@ RUN chmod +x mvnw && ./mvnw -DskipTests package
 
 FROM eclipse-temurin:21-jre-alpine
 
-RUN addgroup -S app && adduser -S -G app app
+RUN apk upgrade --no-cache && addgroup -S app && adduser -S -G app app
 
 WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
