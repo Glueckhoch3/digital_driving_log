@@ -1,0 +1,46 @@
+<div class="calc__fields">
+  <div class="calc__field">
+    <label>{{ 'calculations.fields.car' | translate }}</label>
+    <select class="calc__control" [ngModel]="carId()" (ngModelChange)="carId.set($event)">
+      @for (car of cars(); track car.carId) {
+        <option [ngValue]="car.carId">{{ car.name }} · {{ car.plateNumber }}</option>
+      }
+    </select>
+  </div>
+  <div class="calc__field">
+    <label>{{ 'calculations.fields.year' | translate }}</label>
+    <select class="calc__control" [ngModel]="year()" (ngModelChange)="year.set($event)">
+      @for (y of years; track y) {
+        <option [ngValue]="y">
+          {{ store.yearCalculated(y) || store.participantsStored(y) ? '● ' : '' }}{{ y }}
+        </option>
+      }
+    </select>
+  </div>
+  @if (showMonth()) {
+    <div class="calc__field">
+      <label>{{ 'calculations.fields.month' | translate }}</label>
+      <select class="calc__control" [ngModel]="month()" (ngModelChange)="month.set($event)">
+        @for (m of months; track m) {
+          <option [ngValue]="m">
+            {{ store.monthState(year(), m) === 'stored' ? '● ' : ''
+            }}{{ 'calculations.months.' + m | translate }}
+          </option>
+        }
+      </select>
+    </div>
+  }
+</div>
+
+@if (showMonth()) {
+  <div class="calc__chips">
+    @for (m of months; track m) {
+      <span
+        class="calc__chip"
+        [class.calc__chip--stored]="store.monthState(year(), m) === 'stored'"
+        [class.calc__chip--data]="store.monthState(year(), m) === 'data'"
+        >{{ 'calculations.months.' + m | translate }}</span
+      >
+    }
+  </div>
+}

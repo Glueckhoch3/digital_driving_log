@@ -1,0 +1,138 @@
+<section class="upload-page">
+  <a class="upload-page__back" [routerLink]="['/cars', car().carId]">{{
+    'carWorkspace.upload.back' | translate
+  }}</a>
+
+  <h2>{{ 'carWorkspace.upload.title' | translate }} — {{ car().name }}</h2>
+  <p class="upload-page__intro">{{ 'carWorkspace.upload.intro' | translate }}</p>
+
+  <fieldset class="upload-page__locale">
+    <legend>{{ 'carWorkspace.upload.formatLabel' | translate }}</legend>
+    <div
+      class="upload-page__toggle"
+      role="group"
+      aria-label="{{ 'carWorkspace.upload.formatLabel' | translate }}"
+    >
+      <button
+        type="button"
+        [class.active]="locale() === 'en'"
+        [attr.aria-pressed]="locale() === 'en'"
+        (click)="setLocale('en')"
+      >
+        {{ 'carWorkspace.upload.formatEn' | translate }}
+      </button>
+      <button
+        type="button"
+        [class.active]="locale() === 'de'"
+        [attr.aria-pressed]="locale() === 'de'"
+        (click)="setLocale('de')"
+      >
+        {{ 'carWorkspace.upload.formatDe' | translate }}
+      </button>
+    </div>
+  </fieldset>
+
+  <div class="upload-page__grid">
+    <!-- Drives -->
+    <article class="upload-card">
+      <h3>{{ 'carWorkspace.upload.drives.title' | translate }}</h3>
+      <code class="upload-card__format">km-end;firstname;lastname;date</code>
+      <p class="upload-card__hint">{{ 'carWorkspace.upload.drives.hint' | translate }}</p>
+
+      <label class="upload-card__file">
+        <span class="sr-only">{{ 'carWorkspace.upload.drives.title' | translate }}</span>
+        <input type="file" accept=".csv,text/csv" (change)="onFileSelected($event, 'drives')" />
+      </label>
+
+      <button
+        type="button"
+        class="upload-card__submit"
+        [disabled]="!driveFile() || driveBusy()"
+        (click)="importDrives()"
+      >
+        {{
+          (driveBusy() ? 'carWorkspace.upload.importing' : 'carWorkspace.upload.importDrives')
+            | translate
+        }}
+      </button>
+
+      @if (driveError()) {
+        <p class="upload-card__error" role="alert">{{ driveError() | translate }}</p>
+      }
+
+      @if (driveResult(); as result) {
+        @if (result.errors.length === 0) {
+          <p class="upload-card__success" role="status">
+            {{ 'carWorkspace.upload.imported' | translate: { count: result.imported } }}
+          </p>
+        } @else {
+          <div class="upload-card__failure" role="alert">
+            <p>{{ 'carWorkspace.upload.rejected' | translate: { count: result.errors.length } }}</p>
+            <ul>
+              @for (rowError of result.errors; track rowError.line) {
+                <li>
+                  <span class="line">{{
+                    'carWorkspace.upload.line' | translate: { line: rowError.line }
+                  }}</span>
+                  {{ rowError.message }}
+                </li>
+              }
+            </ul>
+          </div>
+        }
+      }
+    </article>
+
+    <!-- Costs -->
+    <article class="upload-card">
+      <h3>{{ 'carWorkspace.upload.costs.title' | translate }}</h3>
+      <code class="upload-card__format"
+        >firstname;lastname;date;amount;price;description;cost_type</code
+      >
+      <p class="upload-card__hint">{{ 'carWorkspace.upload.costs.hint' | translate }}</p>
+
+      <label class="upload-card__file">
+        <span class="sr-only">{{ 'carWorkspace.upload.costs.title' | translate }}</span>
+        <input type="file" accept=".csv,text/csv" (change)="onFileSelected($event, 'costs')" />
+      </label>
+
+      <button
+        type="button"
+        class="upload-card__submit"
+        [disabled]="!costFile() || costBusy()"
+        (click)="importCosts()"
+      >
+        {{
+          (costBusy() ? 'carWorkspace.upload.importing' : 'carWorkspace.upload.importCosts')
+            | translate
+        }}
+      </button>
+
+      @if (costError()) {
+        <p class="upload-card__error" role="alert">{{ costError() | translate }}</p>
+      }
+
+      @if (costResult(); as result) {
+        @if (result.errors.length === 0) {
+          <p class="upload-card__success" role="status">
+            {{ 'carWorkspace.upload.imported' | translate: { count: result.imported } }}
+          </p>
+        } @else {
+          <div class="upload-card__failure" role="alert">
+            <p>{{ 'carWorkspace.upload.rejected' | translate: { count: result.errors.length } }}</p>
+            <ul>
+              @for (rowError of result.errors; track rowError.line) {
+                <li>
+                  <span class="line">{{
+                    'carWorkspace.upload.line' | translate: { line: rowError.line }
+                  }}</span>
+                  {{ rowError.message }}
+                </li>
+              }
+            </ul>
+          </div>
+        }
+      }
+    </article>
+  </div>
+</section>

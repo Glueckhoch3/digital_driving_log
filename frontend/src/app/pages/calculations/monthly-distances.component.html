@@ -1,0 +1,30 @@
+<div>
+  @if (loading()) {
+    <p>{{ 'calculations.loading' | translate }}</p>
+  } @else if (error()) {
+    <p class="calc__note calc__note--error">{{ error() | translate }}</p>
+  } @else if (rows().length === 0) {
+    <p class="calc__note calc__note--info">{{ 'calculations.monthly.empty' | translate }}</p>
+  } @else {
+    <div class="calc__tbl-wrap">
+      <table class="calc__table">
+        <thead>
+          <tr>
+            <th>{{ 'calculations.cols.month' | translate }}</th>
+            <th>{{ 'calculations.cols.driver' | translate }}</th>
+            <th class="num">{{ 'calculations.cols.distance' | translate }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of rows(); track $index) {
+            <tr>
+              <td>{{ 'calculations.months.' + row.month | translate }}</td>
+              <td>{{ row.userName }}</td>
+              <td class="num">{{ row.distance | number }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

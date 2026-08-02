@@ -1,0 +1,240 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*.*.*']
+  pull_request:
+    branches: [main]
+
+jobs:
+  backend:
+    name: Backend (Maven verify)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4.4.0
+
+      - uses: actions/setup-java@v4.9.0
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+
+      - name: Build and test
+        run: ./mvnw -B verify
+        working-directory: backend
+
+      - name: Upload JaCoCo report
+        uses: actions/upload-artifact@v4.6.2
+        with:
+          name: jacoco-report
+          path: backend/target/site/jacoco/
+
+  frontend:
+    name: Frontend (vitest + build)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4.4.0
+
+      - uses: actions/setup-node@v4.4.0
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: frontend
+
+      - name: Test
+        run: npm test -- --watch=false
+        working-directory: frontend
+
+      - name: Build
+        run: npm run build
+        working-directory: frontend
+
+  security:
+    name: Security (SBOM, vulnerabilities, secrets, misconfig)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4.4.0
+
+      - uses: actions/setup-java@v4.9.0
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+
+      - uses: actions/setup-node@v4.4.0
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Generate SBOMs (CycloneDX)
+        run: |
+          mkdir -p sbom
+          npx --yes @cyclonedx/cdxgen -t java backend -o sbom/backend.cdx.json
+          npx --yes @cyclonedx/cdxgen -t npm frontend -o sbom/frontend.cdx.json
+
+      - name: Upload SBOMs
+        uses: actions/upload-artifact@v4.6.2
+        with:
+          name: sbom
+          path: sbom/
+
+      - name: Scan backend SBOM (HIGH/CRITICAL gate)
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          version: v0.72.0
+          scan-type: sbom
+          scan-ref: sbom/backend.cdx.json
+          severity: HIGH,CRITICAL
+          exit-code: '1'
+
+      - name: Scan frontend SBOM (HIGH/CRITICAL gate)
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          version: v0.72.0
+          scan-type: sbom
+          scan-ref: sbom/frontend.cdx.json
+          severity: HIGH,CRITICAL
+          exit-code: '1'
+
+      - name: Scan repo for secrets and misconfigurations
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          version: v0.72.0
+          scan-type: fs
+          scan-ref: .
+          scanners: secret,misconfig
+          exit-code: '1'
+
+  docker:
+    name: Docker images (build + scan, non-blocking)
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4.4.0
+
+      - name: Build images
+        run: |
+          docker build -t ddl-backend:ci backend
+          docker build -t ddl-frontend:ci frontend
+
+      - name: Scan backend image
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          version: v0.72.0
+          scan-type: image
+          image-ref: ddl-backend:ci
+          severity: HIGH,CRITICAL
+          exit-code: '1'
+
+      - name: Scan frontend image
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          version: v0.72.0
+          scan-type: image
+          image-ref: ddl-frontend:ci
+          severity: HIGH,CRITICAL
+          exit-code: '1'
+
+  release:
+    name: Release (build, scan, push to DockerHub)
+    runs-on: ubuntu-latest
+    needs: [backend, frontend, security]
+    if: startsWith(github.ref, 'refs/tags/v')
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4.4.0
+
+      - name: Derive version from tag
+        id: version
+        run: echo "version=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+
+      - name: Download SBOMs
+        uses: actions/download-artifact@v4.3.0
+        with:
+          name: sbom
+          path: sbom/
+
+      - uses: actions/setup-java@v4.9.0
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+
+      - uses: actions/setup-node@v4.4.0
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Set backend version
+        run: ./mvnw -B versions:set -DnewVersion="${{ steps.version.outputs.version }}" -DgenerateBackupPoms=false
+        working-directory: backend
+
+      - name: Set frontend version
+        run: npm version "${{ steps.version.outputs.version }}" --no-git-tag-version --allow-same-version
+        working-directory: frontend
+
+      - name: Commit bumped versions to main
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if ! git diff --quiet -- backend/pom.xml frontend/package.json frontend/package-lock.json; then
+            git add backend/pom.xml frontend/package.json frontend/package-lock.json
+            git commit -m "chore: bump version to ${{ steps.version.outputs.version }} [skip ci]"
+            git push origin HEAD:main
+          fi
+
+      - name: Build images
+        run: |
+          docker build -t "$DOCKERHUB_USER/ddl-backend:${{ steps.version.outputs.version }}" backend
+          docker build -t "$DOCKERHUB_USER/ddl-frontend:${{ steps.version.outputs.version }}" frontend
+        env:
+          DOCKERHUB_USER: ${{ secrets.DOCKERHUB_USERNAME }}
+
+      - name: Scan backend image (blocking)
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          version: v0.72.0
+          scan-type: image
+          image-ref: ${{ secrets.DOCKERHUB_USERNAME }}/ddl-backend:${{ steps.version.outputs.version }}
+          severity: HIGH,CRITICAL
+          exit-code: '1'
+
+      - name: Scan frontend image (blocking)
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          version: v0.72.0
+          scan-type: image
+          image-ref: ${{ secrets.DOCKERHUB_USERNAME }}/ddl-frontend:${{ steps.version.outputs.version }}
+          severity: HIGH,CRITICAL
+          exit-code: '1'
+
+      - name: Log in to DockerHub
+        uses: docker/login-action@v3.7.0
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Push images
+        run: |
+          docker push "$DOCKERHUB_USER/ddl-backend:${{ steps.version.outputs.version }}"
+          docker push "$DOCKERHUB_USER/ddl-frontend:${{ steps.version.outputs.version }}"
+        env:
+          DOCKERHUB_USER: ${{ secrets.DOCKERHUB_USERNAME }}
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v2.6.2
+        with:
+          tag_name: ${{ github.ref_name }}
+          generate_release_notes: true
+          files: |
+            sbom/backend.cdx.json
+            sbom/frontend.cdx.json

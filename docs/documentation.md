@@ -69,17 +69,17 @@
 ### Epic 1: Drive Logging
 
 #### US-001: Enter Driving Distance
-**As a** driver of the shared vehicle  
-**I want to** enter the distance I drove  
-**So that** the total kilometers/miles are recorded for cost distribution  
+**As a** driver of the shared vehicle
+**I want to** enter the distance I drove
+**So that** the total kilometers/miles are recorded for cost distribution
 
 **Acceptance Criteria:**
-- [ ] User can access a form to enter driving distance
+- [X] User can access a form to enter driving distance
 - [ ] Form validates that distance is a positive number
-- [ ] User can specify the date of the drive
-- [ ] User can add optional notes about the drive
-- [ ] Data is saved to the database
-- [ ] User receives confirmation of successful submission
+- [X] User can specify the date of the drive
+- [X] User can add optional notes about the drive
+- [X] Data is saved to the database
+- [X] User receives confirmation of successful submission
 
 **Technical Requirements:**
 - Create REST endpoint: `POST /api/drives`
@@ -90,16 +90,16 @@
 ---
 
 #### US-002: Track Fuel Refills
-**As a** driver  
-**I want to** record when I refill the fuel tank  
-**So that** fuel consumption and costs are accurately tracked  
+**As a** driver
+**I want to** record when I refill the fuel tank
+**So that** fuel consumption and costs are accurately tracked
 
 **Acceptance Criteria:**
-- [ ] User can add fuel refill information to a drive
+- [X] User can add fuel refill information to a drive
 - [ ] Form captures: refill date, liters/gallons, cost, fuel type
-- [ ] System calculates cost per liter
-- [ ] Fuel data is linked to the corresponding drive
-- [ ] Historical fuel data is displayed in a list
+- [ ] System calculates cost per liter/gallon (amount unit)
+- [X] Fuel data is linked to the corresponding drive (car)
+- [X] Historical fuel data is displayed in a list
 
 **Technical Requirements:**
 - Create REST endpoint: `POST /api/fuel-refills`
@@ -111,17 +111,17 @@
 ---
 
 #### US-003: View Driving History
-**As a** shareholder  
-**I want to** view all recorded drives in the system  
-**So that** I can verify accuracy and track overall vehicle usage  
+**As a** shareholder
+**I want to** view all recorded drives in the system
+**So that** I can verify accuracy and track overall vehicle usage
 
 **Acceptance Criteria:**
-- [ ] User can see a list of all drives
-- [ ] List displays: date, driver, distance, notes
+- [X] User can see a list of all drives
+- [X] List displays: date, driver, distance, notes
 - [ ] List is sortable by date, driver, or distance
 - [ ] User can filter drives by date range
 - [ ] User can filter drives by specific driver
-- [ ] Total distance is displayed
+- [X] Total distance (odometer) is displayed
 
 **Technical Requirements:**
 - Create REST endpoint: `GET /api/drives`
@@ -135,13 +135,13 @@
 ### Epic 2: Expense Management
 
 #### US-004: Record Fixed Costs
-**As a** vehicle owner/shareholder  
-**I want to** record fixed costs like insurance and registration  
-**So that** these costs can be distributed equally among all shareholders  
+**As a** vehicle owner/shareholder
+**I want to** record fixed costs like insurance and registration
+**So that** these costs can be distributed equally among all shareholders
 
 **Acceptance Criteria:**
-- [ ] User can enter fixed cost information
-- [ ] Form captures: cost type, amount, date, description
+- [X] User can enter fixed cost information
+- [X] Form captures: cost type, amount, date, description
 - [ ] Fixed costs are marked as non-divisible by distance
 - [ ] Cost is automatically distributed equally among active shareholders
 - [ ] Users can view how much they owe for fixed costs
@@ -156,12 +156,12 @@
 ---
 
 #### US-005: Record Variable Costs
-**As a** driver  
-**I want to** record variable costs like maintenance and repairs  
-**So that** these costs are distributed proportionally to distance driven  
+**As a** driver
+**I want to** record variable costs like maintenance and repairs
+**So that** these costs are distributed proportionally to distance driven
 
 **Acceptance Criteria:**
-- [ ] User can enter variable cost information
+- [X] User can enter variable cost information
 - [ ] Form captures: cost type, amount, date, description, affected distance period
 - [ ] Variable costs are distributed based on distance driven
 - [ ] System calculates cost per kilometer/mile
@@ -178,9 +178,9 @@
 ---
 
 #### US-006: View Cost Distribution Overview
-**As a** shareholder  
-**I want to** see a clear overview of how much each participant owes/is owed  
-**So that** cost settlements can be made fairly and transparently  
+**As a** shareholder
+**I want to** see a clear overview of how much each participant owes/is owed
+**So that** cost settlements can be made fairly and transparently
 
 **Acceptance Criteria:**
 - [ ] Dashboard displays current cost distribution
@@ -202,9 +202,9 @@
 ### Epic 3: Shareholder Management
 
 #### US-007: Add New Shareholder
-**As a** vehicle owner  
-**I want to** add new participants to the shared vehicle  
-**So that** they can start recording their drives and participating in cost distribution  
+**As a** vehicle owner
+**I want to** add new participants to the shared vehicle
+**So that** they can start recording their drives and participating in cost distribution
 
 **Acceptance Criteria:**
 - [ ] Admin can access shareholder management section
@@ -224,9 +224,9 @@
 ---
 
 #### US-008: Remove Shareholder
-**As a** vehicle owner  
-**I want to** remove shareholders from the vehicle  
-**So that** they no longer participate in cost distribution  
+**As a** vehicle owner
+**I want to** remove shareholders from the vehicle
+**So that** they no longer participate in cost distribution
 
 **Acceptance Criteria:**
 - [ ] Admin can select and remove a shareholder
@@ -245,9 +245,9 @@
 ---
 
 #### US-009: Configure Temporary Participants
-**As a** vehicle owner  
-**I want to** configure temporary participants who only pay variable costs  
-**So that** short-term participants don't bear fixed costs  
+**As a** vehicle owner
+**I want to** configure temporary participants who only pay variable costs
+**So that** short-term participants don't bear fixed costs
 
 **Acceptance Criteria:**
 - [ ] Temporary participants can be marked when added
@@ -268,9 +268,9 @@
 ### Epic 4: Settlement and Reporting
 
 #### US-010: Annual Settlement
-**As a** a vehicle owner  
-**I want to** the system automatically closes the current settlement period at year end  
-**So that** a new settlement period begins for the next year  
+**As a** a vehicle owner
+**I want to** the system automatically closes the current settlement period at year end
+**So that** a new settlement period begins for the next year
 
 **Acceptance Criteria:**
 - [ ] System automatically triggers settlement on December 31st
@@ -290,9 +290,9 @@
 ---
 
 #### US-011: View Settlement History
-**As a** shareholder  
-**I want to** view past settlement periods and their final results  
-**So that** I can verify historical costs and payments  
+**As a** shareholder
+**I want to** view past settlement periods and their final results
+**So that** I can verify historical costs and payments
 
 **Acceptance Criteria:**
 - [ ] User can view all past settlement periods
@@ -311,9 +311,9 @@
 ---
 
 #### US-012: Generate Cost Reports
-**As a** a shareholder  
-**I want to** generate detailed reports about costs  
-**So that** I can understand how my costs are calculated  
+**As a** a shareholder
+**I want to** generate detailed reports about costs
+**So that** I can understand how my costs are calculated
 
 **Acceptance Criteria:**
 - [ ] User can generate reports for a date range
@@ -334,9 +334,9 @@
 ### Epic 5: Data Synchronization
 
 #### US-013: Sync with Server on Network Connection
-**As a** a driver with the app offline  
-**I want to** automatically sync my data when reconnecting to the network  
-**So that** my recorded drives and expenses are saved to the server  
+**As a** a driver with the app offline
+**I want to** automatically sync my data when reconnecting to the network
+**So that** my recorded drives and expenses are saved to the server
 
 **Acceptance Criteria:**
 - [ ] App detects network availability
@@ -356,9 +356,9 @@
 ---
 
 #### US-014: Conflict Resolution for Duplicate Entries
-**As a** the system  
-**I want to** handle conflicts when the same data is modified offline and online  
-**So that** data integrity is maintained  
+**As a** the system
+**I want to** handle conflicts when the same data is modified offline and online
+**So that** data integrity is maintained
 
 **Acceptance Criteria:**
 - [ ] System detects conflicting changes
@@ -410,57 +410,77 @@
 
 ## Database Design
 
-For database schema, see [digitalDriveLog-database.dbml](digitalDriveLog-database.dbml)
+For database schema, see [digitalDriveLog-database.json](digitalDriveLog-database.json)
+(a [drawdb.app](https://drawdb.app) export).
+For how the derived/calculation tables in that schema are computed from the
+raw entities, see [calculations.md](calculations.md).
 
 ---
 
 ## API Endpoints
 
-*Will be documentet in a swagger/OpenApi file. **tbd***
+Current frontend and backend integrations use the base path:
 
-### Drives
-- `GET /api/drives` - List all drives (with pagination, filtering)
-- `POST /api/drives` - Create new drive
-- `GET /api/drives/{id}` - Get drive details
-- `PUT /api/drives/{id}` - Update drive
-- `DELETE /api/drives/{id}` - Delete drive
+- `http://localhost:8080/ddl/api`
+API Documentation see: [api_doc](./api_doc.yaml)
 
-### Fuel Refills
-- `GET /api/fuel-refills` - List all fuel refills
-- `POST /api/fuel-refills` - Record fuel refill
-- `GET /api/fuel-refills/{id}` - Get refill details
-- `PUT /api/fuel-refills/{id}` - Update refill
-- `DELETE /api/fuel-refills/{id}` - Delete refill
 
-### Costs
-- `POST /api/costs/fixed` - Record fixed cost
-- `POST /api/costs/variable` - Record variable cost
-- `GET /api/costs` - List all costs
-- `PUT /api/costs/{id}` - Update cost
-- `DELETE /api/costs/{id}` - Delete cost
+### Request/response shape highlights
+- `CreateDriveRequest`/`UpdateDriveRequest`: `carId`, `odometer`, `driverId`, `driveDate`, optional `notes`
+  - `odometer` is the **total odometer reading** at the time of the drive (cumulative, monotonically increasing), not the distance driven on the single trip.
+- `CreateCostRequest`/`UpdateCostRequest`: `carId`, `buyerId`, `description`, `price`, `quantity`, `dayOfTransaction`, `costType`, optional `notes`
+  - `quantity` is a **decimal** (e.g. `36.89` litres of fuel), must be positive.
+- `costType` accepts `fixed` or `variable` (case-insensitive); responses return enum values in uppercase
+- **List endpoints are paginated.** The drive/cost list endpoints (`/vehicles/{carId}/drives`, `/users/{userId}/drives`, `/vehicles/{carId}/users/{userId}/drives`, `/costs`, `/vehicles/{carId}/costs`, `/users/{userId}/costs`) return a Spring `Page` object (`content` array plus `totalElements`, `totalPages`, `number`, `size`). They accept `?page`, `?size` and `?sort`; drives default to `driveDate` desc, costs to `dayOfTransaction` desc, page size 50.
 
-### Distribution
-- `GET /api/distribution/current` - Get current cost distribution
-- `GET /api/distribution/breakdown/{shareholder_id}` - Get detailed breakdown for shareholder
-- `GET /api/distribution/summary` - Get system-wide summary
+### CSV import
 
-### Shareholders
-- `GET /api/shareholders` - List all shareholders
-- `POST /api/shareholders` - Add new shareholder
-- `GET /api/shareholders/{id}` - Get shareholder details
-- `PUT /api/shareholders/{id}` - Update shareholder
-- `DELETE /api/shareholders/{id}` - Remove shareholder
+Two `multipart/form-data` endpoints bulk-load historical data for a car. They are **all-or-nothing**: every row is validated first, and only a fully valid file is written. A file with any invalid row is rejected in full — the response's `errors` array lists the offending line numbers and nothing is persisted, so re-uploading a corrected file never creates duplicates.
 
-### Settlements
-- `GET /api/settlements` - List all settlements
-- `POST /api/settlements/trigger` - Manually trigger settlement
-- `GET /api/settlements/{id}` - Get settlement details
-- `GET /api/settlements/{id}/report` - Generate settlement report
+- `POST /vehicles/{carId}/drives/import` — columns `km-end;firstname;lastname;date`
+- `POST /vehicles/{carId}/costs/import` — columns `firstname;lastname;date;amount;price;description;cost_type`
 
-### Reports
-- `GET /api/reports/cost-breakdown` - Get cost breakdown report
-- `GET /api/reports/distance-summary` - Get distance summary
-- `GET /api/reports/export/{format}` - Export report (pdf, csv, excel)
+Both return an `ImportResult` (`{ imported, errors: [{ line, message }] }`). Field structure and restrictions:
+
+| Field | Rules |
+| --- | --- |
+| separator | Fields are separated by `;`. A header row (first line naming the columns) is optional and skipped automatically. |
+| `km-end` | Whole number — the total odometer reading. |
+| `firstname` / `lastname` | Matched case-insensitively to an existing user; **the user must already exist**. |
+| `date` | `dd.MM.yyyy` or ISO `yyyy-MM-dd`. |
+| `amount` / `price` | Decimals, read per the `?locale` query param: `en` (default) uses `.` as the decimal separator and `,` for thousands; `de` uses `,` as decimal and `.` for thousands. |
+| `description` | 1–63 characters. |
+| `cost_type` | `Fix`/`Var` or `FIXED`/`VARIABLE` (case-insensitive, surrounding spaces ignored). |
+
+### Frontend routes
+- `/` - Start page
+- `/overview` - Management overview
+- `/cars/select` - Car selection
+- `/cars/{carId}` - Car workspace
+- `/cars/{carId}/upload` - CSV import (drives and costs)
+- `/manage/users` - User management (create/update/delete)
+- `/manage/cars` - Car management (create/update/delete)
+- `/calculations` - Calculation hub: links to results/combined/run, plus per-car-year participant management (issue #32)
+- `/calculations/run` - Aggregate a month, calculate a year, delete a month/year, for one car/year/month selection
+- `/calculations/results?tab=yearly|monthly|factors` - Yearly settlement, monthly distances and distribution factors for one car/year, as tabs
+- `/calculations/combined` - Combined settlement across all calculated cars for a year
+
+### Calculations: participant management (issue #32)
+
+A car-year's fixed-cost split is always an equal share, but *who* is in that split
+is now user-controlled instead of being derived purely from `DriveLogMonthTotal`:
+
+```
+drivers for the yearly run = (users with aggregated distance) ∪ (stored participants)
+```
+
+`GET/PUT/DELETE /calculations/participants` manage that stored set (a user is simply a
+row in `user_cost_factor_year` with `manually_added = true`); `GET /calculations/availability`
+returns the per-year/per-month colouring (calculated, aggregated, participants stored) the
+frontend needs for `/calculations/run`, `/calculations/results` and the hub. See
+`docs/api_doc.yaml` for the request/response shapes and
+[calculations.md, Stage 2](calculations.md#stage-2--distribution-factors) for the full
+factor formula and rounding rules.
 
 ---
 
@@ -469,87 +489,53 @@ For database schema, see [digitalDriveLog-database.dbml](digitalDriveLog-databas
 ### Prerequisites
 - Java 21 or higher
 - Node.js 18+ and npm 10.8.2+
-- PostgreSQL 12+
+- Docker / Docker Compose
 - Git
 
-### Backend Setup
+### Development Start Guide (Backend + Frontend, Dockerized PostgreSQL)
 
-1. **Navigate to backend directory**
+1. **Start PostgreSQL only (recommended for development)**
    ```bash
-   cd digidrivelog-backend
+   docker compose up -d postgres
    ```
 
-2. **Configure PostgreSQL**
-   - Create a database named `digital_driving_log`
-   - Update connection details in `src/main/resources/application.properties`
-   ```properties
-   spring.datasource.url=jdbc:postgresql://localhost:5432/digital_driving_log
-   spring.datasource.username=your_username
-   spring.datasource.password=your_password
-   spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQL12Dialect
-   spring.jpa.hibernate.ddl-auto=update
+2. **Configure backend environment**
+   ```bash
+   cd backend
+   cp .env.example .env
    ```
 
-3. **Build the application**
+3. **Build and run backend**
    ```bash
-   ./mvnw clean build
-   ```
-
-4. **Run the application**
-   ```bash
+   ./mvnw clean package
    ./mvnw spring-boot:run
    ```
-   The API will be available at `http://localhost:8080`
+   Backend API: `http://localhost:8080`
 
-### Frontend Setup
-
-1. **Navigate to frontend directory**
+4. **Start frontend**
    ```bash
-   cd frontend
-   ```
-
-2. **Install dependencies**
-   ```bash
+   cd ../frontend
    npm install
-   ```
-
-3. **Start development server**
-   ```bash
    npm start
    ```
-   The application will be available at `http://localhost:4200`
+   Frontend app: `http://localhost:4200`
 
-4. **Build for production**
-   ```bash
-   npm run build
-   ```
+### Full Docker Compose Setup
+Use the committed `docker-compose.yml` at repository root:
 
-### Docker Setup (Optional)
-Create a `docker-compose.yml` for local deployment:
-```yaml
-version: '3.8'
-services:
-  postgres:
-    image: postgres:16-alpine
-    environment:
-      POSTGRES_DB: digital_driving_log
-      POSTGRES_USER: ddl_user
-      POSTGRES_PASSWORD: secure_password
-    ports:
-      - "5432:5432"
-  backend:
-    build: ./digidrivelog-backend
-    ports:
-      - "8080:8080"
-    depends_on:
-      - postgres
-  frontend:
-    build: ./frontend
-    ports:
-      - "80:4200"
-    depends_on:
-      - backend
+```bash
+docker compose up --build -d
 ```
+
+This starts:
+- PostgreSQL: `localhost:5432`
+- Backend API: `http://localhost:8080`
+- Frontend app: `http://localhost:4200`
+
+### First-run functional flow
+1. Open `/manage/users` and create at least one user.
+2. Open `/manage/cars` and create a car with an owner.
+3. Deleting users/cars is blocked when dependent entities exist (cars/drives/costs).
 
 ---
 
@@ -589,7 +575,7 @@ src/
 └── assets/                 # Images, fonts, etc.
 ```
 
-**Backend** (`digidrivelog-backend/src/main/java/de/digidrivelog/`):
+**Backend** (`backend/src/main/java/de/digidrivelog/`):
 ```
 ├── models/                 # JPA entities
 ├── repositories/           # Spring Data repositories
@@ -610,7 +596,7 @@ src/
 ### Testing
 - Backend: JUnit 5 + Mockito
 - Frontend: Jasmine + Karma
-- Aim for >80% code coverage
+- Aim for ~80% code coverage
 
 ### Documentation
 - Update this file for architectural changes
@@ -639,6 +625,6 @@ For questions or issues, please refer to the main [README.md](../README.md) and 
 
 ---
 
-**Last Updated**: February 2026  
-**Project Version**: 0.0.1-SNAPSHOT  
+**Last Updated**: February 2026
+**Project Version**: 0.0.1-SNAPSHOT
 **License**: See LICENSE file

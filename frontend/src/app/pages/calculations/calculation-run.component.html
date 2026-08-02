@@ -1,0 +1,82 @@
+<section class="calc">
+  <a class="calc__back" routerLink="/calculations">{{ 'calculations.back' | translate }}</a>
+  <h2 class="calc__title">{{ 'calculations.run.title' | translate }}</h2>
+  <p class="calc__sub">{{ 'calculations.run.subtitle' | translate }}</p>
+
+  <!-- 1. Selection -->
+  <div class="calc__panel">
+    <div class="calc__panel-body">
+      <app-calc-period-select
+        [showMonth]="true"
+        [(carId)]="carId"
+        [(year)]="year"
+        [(month)]="month"
+      />
+    </div>
+  </div>
+
+  <!-- 2. Status strip -->
+  <div class="calc__panel">
+    <div class="calc__panel-body">
+      <div class="calc__chips">
+        <span class="calc__badge" [class.calc__badge--stored]="yearCalculated()">
+          {{ year() }} ·
+          {{
+            (yearCalculated() ? 'calculations.legend.calculated' : 'calculations.notCalculated')
+              | translate
+          }}
+        </span>
+        <span class="calc__badge" [class.calc__badge--stored]="participantAddedCount() > 0">
+          <a routerLink="/calculations">
+            {{
+              participantAddedCount() > 0
+                ? ('calculations.run.participantsBadge'
+                  | translate: { count: participantCount(), added: participantAddedCount() })
+                : ('calculations.participants.driversOnly' | translate)
+            }}
+          </a>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Actions -->
+  <div class="calc__panel">
+    <div class="calc__panel-body">
+      <div class="calc__actions-grid">
+        <button
+          class="calc__btn calc__btn--primary"
+          [disabled]="busy() || monthAggregated()"
+          (click)="aggregateMonth()"
+        >
+          {{ 'calculations.run.aggregateBtn' | translate }}
+        </button>
+        <button
+          class="calc__btn calc__btn--danger"
+          [disabled]="busy() || !monthAggregated()"
+          (click)="deleteMonth()"
+        >
+          {{ 'calculations.run.deleteMonthBtn' | translate }}
+        </button>
+        <button
+          class="calc__btn calc__btn--primary"
+          [disabled]="busy() || yearCalculated()"
+          (click)="calculateYear()"
+        >
+          {{ 'calculations.run.calculateBtn' | translate }}
+        </button>
+        <button
+          class="calc__btn calc__btn--danger"
+          [disabled]="busy() || !yearCalculated()"
+          (click)="deleteYear()"
+        >
+          {{ 'calculations.run.deleteYearBtn' | translate }}
+        </button>
+      </div>
+
+      @if (message(); as msg) {
+        <div class="calc__note calc__note--{{ msg.type }}">{{ msg.key | translate }}</div>
+      }
+    </div>
+  </div>
+</section>

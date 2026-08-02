@@ -1,0 +1,46 @@
+<div>
+  @if (loading()) {
+    <p>{{ 'calculations.loading' | translate }}</p>
+  } @else if (error()) {
+    <p class="calc__note calc__note--error">{{ error() | translate }}</p>
+  } @else if (rows().length === 0) {
+    <p class="calc__note calc__note--info">
+      {{ 'calculations.results.notCalculatedForYear' | translate: { year: year() } }}
+    </p>
+  } @else {
+    <p class="calc__note calc__note--info">
+      {{ 'calculations.results.sourceDistance' | translate }} ·
+      {{ 'calculations.results.sourceEqual' | translate: { count: rows().length } }}
+    </p>
+    <div class="calc__tbl-wrap">
+      <table class="calc__table">
+        <thead>
+          <tr>
+            <th>{{ 'calculations.cols.driver' | translate }}</th>
+            <th class="num">{{ 'calculations.cols.varFactor' | translate }}</th>
+            <th class="num">{{ 'calculations.cols.fixFactor' | translate }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of rows(); track row.userId) {
+            <tr>
+              <td>
+                {{ row.userName }}
+                @if (row.manuallyAdded && row.factorFixCost === 0 && row.factorVariableCost === 0) {
+                  <span class="calc__pill calc__pill--lock">{{
+                    'calculations.results.notInThisRun' | translate
+                  }}</span>
+                }
+              </td>
+              <td class="num">{{ row.factorVariableCost | number: '1.2-2' }}%</td>
+              <td class="num">{{ row.factorFixCost | number: '1.2-2' }}%</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    <p class="calc__note calc__note--info" style="margin-top: 1.2rem">
+      {{ 'calculations.factors.explainer' | translate }}
+    </p>
+  }
+</div>

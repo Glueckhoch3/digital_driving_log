@@ -1,15 +1,15 @@
 # Digital Driving Log
 
-> **A comprehensive digital solution for managing shared vehicle driving logs and cost distribution**
+> **A digital solution for managing shared vehicle driving logs and cost distribution**
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![Java Version](https://img.shields.io/badge/Java-21+-orange.svg)](digidrivelog-backend/pom.xml)
+[![Java Version](https://img.shields.io/badge/Java-21+-orange.svg)](backend/pom.xml)
 [![Angular Version](https://img.shields.io/badge/Angular-21-red.svg)](frontend/package.json)
-[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-12+-blue.svg)](digidrivelog-backend/src/main/resources/application.properties)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-12+-blue.svg)](backend/src/main/resources/application.properties)
 
 ## Quick Overview
 
-**Digital Driving Log** is a modern web application designed to replace manual driving logs and Excel spreadsheets. It provides a centralized platform for shared vehicle participants to track drives, manage expenses, and automatically calculate fair cost distribution.
+**Digital Driving Log** is a web application designed to replace manual driving logs and Excel spreadsheets. It provides a centralized platform for shared vehicle participants to track drives, manage expenses, and calculate cost distribution.
 
 ### Perfect For
 - Family car sharing
@@ -42,14 +42,15 @@
 ### Cost Management
 - **Fixed Costs**: Insurance, registration fees (distributed equally)
 - **Variable Costs**: Fuel, maintenance, repairs (distributed by distance)
-- **Fuel Tracking**: Automatic cost calculation per drive
+- **Fuel Tracking**: Cost calculation per drive
 - **Real-time Distribution**: View current cost balances anytime
 
 ### Shareholder Management
-- Add and remove participants flexibly
+- Add and remove participants
 - Support for temporary participants (variable costs only)
-- Automatic cost distribution based on participant type
+- Cost distribution based on participant type
 - Transparent cost breakdown per person
+- Dedicated user and car management pages for create/update/delete workflows
 
 ### Settlement & Reporting
 - Automatic year-end settlements
@@ -70,7 +71,7 @@
 
 ```
 digital_driving_log/
-├── digidrivelog-backend/          # Spring Boot backend API
+├── backend/                       # Spring Boot backend API
 │   ├── src/
 │   │   ├── main/
 │   │   │   ├── java/de/digidrivelog/
@@ -106,11 +107,12 @@ digital_driving_log/
 │   ├── digitalDriveLog-database.dbml  # Database schema
 │   └── digitalDriveLog-database.json  # Database export
 │
-├── USER_STORIES_AND_DOCUMENTATION.md  # Detailed project documentation
+├── docs/documentation.md              # Detailed project documentation
 ├── README.md                      # This file
 ├── LICENSE                        # Project license
 └── .github/                       # GitHub configuration
-    └── copilot-instructions.md    # Copilot guidelines
+    ├── instructions/              # Agent / contributor instructions
+    └── decisions/                 # Architecture decision records (ADRs)
 ```
 
 ---
@@ -121,7 +123,7 @@ digital_driving_log/
 | Technology | Version | Purpose |
 |-----------|---------|---------|
 | Java | 21+ | Programming language |
-| Spring Boot | 4.0.1 | Web framework & API |
+| Spring Boot | 4.0.7 | Web framework & API |
 | Spring Data JPA | Latest | Data access & ORM |
 | PostgreSQL | 12+ | Relational database |
 | Maven | 3.8+ | Build & dependency management |
@@ -152,29 +154,20 @@ digital_driving_log/
 ### Prerequisites
 - **Java 21+** - [Download](https://www.oracle.com/java/technologies/downloads/)
 - **Node.js 18+** - [Download](https://nodejs.org/)
-- **PostgreSQL 12+** - *will be deployed as docker container; **tbd***
+- **Docker / Docker Compose** - for local database and full stack startup
 - **Git** - [Download](https://git-scm.com/)
 
-### Backend Setup (5 minutes)
+### Development Setup (Backend + Frontend with Docker PostgreSQL)
 
-1. **Create PostgreSQL Database**
+1. **Start PostgreSQL container**
    ```bash
-   psql -U postgres
-   CREATE DATABASE digital_driving_log;
-   \q
+   docker compose up -d postgres
    ```
 
-2. **Configure Database Connection**
+2. **Configure backend environment**
    ```bash
-   cd digidrivelog-backend
-   nano src/main/resources/application.properties
-   ```
-   Update with your PostgreSQL credentials:
-   ```properties
-   spring.datasource.url=jdbc:postgresql://localhost:5432/digital_driving_log
-   spring.datasource.username=postgres
-   spring.datasource.password=your_password
-   spring.jpa.hibernate.ddl-auto=update
+   cd backend
+   cp .env.example .env
    ```
 
 3. **Build & Run**
@@ -213,7 +206,12 @@ docker-compose up -d
 This will start:
 - PostgreSQL (port 5432)
 - Backend API (port 8080)
-- Frontend (port 80)
+- Frontend (port 4200)
+
+### First-Run Data Flow
+- Create at least one user first in **User management** (`/manage/users`).
+- Then create and manage cars in **Car management** (`/manage/cars`).
+- Car deletion/user deletion is blocked when dependent drives/costs/cars exist.
 
 ---
 
@@ -259,7 +257,6 @@ This will start:
 ### Comprehensive Guides
 - [**User Stories & Project Documentation**](docs/documentation.md) - Complete feature specifications, user stories, and development guidelines
 - [**Database Schema**](docs/digitalDriveLog-database.dbml) - DBML format database design
-- [**Backend README**](digidrivelog-backend/HELP.md) - Spring Boot specific documentation
 - [**Frontend README**](frontend/README.md) - Angular specific documentation
 
 ### API Documentation
@@ -269,20 +266,21 @@ All REST API endpoints are documented in [docs/documentation.md#api-endpoints](d
 
 **Record a Drive (Backend)**
 ```java
-// POST /api/drives
+// POST /ddl/api/drives
 {
-  "distance": 42.5,
+  "carId": 1,
+  "currentMileage": 152340,
+  "driverId": 2,
   "driveDate": "2026-02-06",
-  "notes": "Commute to office",
-  "shareholder": { "id": 1 }
+  "notes": "Commute to office"
 }
 ```
 
 **Record a Drive (Frontend)**
 ```typescript
 // In drive.service.ts
-recordDrive(drive: Drive): Observable<Drive> {
-  return this.http.post<Drive>(`${this.apiUrl}/drives`, drive);
+createDrive(request: CreateDriveRequest): Observable<DriveDto> {
+  return this.http.post<DriveDto>(`${this.apiUrl}/drives`, request);
 }
 ```
 
@@ -293,7 +291,7 @@ recordDrive(drive: Drive): Observable<Drive> {
 ### Getting Started
 1. Clone the repository
 2. Follow [Quick Start](#quick-start) section
-3. Read [USER_STORIES_AND_DOCUMENTATION.md](USER_STORIES_AND_DOCUMENTATION.md) for detailed requirements
+3. Read [docs/documentation.md](docs/documentation.md) for detailed requirements
 
 ### Code Style
 - **Backend**: Follow [Google Java Style Guide](https://google.github.io/styleguide/javaguide.html)
@@ -302,19 +300,42 @@ recordDrive(drive: Drive): Observable<Drive> {
 
 ### Testing
 ```bash
-# Backend
-cd digidrivelog-backend
-./mvnw test
+# Backend (JaCoCo report in backend/target/site/jacoco/index.html)
+cd backend
+./mvnw verify
 
-# Frontend
+# Frontend (coverage report in frontend/coverage/)
 cd frontend
-npm test
+npm test -- --watch=false --coverage
+```
+
+### Security Scan (SBOM + vulnerabilities)
+```bash
+# Generates CycloneDX SBOMs into sbom/ (gitignored) and scans dependencies,
+# secrets and Dockerfile misconfigurations. Fails on HIGH/CRITICAL findings.
+scripts/security-scan.sh
+
+# Additionally build and scan both Docker images
+scripts/security-scan.sh --images
+```
+Requires [trivy](https://trivy.dev) and [cdxgen](https://github.com/CycloneDX/cdxgen);
+policy details in [ADR-011](.github/decisions/ADR-011-sbom-and-vuln-scanning.md).
+
+### Pre-commit Hooks
+The repo uses the [pre-commit framework](https://pre-commit.com) for fast checks
+(whitespace, YAML, secrets via gitleaks, prettier) on commit and the full test
+suites on push:
+
+```bash
+pipx install pre-commit          # one-time install (or: pip install --user pre-commit)
+pre-commit install --hook-type pre-commit --hook-type pre-push
+pre-commit run --all-files       # optional: check everything once
 ```
 
 ### Building
 ```bash
 # Backend (JAR file)
-cd digidrivelog-backend
+cd backend
 ./mvnw clean package
 
 # Frontend (optimized build)
@@ -329,9 +350,9 @@ npm run build -- --configuration production
 ### Current Status: Alpha (v0.0.1)
 - [X] Project structure
 - [X] Database schema
-- [ ] Core drive logging
+- [X] Core drive logging
 - [ ] Cost distribution algorithms
-- [ ] Basic UI/UX
+- [X] Basic UI/UX
 
 ### Short Term (Q1-Q2 2026)
 - [ ] Complete CRUD operations for all entities
@@ -388,8 +409,8 @@ For questions, issues, or suggestions:
 
 ---
 
-**Last Updated**: February 6, 2026  
-**Project Version**: 0.0.1-SNAPSHOT  
+**Last Updated**: Juli 18, 2026
+**Project Version**: 0.0.2-SNAPSHOT
 **Maintained By**: [Glueckhoch3]
 
 *This project is done with the help of Copilot and serves the purpos of creating experience in softwaredevelopment.*

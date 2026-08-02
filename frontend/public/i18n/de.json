@@ -1,0 +1,368 @@
+{
+  "header": {
+    "title": "Digitales Fahrtenbuch",
+    "menu": {
+      "entryOverview": "Managementübersicht",
+      "chooseCar": "Auto auswählen",
+      "calculations": "Berechnungen",
+      "manageUsers": "Benutzer verwalten",
+      "manageCars": "Autos verwalten"
+    },
+    "language": {
+      "en": "English",
+      "de": "Deutsch"
+    }
+  },
+  "common": {
+    "pagination": {
+      "previous": "Zurück",
+      "next": "Weiter",
+      "pageOf": "Seite {{current}} von {{total}}",
+      "navLabel": "Seitennavigation"
+    },
+    "yes": "Ja",
+    "no": "Nein",
+    "edit": "Bearbeiten",
+    "delete": "Löschen"
+  },
+  "validation": {
+    "required": "Dieses Feld ist erforderlich.",
+    "maxLength": "Darf höchstens {{max}} Zeichen lang sein.",
+    "minLength": "Muss mindestens {{min}} Zeichen lang sein.",
+    "min": "Muss mindestens {{min}} sein.",
+    "pastDate": "Muss ein Datum in der Vergangenheit sein.",
+    "decimal": "Bitte eine Zahl eingeben (, oder . als Dezimaltrennzeichen)."
+  },
+  "userManagement": {
+    "title": "Benutzerverwaltung",
+    "description": "Benutzer erstellen, bearbeiten und löschen.",
+    "loading": "Benutzer werden geladen...",
+    "empty": "Keine Benutzer verfügbar.",
+    "form": {
+      "createTitle": "Benutzer erstellen",
+      "editTitle": "Benutzer bearbeiten",
+      "firstname": "Vorname",
+      "lastname": "Nachname",
+      "birthday": "Geburtstag",
+      "driverLicense": "Hat Führerschein",
+      "create": "Benutzer erstellen",
+      "update": "Benutzer aktualisieren",
+      "cancel": "Abbrechen"
+    },
+    "table": {
+      "firstname": "Vorname",
+      "lastname": "Nachname",
+      "birthday": "Geburtstag",
+      "driverLicense": "Führerschein",
+      "actions": "Aktionen"
+    },
+    "messages": {
+      "loadFailed": "Benutzer konnten nicht geladen werden.",
+      "formInvalid": "Bitte korrigiere die markierten Felder, bevor du absendest.",
+      "createSuccess": "Benutzer erstellt.",
+      "createFailed": "Benutzer konnte nicht erstellt werden.",
+      "updateSuccess": "Benutzer aktualisiert.",
+      "updateFailed": "Benutzer konnte nicht aktualisiert werden.",
+      "deleteSuccess": "Benutzer gelöscht.",
+      "deleteFailed": "Benutzer konnte nicht gelöscht werden.",
+      "deleteDependencyBlocked": "Benutzer kann nicht gelöscht werden, da verknüpfte Autos, Fahrten oder Kosten existieren."
+    }
+  },
+  "carManagement": {
+    "title": "Autoverwaltung",
+    "description": "Autos erstellen, bearbeiten und löschen.",
+    "loading": "Autos und Benutzer werden geladen...",
+    "empty": "Keine Autos verfügbar.",
+    "usersRequiredFirst": "Erstelle zuerst mindestens einen Benutzer, bevor du ein Auto anlegst.",
+    "form": {
+      "createTitle": "Auto erstellen",
+      "editTitle": "Auto bearbeiten",
+      "name": "Autoname",
+      "plateNumber": "Kennzeichen",
+      "owner": "Besitzer",
+      "data": "Zusätzliche Daten",
+      "create": "Auto erstellen",
+      "update": "Auto aktualisieren",
+      "cancel": "Abbrechen"
+    },
+    "table": {
+      "name": "Name",
+      "plateNumber": "Kennzeichen",
+      "owner": "Besitzer",
+      "actions": "Aktionen"
+    },
+    "messages": {
+      "loadFailed": "Autos oder Benutzer konnten nicht geladen werden.",
+      "usersRequiredFirst": "Erstelle zuerst mindestens einen Benutzer, bevor du ein Auto anlegst.",
+      "formInvalid": "Bitte korrigiere die markierten Felder, bevor du absendest.",
+      "createSuccess": "Auto erstellt.",
+      "createFailed": "Auto konnte nicht erstellt werden.",
+      "updateSuccess": "Auto aktualisiert.",
+      "updateFailed": "Auto konnte nicht aktualisiert werden.",
+      "deleteSuccess": "Auto gelöscht.",
+      "deleteFailed": "Auto konnte nicht gelöscht werden.",
+      "deleteDependencyBlocked": "Auto kann nicht gelöscht werden, da verknüpfte Fahrten oder Kosten existieren."
+    }
+  },
+  "carSelection": {
+    "title": "Auto auswählen",
+    "loading": "Autos werden geladen...",
+    "empty": "Keine Autos verfügbar.",
+    "loadError": "Autos konnten nicht geladen werden."
+  },
+  "managementOverview": {
+    "title": "Managementübersicht",
+    "loading": "Zusammengeführte Zeitleiste wird geladen...",
+    "empty": "Keine Einträge verfügbar.",
+    "loadError": "Managementübersicht konnte nicht geladen werden.",
+    "headers": {
+      "date": "Datum",
+      "car": "Auto",
+      "type": "Typ",
+      "participant": "Beteiligte Person",
+      "details": "Details",
+      "value": "Wert"
+    },
+    "types": {
+      "drive": "Fahrt",
+      "transaction": "Transaktion"
+    },
+    "timelineLoadError": "Zeitleisten-Einträge konnten nicht geladen werden."
+  },
+  "carWorkspace": {
+    "loading": "Fahrzeugdaten werden geladen...",
+    "loadError": "Fahrzeugdaten konnten nicht geladen werden.",
+    "hub": {
+      "navLabel": "Fahrzeugbereiche",
+      "viewDrives": "Fahrten ansehen",
+      "addDrive": "Fahrt hinzufügen",
+      "viewCosts": "Kosten ansehen",
+      "addCost": "Kosten hinzufügen",
+      "backToHub": "Zurück zur Fahrzeugübersicht",
+      "upload": "CSV importieren"
+    },
+    "messages": {
+      "driveSaved": "Fahrt gespeichert.",
+      "driveSaveFailed": "Fahrt konnte nicht gespeichert werden.",
+      "driveAndFuelSaved": "Fahrt und Tank-Transaktion gespeichert.",
+      "fuelSaveFailed": "Fahrt gespeichert, Tank-Transaktion fehlgeschlagen.",
+      "driveFormInvalid": "Bitte korrigiere die markierten Felder, bevor du absendest.",
+      "transactionSaved": "Transaktion gespeichert.",
+      "transactionSaveFailed": "Transaktion konnte nicht gespeichert werden.",
+      "transactionFormInvalid": "Bitte korrigiere die markierten Felder, bevor du absendest."
+    },
+    "costTypes": {
+      "VARIABLE": "Variabel",
+      "FIXED": "Fix"
+    },
+    "driveForm": {
+      "title": "Fahrt erfassen",
+      "driveDate": "Fahrtdatum",
+      "odometer": "Kilometerstand",
+      "driver": "Fahrer",
+      "notes": "Notizen",
+      "includeFuel": "Tank-Transaktion hinzufügen",
+      "fuelPrice": "Tank-Gesamtpreis",
+      "fuelQuantity": "Tank-Menge",
+      "fuelDate": "Tank-Transaktionsdatum",
+      "fuelBuyer": "Käufer",
+      "fuelNotes": "Tank-Notizen",
+      "submit": "Fahrt speichern",
+      "backToList": "Zurück zur Fahrtenliste"
+    },
+    "transactionForm": {
+      "title": "Transaktion erfassen",
+      "date": "Transaktionsdatum",
+      "buyer": "Käufer",
+      "description": "Beschreibung",
+      "type": "Kostenart",
+      "price": "Preis",
+      "quantity": "Menge",
+      "notes": "Notizen",
+      "submit": "Transaktion speichern",
+      "backToList": "Zurück zur Transaktionsliste"
+    },
+    "drives": {
+      "title": "Fahrten",
+      "empty": "Keine Fahrten für dieses Auto.",
+      "addLink": "Fahrt hinzufügen",
+      "headers": {
+        "date": "Datum",
+        "driver": "Fahrer",
+        "odometer": "Kilometerstand",
+        "distance": "Gefahrene Distanz"
+      }
+    },
+    "transactions": {
+      "title": "Transaktionen",
+      "empty": "Keine Transaktionen für dieses Auto.",
+      "addLink": "Transaktion hinzufügen",
+      "headers": {
+        "date": "Datum",
+        "buyer": "Käufer",
+        "description": "Beschreibung",
+        "price": "Preis",
+        "quantity": "Menge",
+        "type": "Typ"
+      }
+    },
+    "upload": {
+      "title": "CSV importieren",
+      "back": "Zurück zur Fahrzeugübersicht",
+      "intro": "Fahrten und Kosten für dieses Fahrzeug aus semikolongetrennten Dateien importieren. Jede Zeile wird zuerst geprüft — es wird nichts importiert, solange nicht die gesamte Datei gültig ist.",
+      "formatLabel": "Zahlenformat",
+      "formatEn": "Englisch  1,234.56",
+      "formatDe": "Deutsch  1.234,56",
+      "importDrives": "Fahrten importieren",
+      "importCosts": "Kosten importieren",
+      "importing": "Importiere…",
+      "imported": "{{count}} Zeilen importiert.",
+      "rejected": "Datei abgelehnt — {{count}} Zeilen müssen korrigiert werden. Es wurde nichts importiert.",
+      "line": "Zeile {{line}}:",
+      "importFailed": "Der Import konnte nicht abgeschlossen werden.",
+      "drives": {
+        "title": "Fahrten",
+        "hint": "Spalten: Kilometerstand, Vor- und Nachname der fahrenden Person und Fahrtdatum."
+      },
+      "costs": {
+        "title": "Tanken & Kosten",
+        "hint": "Spalten: Name der kaufenden Person, Datum, Menge (Dezimalzahlen erlaubt), Preis, Beschreibung und Kostenart (Fix oder Var)."
+      }
+    }
+  },
+  "calculations": {
+    "back": "← Zurück zu den Berechnungen",
+    "loading": "Wird geladen…",
+    "notCalculated": "Für diese Auswahl gibt es noch keine Berechnung. Starte sie auf der Aktionsseite.",
+    "hub": {
+      "title": "Berechnungen",
+      "subtitle": "Distanzen, Faktoren und Abrechnungen ansehen, festlegen, wer die Fixkosten eines Autos mitträgt, oder eine Monats- oder Jahresberechnung starten.",
+      "viewResults": "Ergebnisse ansehen",
+      "takeAction": "Aktion ausführen",
+      "resultsTitle": "Ergebnisse",
+      "resultsDesc": "Jahresabrechnung, Monatsdistanzen und Verteilungsfaktoren für ein Auto.",
+      "combinedTitle": "Gesamtabrechnung",
+      "combinedDesc": "Nettosaldo jedes Fahrers über alle seine Autos.",
+      "runTitle": "Berechnung starten",
+      "runDesc": "Einen Monat aggregieren, ein Jahr berechnen oder einen Lauf löschen."
+    },
+    "run": {
+      "title": "Berechnung starten",
+      "subtitle": "Wähle Auto, Jahr und Monat und handle dann unten. Eine Periode wird nur einmal berechnet — lösche sie vor einer Neuberechnung.",
+      "aggregateBtn": "Monat aggregieren",
+      "deleteMonthBtn": "Monat löschen",
+      "confirmDeleteMonth": "Die aggregierten Distanzen dieses Monats löschen? Er kann danach erneut aggregiert werden.",
+      "calculateBtn": "Jahr berechnen",
+      "deleteYearBtn": "Jahr löschen",
+      "confirmDeleteYear": "Die Berechnung dieses Jahres löschen? Die Gesamtabrechnung wird ohne dieses Auto neu aufgebaut, bis es erneut berechnet wird. Um das Jahr neu zu berechnen, danach erneut berechnen.",
+      "participantsBadge": "{{count}} Beteiligte · {{added}} hinzugefügt"
+    },
+    "participants": {
+      "title": "Beteiligte",
+      "subtitle": "Wer die Fixkosten dieses Autos für das gewählte Jahr mitträgt.",
+      "driverCol": "Fahrer",
+      "distanceCol": "Distanz (km)",
+      "fixShareCol": "Fixanteil",
+      "varShareCol": "Variabler Anteil",
+      "drove": "gefahren",
+      "noDrives": "keine Fahrten in {{year}}",
+      "lockedDriver": "Fahrer können nicht entfernt werden — ihre Distanz ist bereits erfasst.",
+      "driversOnly": "Nur Fahrer",
+      "save": "Beteiligte speichern",
+      "reset": "Auf nur Fahrer zurücksetzen",
+      "resetConfirm": "Alle manuell hinzugefügten Beteiligten entfernen und auf nur Fahrer zurücksetzen?",
+      "saved": "Beteiligte gespeichert.",
+      "savedStaleRun": "Beteiligte gespeichert. Die Berechnung für {{year}} verwendet noch die alte Gruppe. Lösche sie hier und berechne das Jahr danach auf der Aktionsseite neu.",
+      "storedYears": "Beteiligte gespeichert für: {{years}}",
+      "driverRequired": "Ein Fahrer mit bereits erfasster Distanz kann nicht aus der Gruppe entfernt werden.",
+      "unsavedConfirm": "Du hast ungespeicherte Änderungen an den Beteiligten. Ohne Speichern verlassen?",
+      "defaultsHint": "Kein Beteiligten-Set gespeichert — die Aufteilung folgt standardmäßig den heutigen Fahrern.",
+      "deleteRunBtn": "Berechnung für {{year}} löschen",
+      "deleteRunConfirm": "Die Berechnung dieses Jahres löschen, damit sie mit der neuen Beteiligtengruppe neu durchgeführt werden kann?",
+      "deletedGoToRun": "Berechnung gelöscht. Berechne das Jahr auf der Aktionsseite neu."
+    },
+    "results": {
+      "title": "Ergebnisse",
+      "subtitle": "Jahresabrechnung, Monatsdistanzen und Verteilungsfaktoren für ein Auto und Jahr.",
+      "tabYearly": "Jahresabrechnung",
+      "tabMonthly": "Monatsdistanzen",
+      "tabFactors": "Verteilungsfaktoren",
+      "notCalculatedForYear": "Für {{year}} gibt es noch keine Berechnung. Starte sie auf der Aktionsseite.",
+      "fixedOnly": "nur Fixkosten",
+      "notInThisRun": "nicht in diesem Lauf",
+      "sourceDistance": "Distanzanteil",
+      "sourceEqual": "gleichmäßige Aufteilung · {{count}} Beteiligte"
+    },
+    "legend": {
+      "aggregated": "aggregiert",
+      "hasDrives": "hat Fahrten",
+      "calculated": "berechnet",
+      "participantsStored": "Beteiligte gespeichert"
+    },
+    "fields": {
+      "car": "Auto",
+      "year": "Jahr",
+      "month": "Monat"
+    },
+    "months": {
+      "1": "Januar",
+      "2": "Februar",
+      "3": "März",
+      "4": "April",
+      "5": "Mai",
+      "6": "Juni",
+      "7": "Juli",
+      "8": "August",
+      "9": "September",
+      "10": "Oktober",
+      "11": "November",
+      "12": "Dezember"
+    },
+    "messages": {
+      "monthAggregated": "Monat aggregiert.",
+      "monthExists": "Dieser Monat ist bereits aggregiert. Lösche ihn zuerst, um ihn neu zu berechnen.",
+      "yearCalculated": "Jahr berechnet.",
+      "yearExists": "Dieses Jahr ist bereits berechnet. Lösche es zuerst, um es neu zu berechnen.",
+      "deleted": "Berechnung gelöscht.",
+      "actionFailed": "Die Aktion konnte nicht abgeschlossen werden. Bitte versuche es erneut.",
+      "loadFailed": "Die Berechnungsergebnisse konnten nicht geladen werden."
+    },
+    "cols": {
+      "driver": "Fahrer",
+      "distance": "Distanz (km)",
+      "varFactor": "Var. Faktor",
+      "fixFactor": "Fix. Faktor",
+      "variableOwed": "Variabel geschuldet (€)",
+      "fixedOwed": "Fix geschuldet (€)",
+      "totalOwed": "Gesamt geschuldet (€)",
+      "total": "Gesamt",
+      "paid": "Bezahlt (€)",
+      "variableDiff": "Variable Differenz (€)",
+      "fixedDiff": "Fixe Differenz (€)",
+      "netBalance": "Nettosaldo (€)",
+      "month": "Monat"
+    },
+    "yearly": {
+      "title": "Jahresabrechnung",
+      "subtitle": "Schuldenaufteilung eines Autos pro Fahrer für das Jahr.",
+      "explainer": "Variabel geschuldet = variabler Faktor × variable Gesamtkosten des Autos (der Faktor folgt der Distanz, also zahlt auch, wer nicht tankt, für gefahrene Kilometer). Fix geschuldet = fixer Faktor × fixe Gesamtkosten des Autos. Diese Ansicht zeigt, was jeder Fahrer schuldet; Bezahltes und Nettosaldo werden über alle Autos zusammengefasst — siehe Gesamtabrechnung."
+    },
+    "combined": {
+      "title": "Gesamtabrechnung",
+      "subtitle": "Nettosaldo pro Fahrer über alle Autos seiner Gruppe.",
+      "explainer": "Variable / fixe Differenz = was ein Fahrer von dieser Kostenart bezahlt hat minus was er schuldet, summiert über alle berechneten Autos. Nettosaldo = Summe der beiden Differenzen; positiv bedeutet, die Gruppe schuldet dem Fahrer. Jede Spalte summiert sich zu null.",
+      "calculatedCars": "Berechnete Autos für dieses Jahr:"
+    },
+    "monthly": {
+      "title": "Monatsdistanzen",
+      "subtitle": "Kilometer pro Fahrer und Monat für ein Auto.",
+      "empty": "Keine aggregierten Monate für dieses Auto und Jahr."
+    },
+    "factors": {
+      "title": "Verteilungsfaktoren",
+      "subtitle": "Die Faktoren, die die Jahreskosten des Autos aufteilen. Variabel folgt der Distanz; fix ist eine gleichmäßige Aufteilung über die Beteiligtengruppe.",
+      "adminOnly": "vom Lauf berechnet",
+      "explainer": "Faktoren werden vom Jahreslauf berechnet und sind hier schreibgeschützt. Der fixe Faktor ist immer eine gleichmäßige Aufteilung — über die Gruppe der Fahrer plus alle auf der Beteiligten-Seite hinzugefügten Personen."
+    }
+  }
+}

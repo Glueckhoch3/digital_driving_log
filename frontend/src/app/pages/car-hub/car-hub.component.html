@@ -1,0 +1,13 @@
+<section class="car-hub">
+  <h2>{{ car().name }} ({{ car().plateNumber }})</h2>
+
+  <nav class="car-hub__nav" aria-label="{{ 'carWorkspace.hub.navLabel' | translate }}">
+    <a class="car-hub__link" routerLink="drives">{{ 'carWorkspace.hub.viewDrives' | translate }}</a>
+    <a class="car-hub__link" routerLink="drives/new">{{
+      'carWorkspace.hub.addDrive' | translate
+    }}</a>
+    <a class="car-hub__link" routerLink="costs">{{ 'carWorkspace.hub.viewCosts' | translate }}</a>
+    <a class="car-hub__link" routerLink="costs/new">{{ 'carWorkspace.hub.addCost' | translate }}</a>
+    <a class="car-hub__link" routerLink="upload">{{ 'carWorkspace.hub.upload' | translate }}</a>
+  </nav>
+</section>

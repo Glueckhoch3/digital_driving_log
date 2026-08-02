@@ -1,0 +1,32 @@
+.drives-list {
+  max-width: 60rem;
+  margin: 2rem auto;
+  padding: 1rem;
+
+  &__actions {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  &__error {
+    color: #b02020;
+  }
+
+  table {
+    width: 100%;
+  }
+
+  &__pager {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    justify-content: center;
+    margin-top: 0.75rem;
+
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+}

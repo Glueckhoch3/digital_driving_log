@@ -1,0 +1,9 @@
+.field-error {
+  color: #b02020;
+  font-size: 0.85rem;
+  margin: 0.15rem 0 0.5rem;
+
+  span + span::before {
+    content: ' ';
+  }
+}

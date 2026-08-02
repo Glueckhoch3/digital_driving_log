@@ -1,0 +1,90 @@
+<section class="calc">
+  <a class="calc__back" routerLink="/calculations">{{ 'calculations.back' | translate }}</a>
+  <h2 class="calc__title">{{ 'calculations.combined.title' | translate }}</h2>
+  <p class="calc__sub">{{ 'calculations.combined.subtitle' | translate }}</p>
+
+  <div class="calc__fields" style="margin-bottom: 1.3rem">
+    <div class="calc__field">
+      <label>{{ 'calculations.fields.year' | translate }}</label>
+      <select class="calc__control" [(ngModel)]="year" (ngModelChange)="load()">
+        @for (y of years; track y) {
+          <option [ngValue]="y">{{ y }}</option>
+        }
+      </select>
+    </div>
+  </div>
+
+  @if (carStatuses().length > 0) {
+    <p class="calc__eyebrow">{{ 'calculations.combined.calculatedCars' | translate }}</p>
+    <div class="calc__chips">
+      @for (status of carStatuses(); track status.carId) {
+        <span class="calc__chip" [class.calc__chip--stored]="status.calculated">{{
+          status.name
+        }}</span>
+      }
+    </div>
+  }
+
+  @if (loading()) {
+    <p>{{ 'calculations.loading' | translate }}</p>
+  } @else if (error()) {
+    <p class="calc__note calc__note--error">{{ error() | translate }}</p>
+  } @else if (rows().length === 0) {
+    <p class="calc__note calc__note--info">{{ 'calculations.notCalculated' | translate }}</p>
+  } @else {
+    <div class="calc__tbl-wrap">
+      <table class="calc__table">
+        <thead>
+          <tr>
+            <th>{{ 'calculations.cols.driver' | translate }}</th>
+            <th class="num">{{ 'calculations.cols.paid' | translate }}</th>
+            <th class="num">{{ 'calculations.cols.variableDiff' | translate }}</th>
+            <th class="num">{{ 'calculations.cols.fixedDiff' | translate }}</th>
+            <th class="num">{{ 'calculations.cols.netBalance' | translate }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of rows(); track row.userId) {
+            <tr>
+              <td>{{ row.userName }}</td>
+              <td class="num">{{ row.paid | number: '1.2-2' }}</td>
+              <td
+                class="num"
+                [class.calc__money-pos]="row.differenceVariableCost > 0"
+                [class.calc__money-neg]="row.differenceVariableCost < 0"
+              >
+                {{ row.differenceVariableCost | number: '1.2-2' }}
+              </td>
+              <td
+                class="num"
+                [class.calc__money-pos]="row.differenceFixCost > 0"
+                [class.calc__money-neg]="row.differenceFixCost < 0"
+              >
+                {{ row.differenceFixCost | number: '1.2-2' }}
+              </td>
+              <td
+                class="num"
+                [class.calc__money-pos]="row.netBalance > 0"
+                [class.calc__money-neg]="row.netBalance < 0"
+              >
+                {{ row.netBalance | number: '1.2-2' }}
+              </td>
+            </tr>
+          }
+        </tbody>
+        <tfoot>
+          <tr>
+            <td>{{ 'calculations.cols.total' | translate }}</td>
+            <td class="num">{{ totals().paid | number: '1.2-2' }}</td>
+            <td class="num">{{ totals().variable | number: '1.2-2' }}</td>
+            <td class="num">{{ totals().fixed | number: '1.2-2' }}</td>
+            <td class="num">{{ totals().net | number: '1.2-2' }}</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+    <p class="calc__note calc__note--info" style="margin-top: 1.2rem">
+      {{ 'calculations.combined.explainer' | translate }}
+    </p>
+  }
+</section>

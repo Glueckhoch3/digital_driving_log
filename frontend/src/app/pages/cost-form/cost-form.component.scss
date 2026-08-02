@@ -1,0 +1,27 @@
+.cost-form-page {
+  max-width: 40rem;
+  margin: 2rem auto;
+  padding: 1rem;
+
+  &__message {
+    color: #0a7d32;
+  }
+
+  &__error {
+    color: #b02020;
+  }
+
+  label,
+  input,
+  select,
+  textarea,
+  button {
+    width: 100%;
+    margin-top: 0.35rem;
+  }
+
+  input[aria-invalid='true'],
+  select[aria-invalid='true'] {
+    border-color: #b02020;
+  }
+}

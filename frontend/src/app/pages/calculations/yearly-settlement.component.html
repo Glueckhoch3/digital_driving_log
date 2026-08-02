@@ -1,0 +1,61 @@
+<div>
+  @if (loading()) {
+    <p>{{ 'calculations.loading' | translate }}</p>
+  } @else if (error()) {
+    <p class="calc__note calc__note--info">{{ error() | translate }}</p>
+  } @else if (rows().length === 0) {
+    <p class="calc__note calc__note--info">
+      {{ 'calculations.results.notCalculatedForYear' | translate: { year: year() } }}
+    </p>
+  } @else {
+    <div class="calc__tbl-wrap">
+      <table class="calc__table">
+        <thead>
+          <tr>
+            <th>{{ 'calculations.cols.driver' | translate }}</th>
+            <th class="num">{{ 'calculations.cols.distance' | translate }}</th>
+            <th class="num">{{ 'calculations.cols.varFactor' | translate }}</th>
+            <th class="num">{{ 'calculations.cols.fixFactor' | translate }}</th>
+            <th class="num">{{ 'calculations.cols.variableOwed' | translate }}</th>
+            <th class="num">{{ 'calculations.cols.fixedOwed' | translate }}</th>
+            <th class="num">{{ 'calculations.cols.totalOwed' | translate }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of rows(); track row.userId) {
+            <tr>
+              <td>
+                {{ row.userName }}
+                @if (row.distance === 0) {
+                  <span class="calc__pill calc__pill--lock">{{
+                    'calculations.results.fixedOnly' | translate
+                  }}</span>
+                }
+              </td>
+              <td class="num">{{ row.distance | number }}</td>
+              <td class="num">{{ row.factorVariableCost | number: '1.2-2' }}%</td>
+              <td class="num">{{ row.factorFixCost | number: '1.2-2' }}%</td>
+              <td class="num">{{ row.variableOwed | number: '1.2-2' }}</td>
+              <td class="num">{{ row.fixedOwed | number: '1.2-2' }}</td>
+              <td class="num">{{ row.totalOwed | number: '1.2-2' }}</td>
+            </tr>
+          }
+        </tbody>
+        <tfoot>
+          <tr>
+            <td>{{ 'calculations.cols.total' | translate }}</td>
+            <td class="num">{{ totals().distance | number }}</td>
+            <td class="num">100%</td>
+            <td class="num">100%</td>
+            <td class="num">{{ totals().variableOwed | number: '1.2-2' }}</td>
+            <td class="num">{{ totals().fixedOwed | number: '1.2-2' }}</td>
+            <td class="num">{{ totals().totalOwed | number: '1.2-2' }}</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+    <p class="calc__note calc__note--info" style="margin-top: 1.2rem">
+      {{ 'calculations.yearly.explainer' | translate }}
+    </p>
+  }
+</div>

@@ -1,102 +1,31 @@
-import { Injectable, signal } from '@angular/core';
-import { Observable, of, BehaviorSubject } from 'rxjs';
-import { Cost, CostSummary, CreateCostRequest } from '../models/cost.model';
+import { Injectable, inject } from '@angular/core';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
+import { CostDto, CreateCostRequest } from '../models/costs';
+import { Page } from '../models/page';
+import { PageQuery, toHttpParams } from '../models/page-query';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class CostService {
-  private readonly costs = signal<Cost[]>([
-    {
-      id: '1',
-      type: 'fixed',
-      amount: 500,
-      shareholder: 'Jane Smith',
-      date: new Date(2026, 0, 1),
-      description: 'Car Insurance',
-      category: 'Insurance',
-      createdAt: new Date(),
-      updatedAt: new Date()
-    }
-  ]);
+  private readonly http = inject(HttpClient);
+  private readonly apiUrl = environment.apiUrl;
 
-  private readonly costs$ = new BehaviorSubject<Cost[]>(this.costs());
-
-  getCosts(): Observable<Cost[]> {
-    return this.costs$;
+  getAllCosts(query?: PageQuery): Observable<Page<CostDto>> {
+    const params: HttpParams = toHttpParams(query);
+    return this.http.get<Page<CostDto>>(`${this.apiUrl}/costs`, { params });
   }
 
-  getCostById(id: string): Observable<Cost | undefined> {
-    return of(this.costs().find(c => c.id === id));
+  getCostsForCar(carId: number, query?: PageQuery): Observable<Page<CostDto>> {
+    const params: HttpParams = toHttpParams(query);
+    return this.http.get<Page<CostDto>>(`${this.apiUrl}/vehicles/${carId}/costs`, { params });
   }
 
-  createCost(request: CreateCostRequest): Observable<Cost> {
-    const newCost: Cost = {
-      id: Date.now().toString(),
-      ...request,
-      createdAt: new Date(),
-      updatedAt: new Date()
-    };
-
-    const currentCosts = this.costs();
-    this.costs.set([...currentCosts, newCost]);
-    this.costs$.next(this.costs());
-
-    return of(newCost);
+  createCost(request: CreateCostRequest): Observable<CostDto> {
+    return this.http.post<CostDto>(`${this.apiUrl}/costs`, request);
   }
 
-  updateCost(id: string, cost: Partial<Cost>): Observable<Cost> {
-    const currentCosts = this.costs();
-    const index = currentCosts.findIndex(c => c.id === id);
-
-    if (index !== -1) {
-      const updated = {
-        ...currentCosts[index],
-        ...cost,
-        updatedAt: new Date()
-      };
-      currentCosts[index] = updated;
-      this.costs.set([...currentCosts]);
-      this.costs$.next(this.costs());
-      return of(updated);
-    }
-
-    return of(currentCosts[index]);
-  }
-
-  deleteCost(id: string): Observable<void> {
-    const currentCosts = this.costs();
-    this.costs.set(currentCosts.filter(c => c.id !== id));
-    this.costs$.next(this.costs());
-    return of(void 0);
-  }
-
-  getCostDistribution(): Observable<CostSummary> {
-    const mockSummary: CostSummary = {
-      totalFixed: 500,
-      totalVariable: 200,
-      totalFuel: 150,
-      totalCosts: 850,
-      distributions: [
-        {
-          shareholder: 'John Doe',
-          totalOwed: 425,
-          fixedCosts: 250,
-          variableCosts: 125,
-          fuelCosts: 50,
-          distance: 350
-        },
-        {
-          shareholder: 'Jane Smith',
-          totalOwed: 425,
-          fixedCosts: 250,
-          variableCosts: 125,
-          fuelCosts: 50,
-          distance: 350
-        }
-      ]
-    };
-
-    return of(mockSummary);
+  deleteCost(costId: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/costs/${costId}`);
   }
 }

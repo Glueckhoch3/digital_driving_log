@@ -1,0 +1,54 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: digital-driving-log-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: digidrivelog
+      POSTGRES_USER: digidrivelog
+      POSTGRES_PASSWORD: digidrivelog
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U digidrivelog -d digidrivelog']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+    container_name: digital-driving-log-backend
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    env_file:
+      - path: ./backend/.env
+        required: false
+    environment:
+      PORT: 8080
+      SPRING_PROFILES_ACTIVE: dev
+      # Inside the compose network the DB is reachable as `postgres`, never localhost,
+      # so this overrides whatever backend/.env says.
+      DATABASE_URL: jdbc:postgresql://postgres:5432/digidrivelog
+      POSTGRES_USER: digidrivelog
+      POSTGRES_PASSWORD: digidrivelog
+      JPA_HIBERNATE_DDL_AUTO: update
+    ports:
+      - '8080:8080'
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: digital-driving-log-frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - '4200:8080'
+
+volumes:
+  postgres_data:

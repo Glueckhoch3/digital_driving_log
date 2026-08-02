@@ -1,0 +1,368 @@
+{
+  "header": {
+    "title": "Digital Driving Log",
+    "menu": {
+      "entryOverview": "Management overview",
+      "chooseCar": "Choose car",
+      "calculations": "Calculations",
+      "manageUsers": "Manage users",
+      "manageCars": "Manage cars"
+    },
+    "language": {
+      "en": "English",
+      "de": "Deutsch"
+    }
+  },
+  "common": {
+    "pagination": {
+      "previous": "Previous",
+      "next": "Next",
+      "pageOf": "Page {{current}} of {{total}}",
+      "navLabel": "Pagination"
+    },
+    "yes": "Yes",
+    "no": "No",
+    "edit": "Edit",
+    "delete": "Delete"
+  },
+  "validation": {
+    "required": "This field is required.",
+    "maxLength": "Must be at most {{max}} characters.",
+    "minLength": "Must be at least {{min}} characters.",
+    "min": "Must be at least {{min}}.",
+    "pastDate": "Must be a date in the past.",
+    "decimal": "Enter a number (use , or . for decimals)."
+  },
+  "userManagement": {
+    "title": "User management",
+    "description": "Create, update, and delete users.",
+    "loading": "Loading users...",
+    "empty": "No users available.",
+    "form": {
+      "createTitle": "Create user",
+      "editTitle": "Update user",
+      "firstname": "First name",
+      "lastname": "Last name",
+      "birthday": "Birthday",
+      "driverLicense": "Has driver's license",
+      "create": "Create user",
+      "update": "Update user",
+      "cancel": "Cancel"
+    },
+    "table": {
+      "firstname": "First name",
+      "lastname": "Last name",
+      "birthday": "Birthday",
+      "driverLicense": "Driver's license",
+      "actions": "Actions"
+    },
+    "messages": {
+      "loadFailed": "Failed to load users.",
+      "formInvalid": "Please correct the highlighted fields before submitting.",
+      "createSuccess": "User created.",
+      "createFailed": "Failed to create user.",
+      "updateSuccess": "User updated.",
+      "updateFailed": "Failed to update user.",
+      "deleteSuccess": "User deleted.",
+      "deleteFailed": "Failed to delete user.",
+      "deleteDependencyBlocked": "User cannot be deleted because related cars, drives or costs exist."
+    }
+  },
+  "carManagement": {
+    "title": "Car management",
+    "description": "Create, update, and delete cars.",
+    "loading": "Loading cars and users...",
+    "empty": "No cars available.",
+    "usersRequiredFirst": "Create at least one user before creating a car.",
+    "form": {
+      "createTitle": "Create car",
+      "editTitle": "Update car",
+      "name": "Car name",
+      "plateNumber": "Plate number",
+      "owner": "Owner",
+      "data": "Additional data",
+      "create": "Create car",
+      "update": "Update car",
+      "cancel": "Cancel"
+    },
+    "table": {
+      "name": "Name",
+      "plateNumber": "Plate number",
+      "owner": "Owner",
+      "actions": "Actions"
+    },
+    "messages": {
+      "loadFailed": "Failed to load cars or users.",
+      "usersRequiredFirst": "Create at least one user before creating a car.",
+      "formInvalid": "Please correct the highlighted fields before submitting.",
+      "createSuccess": "Car created.",
+      "createFailed": "Failed to create car.",
+      "updateSuccess": "Car updated.",
+      "updateFailed": "Failed to update car.",
+      "deleteSuccess": "Car deleted.",
+      "deleteFailed": "Failed to delete car.",
+      "deleteDependencyBlocked": "Car cannot be deleted because related drives or costs exist."
+    }
+  },
+  "carSelection": {
+    "title": "Choose a car",
+    "loading": "Loading cars...",
+    "empty": "No cars available.",
+    "loadError": "Failed to load cars."
+  },
+  "managementOverview": {
+    "title": "Management overview",
+    "loading": "Loading merged timeline...",
+    "empty": "No entries available.",
+    "loadError": "Failed to load management overview.",
+    "headers": {
+      "date": "Date",
+      "car": "Car",
+      "type": "Type",
+      "participant": "Participant",
+      "details": "Details",
+      "value": "Value"
+    },
+    "types": {
+      "drive": "Drive",
+      "transaction": "Transaction"
+    },
+    "timelineLoadError": "Failed to load timeline entries."
+  },
+  "carWorkspace": {
+    "loading": "Loading car data...",
+    "loadError": "Failed to load car workspace data.",
+    "hub": {
+      "navLabel": "Car sections",
+      "viewDrives": "View drives",
+      "addDrive": "Add drive",
+      "viewCosts": "View costs",
+      "addCost": "Add cost",
+      "backToHub": "Back to car overview",
+      "upload": "Import from CSV"
+    },
+    "messages": {
+      "driveSaved": "Drive saved.",
+      "driveSaveFailed": "Failed to save drive.",
+      "driveAndFuelSaved": "Drive and fuel transaction saved.",
+      "fuelSaveFailed": "Drive saved, but fuel transaction failed.",
+      "driveFormInvalid": "Please correct the highlighted fields before submitting.",
+      "transactionSaved": "Transaction saved.",
+      "transactionSaveFailed": "Failed to save transaction.",
+      "transactionFormInvalid": "Please correct the highlighted fields before submitting."
+    },
+    "costTypes": {
+      "VARIABLE": "Variable",
+      "FIXED": "Fixed"
+    },
+    "driveForm": {
+      "title": "Drive entry",
+      "driveDate": "Drive date",
+      "odometer": "Odometer",
+      "driver": "Driver",
+      "notes": "Notes",
+      "includeFuel": "Add fuel transaction",
+      "fuelPrice": "Fuel total price",
+      "fuelQuantity": "Fuel quantity",
+      "fuelDate": "Fuel transaction date",
+      "fuelBuyer": "Fuel buyer",
+      "fuelNotes": "Fuel notes",
+      "submit": "Save drive",
+      "backToList": "Back to drives list"
+    },
+    "transactionForm": {
+      "title": "Transaction entry",
+      "date": "Transaction date",
+      "buyer": "Buyer",
+      "description": "Description",
+      "type": "Cost type",
+      "price": "Price",
+      "quantity": "Quantity",
+      "notes": "Notes",
+      "submit": "Save transaction",
+      "backToList": "Back to transactions list"
+    },
+    "drives": {
+      "title": "Drives",
+      "empty": "No drives for this car.",
+      "addLink": "Add drive",
+      "headers": {
+        "date": "Date",
+        "driver": "Driver",
+        "odometer": "Odometer",
+        "distance": "Driven distance"
+      }
+    },
+    "transactions": {
+      "title": "Transactions",
+      "empty": "No transactions for this car.",
+      "addLink": "Add transaction",
+      "headers": {
+        "date": "Date",
+        "buyer": "Buyer",
+        "description": "Description",
+        "price": "Price",
+        "quantity": "Quantity",
+        "type": "Type"
+      }
+    },
+    "upload": {
+      "title": "Import from CSV",
+      "back": "Back to car overview",
+      "intro": "Bulk-load drives and costs for this car from semicolon-separated files. Every row is checked first — nothing is imported unless the whole file is valid.",
+      "formatLabel": "Number format",
+      "formatEn": "English  1,234.56",
+      "formatDe": "Deutsch  1.234,56",
+      "importDrives": "Import drives",
+      "importCosts": "Import costs",
+      "importing": "Importing…",
+      "imported": "{{count}} rows imported.",
+      "rejected": "File rejected — {{count}} rows need fixing. Nothing was imported.",
+      "line": "Line {{line}}:",
+      "importFailed": "The import could not be completed.",
+      "drives": {
+        "title": "Drives",
+        "hint": "Columns: odometer reading, driver first and last name, and drive date."
+      },
+      "costs": {
+        "title": "Fuel & costs",
+        "hint": "Columns: buyer name, date, amount (decimals allowed), price, description, and cost type (Fix or Var)."
+      }
+    }
+  },
+  "calculations": {
+    "back": "← Back to calculations",
+    "loading": "Loading…",
+    "notCalculated": "No calculation for this selection yet. Run it on the action page.",
+    "hub": {
+      "title": "Calculations",
+      "subtitle": "Review distances, factors and settlements, manage who shares a car's fixed costs, or run a monthly or yearly calculation.",
+      "viewResults": "View results",
+      "takeAction": "Take action",
+      "resultsTitle": "Results",
+      "resultsDesc": "Yearly settlement, monthly distances and distribution factors for a car.",
+      "combinedTitle": "Combined settlement",
+      "combinedDesc": "Each driver's net balance across all their cars.",
+      "runTitle": "Run a calculation",
+      "runDesc": "Aggregate a month, calculate a year, or delete a run."
+    },
+    "run": {
+      "title": "Run a calculation",
+      "subtitle": "Pick a car, year and month, then act on it below. A period is calculated only once — delete it before redoing.",
+      "aggregateBtn": "Aggregate month",
+      "deleteMonthBtn": "Delete month",
+      "confirmDeleteMonth": "Delete this month's aggregated distances? It can be re-aggregated afterwards.",
+      "calculateBtn": "Calculate year",
+      "deleteYearBtn": "Delete year",
+      "confirmDeleteYear": "Delete this year's calculation? The combined settlement is rebuilt without this car until it is calculated again. To redo the year, calculate it again afterwards.",
+      "participantsBadge": "{{count}} participants · {{added}} added"
+    },
+    "participants": {
+      "title": "Participants",
+      "subtitle": "Who shares this car's fixed costs for the selected year.",
+      "driverCol": "Driver",
+      "distanceCol": "Distance (km)",
+      "fixShareCol": "Fixed share",
+      "varShareCol": "Variable share",
+      "drove": "drove",
+      "noDrives": "no drives in {{year}}",
+      "lockedDriver": "Drivers can't be removed — their distance is already recorded.",
+      "driversOnly": "Drivers only",
+      "save": "Save participants",
+      "reset": "Reset to drivers only",
+      "resetConfirm": "Remove every manually added participant and go back to drivers only?",
+      "saved": "Participants saved.",
+      "savedStaleRun": "Participants saved. The {{year}} calculation still uses the old group. Delete it here, then calculate the year again on the run page.",
+      "storedYears": "Participants stored for: {{years}}",
+      "driverRequired": "A driver who already has recorded distance can't be removed from the group.",
+      "unsavedConfirm": "You have unsaved participant changes. Leave without saving?",
+      "defaultsHint": "No participant set stored — the split defaults to today's drivers.",
+      "deleteRunBtn": "Delete the {{year}} calculation",
+      "deleteRunConfirm": "Delete this year's calculation so it can be redone with the new participant group?",
+      "deletedGoToRun": "Calculation deleted. Calculate the year again on the run page."
+    },
+    "results": {
+      "title": "Results",
+      "subtitle": "Yearly settlement, monthly distances and distribution factors for one car and year.",
+      "tabYearly": "Yearly settlement",
+      "tabMonthly": "Monthly distances",
+      "tabFactors": "Distribution factors",
+      "notCalculatedForYear": "No calculation for {{year}} yet. Run it on the action page.",
+      "fixedOnly": "fixed costs only",
+      "notInThisRun": "not in this run",
+      "sourceDistance": "distance share",
+      "sourceEqual": "equal split · {{count}} participants"
+    },
+    "legend": {
+      "aggregated": "aggregated",
+      "hasDrives": "has drives",
+      "calculated": "calculated",
+      "participantsStored": "participants stored"
+    },
+    "fields": {
+      "car": "Car",
+      "year": "Year",
+      "month": "Month"
+    },
+    "months": {
+      "1": "January",
+      "2": "February",
+      "3": "March",
+      "4": "April",
+      "5": "May",
+      "6": "June",
+      "7": "July",
+      "8": "August",
+      "9": "September",
+      "10": "October",
+      "11": "November",
+      "12": "December"
+    },
+    "messages": {
+      "monthAggregated": "Month aggregated.",
+      "monthExists": "This month is already aggregated. Delete it first to redo.",
+      "yearCalculated": "Year calculated.",
+      "yearExists": "This year is already calculated. Delete it first to recalculate.",
+      "deleted": "Calculation deleted.",
+      "actionFailed": "The action could not be completed. Please try again.",
+      "loadFailed": "Failed to load the calculation results."
+    },
+    "cols": {
+      "driver": "Driver",
+      "distance": "Distance (km)",
+      "varFactor": "Var. factor",
+      "fixFactor": "Fix. factor",
+      "variableOwed": "Variable owed (€)",
+      "fixedOwed": "Fixed owed (€)",
+      "totalOwed": "Total owed (€)",
+      "total": "Total",
+      "paid": "Paid (€)",
+      "variableDiff": "Variable diff. (€)",
+      "fixedDiff": "Fixed diff. (€)",
+      "netBalance": "Net balance (€)",
+      "month": "Month"
+    },
+    "yearly": {
+      "title": "Yearly settlement",
+      "subtitle": "One car's owed split per driver for the year.",
+      "explainer": "Variable owed = variable factor × the car's variable total (the factor follows distance, so a non-fueler still pays for km driven). Fixed owed = fixed factor × the car's fixed total. This view shows what each driver owes; paid and net balance are combined across cars — see the combined settlement."
+    },
+    "combined": {
+      "title": "Combined settlement",
+      "subtitle": "Net balance per driver across every car in their group.",
+      "explainer": "Variable / fixed diff. = what a driver paid of that cost type minus what they owe, summed across every calculated car. Net balance = the two differences added; positive means the group owes the driver. Each column nets to zero.",
+      "calculatedCars": "Calculated cars for this year:"
+    },
+    "monthly": {
+      "title": "Monthly distances",
+      "subtitle": "Per-driver kilometres by month for a car.",
+      "empty": "No aggregated months for this car and year."
+    },
+    "factors": {
+      "title": "Distribution factors",
+      "subtitle": "The factors that split this car's yearly costs. Variable follows distance; fixed is an equal split over the participant group.",
+      "adminOnly": "computed by the run",
+      "explainer": "Factors are computed by the yearly run and are read-only here. The fixed factor is always an equal split — over the group of drivers plus anyone added on the participants screen."
+    }
+  }
+}
