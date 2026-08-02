@@ -410,7 +410,10 @@
 
 ## Database Design
 
-For database schema, see [digitalDriveLog-database.dbml](digitalDriveLog-database.dbml)
+For database schema, see [digitalDriveLog-database.json](digitalDriveLog-database.json)
+(a [drawdb.app](https://drawdb.app) export).
+For how the derived/calculation tables in that schema are computed from the
+raw entities, see [calculations.md](calculations.md).
 
 ---
 
@@ -475,9 +478,9 @@ drivers for the yearly run = (users with aggregated distance) ∪ (stored partic
 row in `user_cost_factor_year` with `manually_added = true`); `GET /calculations/availability`
 returns the per-year/per-month colouring (calculated, aggregated, participants stored) the
 frontend needs for `/calculations/run`, `/calculations/results` and the hub. See
-`docs/api_doc.yaml` for the request/response shapes and `docs/sql/V_issue32_participants.sql`
-for the schema change (`user_cost_factor_year.manually_added`, apply before deploying —
-`ddl-auto=validate` in prod).
+`docs/api_doc.yaml` for the request/response shapes and
+[calculations.md, Stage 2](calculations.md#stage-2--distribution-factors) for the full
+factor formula and rounding rules.
 
 ---
 
