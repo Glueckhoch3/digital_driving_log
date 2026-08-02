@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>de</groupId>
 	<artifactId>digidrivelog</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.8.0</version>
 	<name>digidrivelog</name>
 	<description>Project for a digital drive log for sahred vehicles.</description>
 	<url/>
