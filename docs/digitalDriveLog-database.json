@@ -428,14 +428,15 @@
         {
           "id": "68zcgG5hIrMlFkXNmyW5I",
           "name": "quantity",
-          "type": "INTEGER",
+          "type": "DECIMAL",
           "default": "",
           "check": "",
           "primary": false,
           "unique": false,
           "notNull": true,
           "increment": false,
-          "comment": "units purchased"
+          "comment": "units purchased",
+          "size": "10,2"
         },
         {
           "id": "gCSY112qb8Y-z-Lyjw_bD",
