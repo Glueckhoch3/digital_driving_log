@@ -85,7 +85,7 @@ jobs:
           path: sbom/
 
       - name: Scan backend SBOM (HIGH/CRITICAL gate)
-        uses: aquasecurity/trivy-action@0.28.0
+        uses: aquasecurity/trivy-action@v0.28.0
         with:
           scan-type: sbom
           scan-ref: sbom/backend.cdx.json
@@ -93,7 +93,7 @@ jobs:
           exit-code: '1'
 
       - name: Scan frontend SBOM (HIGH/CRITICAL gate)
-        uses: aquasecurity/trivy-action@0.28.0
+        uses: aquasecurity/trivy-action@v0.28.0
         with:
           scan-type: sbom
           scan-ref: sbom/frontend.cdx.json
@@ -101,7 +101,7 @@ jobs:
           exit-code: '1'
 
       - name: Scan repo for secrets and misconfigurations
-        uses: aquasecurity/trivy-action@0.28.0
+        uses: aquasecurity/trivy-action@v0.28.0
         with:
           scan-type: fs
           scan-ref: .
@@ -122,7 +122,7 @@ jobs:
           docker build -t ddl-frontend:ci frontend
 
       - name: Scan backend image
-        uses: aquasecurity/trivy-action@0.28.0
+        uses: aquasecurity/trivy-action@v0.28.0
         with:
           scan-type: image
           image-ref: ddl-backend:ci
@@ -130,7 +130,7 @@ jobs:
           exit-code: '1'
 
       - name: Scan frontend image
-        uses: aquasecurity/trivy-action@0.28.0
+        uses: aquasecurity/trivy-action@v0.28.0
         with:
           scan-type: image
           image-ref: ddl-frontend:ci
@@ -195,7 +195,7 @@ jobs:
           DOCKERHUB_USER: ${{ secrets.DOCKERHUB_USERNAME }}
 
       - name: Scan backend image (blocking)
-        uses: aquasecurity/trivy-action@0.28.0
+        uses: aquasecurity/trivy-action@v0.28.0
         with:
           scan-type: image
           image-ref: ${{ secrets.DOCKERHUB_USERNAME }}/ddl-backend:${{ steps.version.outputs.version }}
@@ -203,7 +203,7 @@ jobs:
           exit-code: '1'
 
       - name: Scan frontend image (blocking)
-        uses: aquasecurity/trivy-action@0.28.0
+        uses: aquasecurity/trivy-action@v0.28.0
         with:
           scan-type: image
           image-ref: ${{ secrets.DOCKERHUB_USERNAME }}/ddl-frontend:${{ steps.version.outputs.version }}
