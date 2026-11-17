@@ -49,19 +49,30 @@ class CsvImportServiceIntegrationTest {
     private DriveRepository driveRepository;
     @Autowired
     private CostRepository costRepository;
+    @Autowired
+    private de.digidrivelog.repositories.CostCategoryRepository costCategoryRepository;
 
     private CarDto car;
 
     @BeforeEach
     void setUp() {
         costRepository.deleteAll();
+        costCategoryRepository.deleteAll();
         driveRepository.deleteAll();
         carRepository.deleteAll();
         userRepository.deleteAll();
 
         UserDto stefan = createUser("Stefan", "Meyer");
         createUser("Anna", "König");
+        costCategoryRepository.save(new de.digidrivelog.models.CostCategory(
+                null, "Tanken", CostType.VARIABLE, "Liter", true, true, null, null));
+        costCategoryRepository.save(new de.digidrivelog.models.CostCategory(
+                null, "Kaufpreis", CostType.FIXED, "pcs", false, false, null, null));
         car = carService.createCar(new CreateCarRequest("Import Car", "M-IM-1", stefan.getUserId(), null));
+    }
+
+    private Long categoryId(String name) {
+        return costCategoryRepository.findByNameIgnoreCase(name).orElseThrow().getCostCategoryId();
     }
 
     private MultipartFile csv(String content) {
@@ -91,9 +102,9 @@ class CsvImportServiceIntegrationTest {
     @Test
     void importCosts_germanNumbers_parseDecimalsAndTypes() {
         String content = """
-                firstname;lastname;date;amount;price;description;cost_type
-                Stefan;Meyer;29.01.2021;36,89;50,50;Tanken;Var
-                Anna;König;06.10.2020;1,00;2.700,00;Kaufpreis;Fix
+                firstname;lastname;date;amount;price;description;odometer
+                Stefan;Meyer;29.01.2021;36,89;50,50;tanken;146739
+                Anna;König;06.10.2020;1,00;2.700,00;Kaufpreis;
                 """;
 
         ImportResultDto result = csvImportService.importCosts(car.getCarId(), csv(content), CsvLocale.DE);
@@ -104,17 +115,39 @@ class CsvImportServiceIntegrationTest {
         assertThat(costs).anySatisfy(c -> {
             assertThat(c.getQuantity()).isEqualByComparingTo("36.89");
             assertThat(c.getPrice()).isEqualByComparingTo("50.50");
-            assertThat(c.getCostType()).isEqualTo(CostType.VARIABLE);
+            assertThat(c.getCostCategory().getCostCategoryId()).isEqualTo(categoryId("Tanken"));
+            assertThat(c.getOdometer()).isEqualTo(146739);
         });
         assertThat(costs).anySatisfy(c -> {
             assertThat(c.getPrice()).isEqualByComparingTo("2700.00");
-            assertThat(c.getCostType()).isEqualTo(CostType.FIXED);
+            assertThat(c.getCostCategory().getCostCategoryId()).isEqualTo(categoryId("Kaufpreis"));
+            assertThat(c.getOdometer()).isNull();
         });
     }
 
     @Test
+    void importCosts_unknownCategory_isRowError() {
+        ImportResultDto result = csvImportService.importCosts(car.getCarId(),
+                csv("Stefan;Meyer;29.01.2021;1,00;5,00;Unbekannt;\n"), CsvLocale.DE);
+
+        assertThat(result.getImported()).isZero();
+        assertThat(result.getErrors()).singleElement()
+                .satisfies(e -> assertThat(e.getMessage()).contains("Unbekannt"));
+        assertThat(costRepository.findAll()).isEmpty();
+    }
+
+    @Test
+    void importCosts_missingRequiredOdometer_isRowError() {
+        ImportResultDto result = csvImportService.importCosts(car.getCarId(),
+                csv("Stefan;Meyer;29.01.2021;36,89;50,50;Tanken\n"), CsvLocale.DE);
+
+        assertThat(result.getImported()).isZero();
+        assertThat(result.getErrors()).hasSize(1);
+    }
+
+    @Test
     void importCosts_englishNumbers_useDotAsDecimal() {
-        String content = "Stefan;Meyer;2021-01-29;36.89;2,700.00;Tanken;Var\n";
+        String content = "Stefan;Meyer;2021-01-29;36.89;2,700.00;Tanken;150000\n";
 
         ImportResultDto result = csvImportService.importCosts(car.getCarId(), csv(content), CsvLocale.EN);
 

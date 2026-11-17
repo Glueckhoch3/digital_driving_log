@@ -54,6 +54,7 @@ class CalculationServiceIntegrationTest {
     @Autowired private UserRepository userRepository;
     @Autowired private DriveRepository driveRepository;
     @Autowired private CostRepository costRepository;
+    @Autowired private de.digidrivelog.repositories.CostCategoryRepository costCategoryRepository;
     @Autowired private DriveLogMonthTotalRepository monthTotalRepository;
     @Autowired private DriveAccountYearRepository accountYearRepository;
     @Autowired private CostTotalCarYearRepository costTotalRepository;
@@ -77,6 +78,7 @@ class CalculationServiceIntegrationTest {
         costTotalRepository.deleteAll();
         monthTotalRepository.deleteAll();
         costRepository.deleteAll();
+        costCategoryRepository.deleteAll();
         driveRepository.deleteAll();
         carRepository.deleteAll();
         userRepository.deleteAll();
@@ -337,7 +339,10 @@ class CalculationServiceIntegrationTest {
     }
 
     private void createCost(UserDto buyer, String description, String price, CostType type, LocalDate date) {
-        costService.createCost(new CreateCostRequest(car.getCarId(), buyer.getUserId(), description,
-                new java.math.BigDecimal(price), java.math.BigDecimal.ONE, date, type, null));
+        de.digidrivelog.models.CostCategory category = costCategoryRepository.findByNameIgnoreCase(description)
+                .orElseGet(() -> costCategoryRepository.save(new de.digidrivelog.models.CostCategory(
+                        null, description, type, "pcs", false, false, null, null)));
+        costService.createCost(new CreateCostRequest(car.getCarId(), buyer.getUserId(), category.getCostCategoryId(),
+                new java.math.BigDecimal(price), java.math.BigDecimal.ONE, date, null, null));
     }
 }

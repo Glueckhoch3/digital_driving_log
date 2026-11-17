@@ -20,9 +20,10 @@
         <tr>
           <th scope="col">{{ 'carWorkspace.transactions.headers.date' | translate }}</th>
           <th scope="col">{{ 'carWorkspace.transactions.headers.buyer' | translate }}</th>
-          <th scope="col">{{ 'carWorkspace.transactions.headers.description' | translate }}</th>
+          <th scope="col">{{ 'carWorkspace.transactions.headers.category' | translate }}</th>
           <th scope="col">{{ 'carWorkspace.transactions.headers.price' | translate }}</th>
           <th scope="col">{{ 'carWorkspace.transactions.headers.quantity' | translate }}</th>
+          <th scope="col">{{ 'carWorkspace.transactions.headers.odometer' | translate }}</th>
           <th scope="col">{{ 'carWorkspace.transactions.headers.type' | translate }}</th>
         </tr>
       </thead>
@@ -31,9 +32,10 @@
           <tr>
             <td>{{ cost.dayOfTransaction }}</td>
             <td>{{ userLabelById().get(cost.buyerId) || cost.buyerId }}</td>
-            <td>{{ cost.description }}</td>
+            <td>{{ cost.costCategoryName }}</td>
             <td>{{ cost.price | number: '1.2-2' }}</td>
-            <td>{{ cost.quantity }}</td>
+            <td>{{ cost.quantity }} {{ cost.unit }}</td>
+            <td>{{ cost.odometer ?? '–' }}</td>
             <td>{{ 'carWorkspace.costTypes.' + cost.costType | translate }}</td>
           </tr>
         }

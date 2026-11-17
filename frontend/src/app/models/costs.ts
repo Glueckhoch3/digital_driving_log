@@ -8,21 +8,27 @@ export interface CostDto {
   costId: number;
   carId: number;
   buyerId: number;
-  description: string;
+  costCategoryId: number;
+  /** Denormalised from the cost category for display. */
+  costCategoryName: string;
+  unit: string;
   price: number;
   quantity: number;
   dayOfTransaction: string;
+  /** Derived from the cost category. */
   costType: CostType;
+  odometer: number | null;
   notes: string | null;
 }
 
 export interface CreateCostRequest {
   carId: number;
   buyerId: number;
-  description: string;
+  costCategoryId: number;
   price: number;
   quantity: number;
   dayOfTransaction: string;
-  costType: CostType;
+  /** Required by the backend when the category has `requiresOdometer`. */
+  odometer?: number;
   notes?: string;
 }

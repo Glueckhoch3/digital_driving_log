@@ -6,7 +6,8 @@
       "chooseCar": "Auto auswählen",
       "calculations": "Berechnungen",
       "manageUsers": "Benutzer verwalten",
-      "manageCars": "Autos verwalten"
+      "manageCars": "Autos verwalten",
+      "manageCostCategories": "Kostenarten verwalten"
     },
     "language": {
       "en": "English",
@@ -31,7 +32,8 @@
     "minLength": "Muss mindestens {{min}} Zeichen lang sein.",
     "min": "Muss mindestens {{min}} sein.",
     "pastDate": "Muss ein Datum in der Vergangenheit sein.",
-    "decimal": "Bitte eine Zahl eingeben (, oder . als Dezimaltrennzeichen)."
+    "decimal": "Bitte eine Zahl eingeben (, oder . als Dezimaltrennzeichen).",
+    "integer": "Bitte eine ganze Zahl größer als 0 eingeben."
   },
   "userManagement": {
     "title": "Benutzerverwaltung",
@@ -139,13 +141,12 @@
       "viewCosts": "Kosten ansehen",
       "addCost": "Kosten hinzufügen",
       "backToHub": "Zurück zur Fahrzeugübersicht",
-      "upload": "CSV importieren"
+      "upload": "CSV importieren",
+      "statistics": "Verbrauchsstatistik"
     },
     "messages": {
       "driveSaved": "Fahrt gespeichert.",
       "driveSaveFailed": "Fahrt konnte nicht gespeichert werden.",
-      "driveAndFuelSaved": "Fahrt und Tank-Transaktion gespeichert.",
-      "fuelSaveFailed": "Fahrt gespeichert, Tank-Transaktion fehlgeschlagen.",
       "driveFormInvalid": "Bitte korrigiere die markierten Felder, bevor du absendest.",
       "transactionSaved": "Transaktion gespeichert.",
       "transactionSaveFailed": "Transaktion konnte nicht gespeichert werden.",
@@ -161,12 +162,6 @@
       "odometer": "Kilometerstand",
       "driver": "Fahrer",
       "notes": "Notizen",
-      "includeFuel": "Tank-Transaktion hinzufügen",
-      "fuelPrice": "Tank-Gesamtpreis",
-      "fuelQuantity": "Tank-Menge",
-      "fuelDate": "Tank-Transaktionsdatum",
-      "fuelBuyer": "Käufer",
-      "fuelNotes": "Tank-Notizen",
       "submit": "Fahrt speichern",
       "backToList": "Zurück zur Fahrtenliste"
     },
@@ -174,13 +169,15 @@
       "title": "Transaktion erfassen",
       "date": "Transaktionsdatum",
       "buyer": "Käufer",
-      "description": "Beschreibung",
-      "type": "Kostenart",
       "price": "Preis",
       "quantity": "Menge",
       "notes": "Notizen",
       "submit": "Transaktion speichern",
-      "backToList": "Zurück zur Transaktionsliste"
+      "backToList": "Zurück zur Transaktionsliste",
+      "category": "Kostenart",
+      "odometer": "Kilometerstand",
+      "optional": "optional",
+      "noCategories": "Es existieren noch keine Kostenarten."
     },
     "drives": {
       "title": "Fahrten",
@@ -200,10 +197,11 @@
       "headers": {
         "date": "Datum",
         "buyer": "Käufer",
-        "description": "Beschreibung",
         "price": "Preis",
         "quantity": "Menge",
-        "type": "Typ"
+        "type": "Typ",
+        "category": "Kostenart",
+        "odometer": "Kilometerstand"
       }
     },
     "upload": {
@@ -226,7 +224,7 @@
       },
       "costs": {
         "title": "Tanken & Kosten",
-        "hint": "Spalten: Name der kaufenden Person, Datum, Menge (Dezimalzahlen erlaubt), Preis, Beschreibung und Kostenart (Fix oder Var)."
+        "hint": "Spalten: Name der kaufenden Person, Datum, Menge (Dezimalzahlen erlaubt), Preis, Name der Kostenart (muss bereits existieren) und optional der Kilometerstand (Pflicht bei Kostenarten, die ihn verlangen)."
       }
     }
   },
@@ -364,5 +362,68 @@
       "adminOnly": "vom Lauf berechnet",
       "explainer": "Faktoren werden vom Jahreslauf berechnet und sind hier schreibgeschützt. Der fixe Faktor ist immer eine gleichmäßige Aufteilung — über die Gruppe der Fahrer plus alle auf der Beteiligten-Seite hinzugefügten Personen."
     }
+  },
+  "costCategoryManagement": {
+    "title": "Kostenarten",
+    "description": "Definiere die Produkte, die als Kosten gebucht werden können, samt Kostentyp und Einheit.",
+    "loading": "Kostenarten werden geladen...",
+    "empty": "Noch keine Kostenarten vorhanden. Lege eine an, um Kosten zu erfassen.",
+    "form": {
+      "createTitle": "Kostenart anlegen",
+      "editTitle": "Kostenart ändern",
+      "name": "Name",
+      "costType": "Kostentyp",
+      "unit": "Einheit (z. B. Liter)",
+      "requiresOdometer": "Kilometerstand bei Buchung erforderlich",
+      "fuel": "Kraftstoff (für die Verbrauchsstatistik)",
+      "create": "Kostenart anlegen",
+      "update": "Kostenart ändern",
+      "cancel": "Abbrechen"
+    },
+    "table": {
+      "name": "Name",
+      "costType": "Typ",
+      "unit": "Einheit",
+      "requiresOdometer": "Kilometerstand erforderlich",
+      "fuel": "Kraftstoff",
+      "actions": "Aktionen",
+      "yes": "Ja",
+      "no": "Nein"
+    },
+    "messages": {
+      "loadFailed": "Kostenarten konnten nicht geladen werden.",
+      "formInvalid": "Bitte korrigiere die markierten Felder vor dem Absenden.",
+      "createSuccess": "Kostenart angelegt.",
+      "createFailed": "Kostenart konnte nicht angelegt werden.",
+      "updateSuccess": "Kostenart geändert.",
+      "updateFailed": "Kostenart konnte nicht geändert werden.",
+      "deleteSuccess": "Kostenart gelöscht.",
+      "deleteFailed": "Kostenart konnte nicht gelöscht werden.",
+      "deleteDependencyBlocked": "Die Kostenart kann nicht gelöscht werden, da Kosten sie verwenden.",
+      "nameInUse": "Eine Kostenart mit diesem Namen existiert bereits."
+    }
+  },
+  "statistics": {
+    "title": "Kraftstoffverbrauch",
+    "description": "Verbrauch zwischen aufeinanderfolgenden Tankungen unter der Annahme, dass jede Tankung ein Volltanken ist. Die erste Tankung dient nur als Ausgangswert.",
+    "year": "Jahr",
+    "allYears": "Alle Jahre",
+    "loading": "Statistik wird geladen...",
+    "loadFailed": "Statistik konnte nicht geladen werden.",
+    "empty": "Zu wenige Tankungen mit Kilometerstand (mindestens zwei erforderlich).",
+    "average": "Durchschnittsverbrauch",
+    "unit": "l/100 km",
+    "totalDistance": "Gefahrene Strecke",
+    "totalLiters": "Verbrauchter Kraftstoff",
+    "chartLabel": "Liniendiagramm des Verbrauchs in l/100 km je Tankung",
+    "headers": {
+      "date": "Datum",
+      "odometer": "Kilometerstand",
+      "distance": "Strecke (km)",
+      "liters": "Liter",
+      "price": "Preis",
+      "consumption": "l/100 km"
+    },
+    "backToHub": "Zurück zur Fahrzeugübersicht"
   }
 }

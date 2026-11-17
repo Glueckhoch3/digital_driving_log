@@ -1,0 +1,110 @@
+<section class="statistics">
+  <h2>{{ 'statistics.title' | translate }} — {{ car().name }}</h2>
+  <p>{{ 'statistics.description' | translate }}</p>
+
+  <a routerLink="..">{{ 'statistics.backToHub' | translate }}</a>
+
+  <div class="statistics__filter">
+    <label for="stats-year">{{ 'statistics.year' | translate }}</label>
+    <select id="stats-year" (change)="onYearChange($event)">
+      <option value="" [selected]="year() === null">{{ 'statistics.allYears' | translate }}</option>
+      @for (y of years; track y) {
+        <option [value]="y" [selected]="year() === y">{{ y }}</option>
+      }
+    </select>
+  </div>
+
+  @if (loading()) {
+    <p>{{ 'statistics.loading' | translate }}</p>
+  } @else if (errorMessage()) {
+    <p class="statistics__error" role="alert" aria-live="assertive">
+      {{ errorMessage() | translate }}
+    </p>
+  } @else if (intervals().length === 0) {
+    <p>{{ 'statistics.empty' | translate }}</p>
+  } @else {
+    <dl class="statistics__summary">
+      <div>
+        <dt>{{ 'statistics.average' | translate }}</dt>
+        <dd>
+          {{ data()?.averageLitersPer100Km | number: '1.2-2' }} {{ 'statistics.unit' | translate }}
+        </dd>
+      </div>
+      <div>
+        <dt>{{ 'statistics.totalDistance' | translate }}</dt>
+        <dd>{{ data()?.totalDistanceKm | number }} km</dd>
+      </div>
+      <div>
+        <dt>{{ 'statistics.totalLiters' | translate }}</dt>
+        <dd>{{ data()?.totalLiters | number: '1.2-2' }} l</dd>
+      </div>
+    </dl>
+
+    <svg
+      class="statistics__chart"
+      role="img"
+      [attr.aria-label]="'statistics.chartLabel' | translate"
+      [attr.viewBox]="'0 0 ' + chart.width + ' ' + chart.height"
+    >
+      @for (tick of yTicks(); track tick.value) {
+        <line
+          class="statistics__grid"
+          [attr.x1]="chart.left"
+          [attr.x2]="chart.width - chart.right"
+          [attr.y1]="tick.y"
+          [attr.y2]="tick.y"
+        />
+        <text
+          class="statistics__tick"
+          [attr.x]="chart.left - 6"
+          [attr.y]="tick.y + 4"
+          text-anchor="end"
+        >
+          {{ tick.value }}
+        </text>
+      }
+      <text class="statistics__tick" x="4" [attr.y]="chart.top - 4">
+        {{ 'statistics.unit' | translate }}
+      </text>
+      <polyline class="statistics__line" [attr.points]="polyline()" fill="none" />
+      @for (point of points(); track $index) {
+        <circle class="statistics__point" [attr.cx]="point.x" [attr.cy]="point.y" r="4" />
+        @if (points().length <= 12) {
+          <text
+            class="statistics__tick"
+            [attr.x]="point.x"
+            [attr.y]="chart.height - chart.bottom + 16"
+            text-anchor="middle"
+          >
+            {{ point.label }}
+          </text>
+        }
+      }
+    </svg>
+
+    <table class="statistics__table">
+      <thead>
+        <tr>
+          <th scope="col">{{ 'statistics.headers.date' | translate }}</th>
+          <th scope="col">{{ 'statistics.headers.odometer' | translate }}</th>
+          <th scope="col">{{ 'statistics.headers.distance' | translate }}</th>
+          <th scope="col">{{ 'statistics.headers.liters' | translate }}</th>
+          <th scope="col">{{ 'statistics.headers.price' | translate }}</th>
+          <th scope="col">{{ 'statistics.headers.consumption' | translate }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (interval of intervals(); track interval.costId) {
+          <tr>
+            <td>{{ interval.date }}</td>
+            <td>{{ interval.odometer }}</td>
+            <td>{{ interval.distanceKm }}</td>
+            <td>{{ interval.liters | number: '1.2-2' }}</td>
+            <td>{{ interval.price | number: '1.2-2' }}</td>
+            <td>{{ interval.litersPer100Km | number: '1.2-2' }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+</section>

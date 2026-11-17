@@ -1,0 +1,136 @@
+<section class="cost-category-management">
+  <h2>{{ 'costCategoryManagement.title' | translate }}</h2>
+  <p>{{ 'costCategoryManagement.description' | translate }}</p>
+
+  @if (message()) {
+    <p class="cost-category-management__message" role="status" aria-live="polite">
+      {{ message() | translate }}
+    </p>
+  }
+
+  @if (error()) {
+    <p class="cost-category-management__error" role="alert" aria-live="assertive">
+      {{ error() | translate }}
+    </p>
+  }
+
+  <form class="cost-category-management__form" [formGroup]="form" (ngSubmit)="submit()">
+    <h3>
+      @if (editingId() !== null) {
+        {{ 'costCategoryManagement.form.editTitle' | translate }}
+      } @else {
+        {{ 'costCategoryManagement.form.createTitle' | translate }}
+      }
+    </h3>
+
+    <label for="cc-name">{{ 'costCategoryManagement.form.name' | translate }}</label>
+    <input
+      id="cc-name"
+      type="text"
+      formControlName="name"
+      [attr.aria-invalid]="form.controls.name.invalid && form.controls.name.touched"
+      [attr.aria-describedby]="
+        form.controls.name.invalid && form.controls.name.touched ? 'cc-name-error' : null
+      "
+    />
+    <app-field-error id="cc-name-error" [control]="form.controls.name" />
+
+    <label for="cc-costType">{{ 'costCategoryManagement.form.costType' | translate }}</label>
+    <select id="cc-costType" formControlName="costType">
+      @for (type of costTypes; track type) {
+        <option [value]="type">{{ 'carWorkspace.costTypes.' + type | translate }}</option>
+      }
+    </select>
+
+    <label for="cc-unit">{{ 'costCategoryManagement.form.unit' | translate }}</label>
+    <input
+      id="cc-unit"
+      type="text"
+      formControlName="unit"
+      [attr.aria-invalid]="form.controls.unit.invalid && form.controls.unit.touched"
+      [attr.aria-describedby]="
+        form.controls.unit.invalid && form.controls.unit.touched ? 'cc-unit-error' : null
+      "
+    />
+    <app-field-error id="cc-unit-error" [control]="form.controls.unit" />
+
+    <label class="cost-category-management__checkbox" for="cc-requiresOdometer">
+      <input id="cc-requiresOdometer" type="checkbox" formControlName="requiresOdometer" />
+      {{ 'costCategoryManagement.form.requiresOdometer' | translate }}
+    </label>
+
+    <label class="cost-category-management__checkbox" for="cc-fuel">
+      <input id="cc-fuel" type="checkbox" formControlName="fuel" />
+      {{ 'costCategoryManagement.form.fuel' | translate }}
+    </label>
+
+    <div class="cost-category-management__form-actions">
+      <button type="submit">
+        @if (editingId() !== null) {
+          {{ 'costCategoryManagement.form.update' | translate }}
+        } @else {
+          {{ 'costCategoryManagement.form.create' | translate }}
+        }
+      </button>
+      @if (editingId() !== null) {
+        <button type="button" (click)="cancelEdit()">
+          {{ 'costCategoryManagement.form.cancel' | translate }}
+        </button>
+      }
+    </div>
+  </form>
+
+  @if (loading()) {
+    <p>{{ 'costCategoryManagement.loading' | translate }}</p>
+  } @else if (categories().length === 0) {
+    <p>{{ 'costCategoryManagement.empty' | translate }}</p>
+  } @else {
+    <table class="cost-category-management__table">
+      <thead>
+        <tr>
+          <th scope="col">{{ 'costCategoryManagement.table.name' | translate }}</th>
+          <th scope="col">{{ 'costCategoryManagement.table.costType' | translate }}</th>
+          <th scope="col">{{ 'costCategoryManagement.table.unit' | translate }}</th>
+          <th scope="col">{{ 'costCategoryManagement.table.requiresOdometer' | translate }}</th>
+          <th scope="col">{{ 'costCategoryManagement.table.fuel' | translate }}</th>
+          <th scope="col">{{ 'costCategoryManagement.table.actions' | translate }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (category of categories(); track category.costCategoryId) {
+          <tr>
+            <td>{{ category.name }}</td>
+            <td>{{ 'carWorkspace.costTypes.' + category.costType | translate }}</td>
+            <td>{{ category.unit }}</td>
+            <td>
+              {{
+                (category.requiresOdometer
+                  ? 'costCategoryManagement.table.yes'
+                  : 'costCategoryManagement.table.no'
+                ) | translate
+              }}
+            </td>
+            <td>
+              {{
+                (category.fuel
+                  ? 'costCategoryManagement.table.yes'
+                  : 'costCategoryManagement.table.no'
+                ) | translate
+              }}
+            </td>
+            <td>
+              <div class="cost-category-management__row-actions">
+                <button type="button" (click)="edit(category)">
+                  {{ 'common.edit' | translate }}
+                </button>
+                <button type="button" (click)="delete(category.costCategoryId)">
+                  {{ 'common.delete' | translate }}
+                </button>
+              </div>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+</section>

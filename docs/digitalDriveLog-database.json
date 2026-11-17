@@ -378,16 +378,16 @@
           "comment": "buyer"
         },
         {
-          "id": "M5mozGvg54Vomwgu265I8",
-          "name": "description",
-          "type": "VARCHAR(63)",
+          "id": "d9d740aeb32e4e7ea51e2",
+          "name": "cost_category_id",
+          "type": "BIGINT",
           "default": "",
           "check": "",
           "primary": false,
           "unique": false,
           "notNull": true,
           "increment": false,
-          "comment": "what was bought"
+          "comment": "what was bought; fixes cost type and unit"
         },
         {
           "id": "O-qSHqtpCNGEiXS4CY3CX",
@@ -414,16 +414,16 @@
           "comment": ""
         },
         {
-          "id": "vQ75ZsWRO3Zi7fBW73MYn",
-          "name": "cost_type",
-          "type": "VARCHAR(20)",
+          "id": "1c9b0e993126486b8fdbd",
+          "name": "odometer",
+          "type": "INTEGER",
           "default": "",
           "check": "",
           "primary": false,
           "unique": false,
-          "notNull": true,
+          "notNull": false,
           "increment": false,
-          "comment": "enum: VARIABLE | FIXED"
+          "comment": "total odometer reading; required if category.requires_odometer"
         },
         {
           "id": "68zcgG5hIrMlFkXNmyW5I",
@@ -490,6 +490,14 @@
             "user_id"
           ],
           "name": "idx_cost_user",
+          "unique": false
+        },
+        {
+          "id": 12,
+          "fields": [
+            "cost_category_id"
+          ],
+          "name": "idx_cost_category",
           "unique": false
         }
       ],
@@ -944,6 +952,114 @@
       "uniqueConstraints": [],
       "color": "#17497a",
       "collapsed": false
+    },
+    {
+      "id": "96a393430af748ef9d199",
+      "name": "cost_category",
+      "comment": "extensible catalogue of cost products",
+      "color": "#175e7a",
+      "fields": [
+        {
+          "id": "275ea144f8d84eee81316",
+          "name": "cost_category_id",
+          "type": "BIGINT",
+          "default": "",
+          "check": "",
+          "primary": true,
+          "unique": true,
+          "notNull": true,
+          "increment": false,
+          "comment": "sequence cost_category_seq"
+        },
+        {
+          "id": "3d793137eaa8450d98765",
+          "name": "name",
+          "type": "VARCHAR(63)",
+          "default": "",
+          "check": "",
+          "primary": false,
+          "unique": true,
+          "notNull": true,
+          "increment": false,
+          "comment": ""
+        },
+        {
+          "id": "f717671d830d4aae88000",
+          "name": "cost_type",
+          "type": "VARCHAR(20)",
+          "default": "",
+          "check": "",
+          "primary": false,
+          "unique": false,
+          "notNull": true,
+          "increment": false,
+          "comment": "enum: VARIABLE | FIXED"
+        },
+        {
+          "id": "3826d0b650214df09a9d3",
+          "name": "unit",
+          "type": "VARCHAR(20)",
+          "default": "",
+          "check": "",
+          "primary": false,
+          "unique": false,
+          "notNull": true,
+          "increment": false,
+          "comment": "unit of cost.quantity, e.g. Liter"
+        },
+        {
+          "id": "85186a7d6e7e49aab1ae5",
+          "name": "requires_odometer",
+          "type": "BOOLEAN",
+          "default": "",
+          "check": "",
+          "primary": false,
+          "unique": false,
+          "notNull": true,
+          "increment": false,
+          "comment": ""
+        },
+        {
+          "id": "aa2c1efeeb0e491099fd2",
+          "name": "fuel",
+          "type": "BOOLEAN",
+          "default": "",
+          "check": "",
+          "primary": false,
+          "unique": false,
+          "notNull": true,
+          "increment": false,
+          "comment": "feeds consumption statistics"
+        },
+        {
+          "id": "807c5c7163894c80843b4",
+          "name": "created_at",
+          "type": "TIMESTAMP",
+          "default": "",
+          "check": "",
+          "primary": false,
+          "unique": false,
+          "notNull": true,
+          "increment": false,
+          "comment": ""
+        },
+        {
+          "id": "5009737c6a094247a4a43",
+          "name": "updated_at",
+          "type": "TIMESTAMP",
+          "default": "",
+          "check": "",
+          "primary": false,
+          "unique": false,
+          "notNull": true,
+          "increment": false,
+          "comment": ""
+        }
+      ],
+      "indices": [],
+      "uniqueConstraints": [],
+      "x": 580.6606734375001,
+      "y": 1134.8346349999997
     }
   ],
   "relationships": [
@@ -1184,6 +1300,23 @@
       "updateConstraint": "No action",
       "deleteConstraint": "No action",
       "cardinality": "one_to_many"
+    },
+    {
+      "name": "fk_cost_cost_category_id_cost_category",
+      "startTableId": "UEB0oa_4PBXj__wa5B2BK",
+      "endTableId": "96a393430af748ef9d199",
+      "fields": [
+        {
+          "startFieldId": "d9d740aeb32e4e7ea51e2",
+          "endFieldId": "275ea144f8d84eee81316"
+        }
+      ],
+      "endFieldId": "275ea144f8d84eee81316",
+      "startFieldId": "d9d740aeb32e4e7ea51e2",
+      "id": "5b9f036668064dca88cdf",
+      "updateConstraint": "No action",
+      "deleteConstraint": "No action",
+      "cardinality": "many_to_one"
     }
   ],
   "notes": [],

@@ -15,11 +15,14 @@ describe('CostService', () => {
     costId: 1,
     carId: 2,
     buyerId: 3,
-    description: 'Fuel',
+    costCategoryId: 10,
+    costCategoryName: 'Fuel',
+    unit: 'Liter',
     price: 54.9,
     quantity: 40,
     dayOfTransaction: '2025-04-02',
     costType: 'VARIABLE',
+    odometer: 12345,
     notes: null,
   };
 
@@ -74,11 +77,11 @@ describe('CostService', () => {
     const request: CreateCostRequest = {
       carId: 2,
       buyerId: 3,
-      description: 'Oil',
+      costCategoryId: 10,
       price: 19.99,
       quantity: 1,
       dayOfTransaction: '2025-05-05',
-      costType: 'VARIABLE',
+      odometer: 12345,
     };
     service.createCost(request).subscribe();
 

@@ -305,6 +305,130 @@ paths:
         '404':
           description: Vehicle not found
 
+  /cost-categories:
+    get:
+      tags:
+        - costs
+      summary: List cost categories
+      responses:
+        '200':
+          description: Cost categories sorted by name
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CostCategory'
+    post:
+      tags:
+        - costs
+      summary: Create a cost category
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CostCategoryInput'
+      responses:
+        '201':
+          description: Cost category created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CostCategory'
+        '400':
+          description: Invalid input
+        '409':
+          description: Name already in use
+
+  /cost-categories/{costCategoryId}:
+    parameters:
+      - name: costCategoryId
+        in: path
+        required: true
+        schema:
+          type: number
+          format: int64
+    get:
+      tags:
+        - costs
+      summary: Get a cost category
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CostCategory'
+        '404':
+          description: Cost category not found
+    put:
+      tags:
+        - costs
+      summary: Replace a cost category
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CostCategoryInput'
+      responses:
+        '200':
+          description: Cost category updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CostCategory'
+        '400':
+          description: Invalid input
+        '404':
+          description: Cost category not found
+        '409':
+          description: Name already in use
+    delete:
+      tags:
+        - costs
+      summary: Delete a cost category
+      responses:
+        '204':
+          description: Cost category deleted
+        '404':
+          description: Cost category not found
+        '409':
+          description: Costs still use this category
+
+  /vehicles/{carId}/consumption:
+    get:
+      tags:
+        - calculations
+      summary: Fuel consumption statistics of a car
+      description: >
+        Consumption between consecutive fill-ups (full-tank assumption): litres of the
+        later fill-up divided by the distance since the previous one, times 100. Only
+        costs of fuel categories with an odometer reading count. The first fill-up is
+        the baseline. `year` filters on the date of the later fill-up.
+      parameters:
+        - name: carId
+          in: path
+          required: true
+          schema:
+            type: number
+            format: int64
+        - name: year
+          in: query
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Intervals and average
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Consumption'
+        '404':
+          description: Vehicle not found
+
   /costs:
     get:
       tags:
@@ -493,10 +617,11 @@ paths:
       summary: Import costs from a CSV file
       description: >
         Bulk-import fuel and cost entries for a car from a semicolon-separated
-        CSV with columns `firstname;lastname;date;amount;price;description;cost_type`.
-        `amount` and `price` are read using the `locale` number format; `cost_type`
-        accepts `Fix`/`Var` (or `FIXED`/`VARIABLE`). Same all-or-nothing semantics
-        as the drives import.
+        CSV with columns `firstname;lastname;date;amount;price;category[;odometer]`.
+        `amount` and `price` are read using the `locale` number format; `category`
+        must match the name of an existing cost category (case-insensitive) and an
+        unknown name is a row error; `odometer` is optional unless the category
+        requires it. Same all-or-nothing semantics as the drives import.
       parameters:
         - name: carId
           in: path
@@ -955,6 +1080,79 @@ components:
         - line
         - message
 
+    CostCategoryInput:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 2
+          maxLength: 63
+        costType:
+          type: string
+          enum: [VARIABLE, FIXED]
+        unit:
+          type: string
+          maxLength: 20
+          description: Unit of the booked quantity, e.g. Liter.
+        requiresOdometer:
+          type: boolean
+        fuel:
+          type: boolean
+          description: Marks fuel categories used by the consumption statistics.
+      required:
+        - name
+        - costType
+        - unit
+
+    CostCategory:
+      allOf:
+        - type: object
+          properties:
+            costCategoryId:
+              type: number
+              format: int64
+          required:
+            - costCategoryId
+        - $ref: '#/components/schemas/CostCategoryInput'
+
+    Consumption:
+      type: object
+      properties:
+        carId:
+          type: number
+          format: int64
+        year:
+          type: integer
+          nullable: true
+        intervals:
+          type: array
+          items:
+            type: object
+            properties:
+              costId:
+                type: number
+                format: int64
+              date:
+                type: string
+                format: date
+              odometer:
+                type: integer
+              distanceKm:
+                type: integer
+              liters:
+                type: number
+              price:
+                type: number
+              litersPer100Km:
+                type: number
+        averageLitersPer100Km:
+          type: number
+          nullable: true
+        totalDistanceKm:
+          type: integer
+        totalLiters:
+          type: number
+
     CreateCost:
       type: object
       properties:
@@ -964,28 +1162,29 @@ components:
         buyerId:
           type: number
           format: int64
-        description:
-          type: string
+        costCategoryId:
+          type: number
+          format: int64
+          description: Cost category (see /cost-categories); fixes cost type and unit.
         price:
           type: number
         dayOfTransaction:
           type: string
           format: date-time
-        costType:
-          type: string
-          enum: [VARIABLE, FIXED]
         quantity:
           type: number
-          description: Decimal quantity (e.g. litres of fuel); must be positive.
+          description: Decimal quantity in the category's unit (e.g. litres); must be positive.
+        odometer:
+          type: integer
+          description: Total odometer reading; required when the category has requiresOdometer.
         notes:
           type: string
       required:
          - carId
          - buyerId
-         - description
+         - costCategoryId
          - price
          - dayOfTransaction
-         - costType
          - quantity
 
     RetrieveCost:
@@ -1000,7 +1199,12 @@ components:
         buyerId:
           type: number
           format: int64
-        description:
+        costCategoryId:
+          type: number
+          format: int64
+        costCategoryName:
+          type: string
+        unit:
           type: string
         price:
           type: number
@@ -1010,15 +1214,19 @@ components:
         costType:
           type: string
           enum: [VARIABLE, FIXED]
+          description: Derived from the cost category.
         quantity:
           type: number
+        odometer:
+          type: integer
+          nullable: true
         notes:
           type: string
       required:
          - costId
          - carId
          - buyerId
-         - description
+         - costCategoryId
          - price
          - dayOfTransaction
          - costType
@@ -1033,27 +1241,27 @@ components:
         buyerId:
           type: number
           format: int64
-        description:
-          type: string
+        costCategoryId:
+          type: number
+          format: int64
         price:
           type: number
         dayOfTransaction:
           type: string
           format: date-time
-        costType:
-          type: string
-          enum: [VARIABLE, FIXED]
         quantity:
           type: number
+        odometer:
+          type: integer
+          description: Required when the category has requiresOdometer.
         notes:
           type: string
       required:
          - carId
          - buyerId
-         - description
+         - costCategoryId
          - price
          - dayOfTransaction
-         - costType
          - quantity
 
     CreateDrive:

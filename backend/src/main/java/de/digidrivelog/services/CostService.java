@@ -7,7 +7,9 @@ import de.digidrivelog.models.Car;
 import de.digidrivelog.models.Cost;
 import de.digidrivelog.models.User;
 import de.digidrivelog.repositories.CarRepository;
+import de.digidrivelog.repositories.CostCategoryRepository;
 import de.digidrivelog.repositories.CostRepository;
+import de.digidrivelog.models.CostCategory;
 import de.digidrivelog.repositories.UserRepository;
 import de.digidrivelog.mappers.CostMapper;
 import org.springframework.data.domain.Page;
@@ -25,6 +27,7 @@ public class CostService {
     private final CostRepository costRepository;
     private final CarRepository carRepository;
     private final UserRepository userRepository;
+    private final CostCategoryRepository costCategoryRepository;
 
     @Transactional(readOnly = true)
     public Page<CostDto> getAllCosts(Pageable pageable) {
@@ -35,7 +38,8 @@ public class CostService {
     public CostDto createCost(CreateCostRequest request) {
         Car car = carRepository.findById(request.getCarId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Car not found"));
         User buyer = userRepository.findById(request.getBuyerId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Buyer user not found"));
-        Cost c = CostMapper.fromCreate(request, car, buyer);
+        CostCategory category = requireCategory(request.getCostCategoryId(), request.getOdometer());
+        Cost c = CostMapper.fromCreate(request, car, buyer, category);
         Cost saved = costRepository.save(c);
         return CostMapper.toDto(saved);
     }
@@ -51,7 +55,8 @@ public class CostService {
         Cost existing = costRepository.findById(costId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cost not found"));
         Car car = carRepository.findById(request.getCarId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Car not found"));
         User buyer = userRepository.findById(request.getBuyerId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Buyer user not found"));
-        CostMapper.applyUpdate(request, existing, car, buyer);
+        CostCategory category = requireCategory(request.getCostCategoryId(), request.getOdometer());
+        CostMapper.applyUpdate(request, existing, car, buyer, category);
         Cost saved = costRepository.save(existing);
         return CostMapper.toDto(saved);
     }
@@ -74,4 +79,14 @@ public class CostService {
         return costRepository.findByBuyerUserId(userId, pageable).map(CostMapper::toDto);
     }
 
+    /** Resolve the category and enforce its odometer requirement. */
+    private CostCategory requireCategory(Long categoryId, Integer odometer) {
+        CostCategory category = costCategoryRepository.findById(categoryId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cost category not found"));
+        if (category.isRequiresOdometer() && odometer == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Odometer is required for cost category '" + category.getName() + "'");
+        }
+        return category;
+    }
 }

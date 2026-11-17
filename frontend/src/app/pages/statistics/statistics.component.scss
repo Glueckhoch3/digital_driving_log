@@ -1,0 +1,73 @@
+.statistics {
+  max-width: 60rem;
+  margin: 2rem auto;
+  padding: 1rem;
+
+  &__filter {
+    margin: 1rem 0;
+
+    select {
+      margin-left: 0.5rem;
+    }
+  }
+
+  &__error {
+    color: #b02020;
+  }
+
+  &__summary {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    margin: 1rem 0;
+
+    dt {
+      font-size: 0.85rem;
+      opacity: 0.75;
+    }
+
+    dd {
+      margin: 0;
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
+  }
+
+  &__chart {
+    width: 100%;
+    height: auto;
+    margin: 1rem 0;
+  }
+
+  &__grid {
+    stroke: currentColor;
+    stroke-opacity: 0.15;
+  }
+
+  &__tick {
+    fill: currentColor;
+    font-size: 11px;
+    opacity: 0.75;
+  }
+
+  &__line {
+    stroke: #1f6feb;
+    stroke-width: 2;
+  }
+
+  &__point {
+    fill: #1f6feb;
+  }
+
+  &__table {
+    width: 100%;
+    border-collapse: collapse;
+
+    th,
+    td {
+      border: 1px solid #e0e0e0;
+      padding: 0.5rem;
+      text-align: left;
+    }
+  }
+}
