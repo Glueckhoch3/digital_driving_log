@@ -42,7 +42,8 @@
 ### Cost Management
 - **Fixed Costs**: Insurance, registration fees (distributed equally)
 - **Variable Costs**: Fuel, maintenance, repairs (distributed by distance)
-- **Fuel Tracking**: Cost calculation per drive
+- **Cost Categories**: Extensible catalogue of cost products (type, unit, odometer requirement)
+- **Fuel Tracking**: Fill-ups with odometer reading, consumption statistics (l/100 km)
 - **Real-time Distribution**: View current cost balances anytime
 
 ### Shareholder Management

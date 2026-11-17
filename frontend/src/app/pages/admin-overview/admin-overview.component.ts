@@ -160,7 +160,7 @@ export class AdminOverviewComponent implements OnInit {
       carName: car.name,
       plateNumber: car.plateNumber,
       participantName: userNameById.get(cost.buyerId) ?? `Unknown user #${cost.buyerId}`,
-      details: `${cost.description} (${cost.costType})`,
+      details: `${cost.costCategoryName} (${cost.costType})`,
       valueLabel: `${Number(cost.price).toFixed(2)} € x ${cost.quantity}`,
     }));
 

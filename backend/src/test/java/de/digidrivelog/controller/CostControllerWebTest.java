@@ -12,6 +12,8 @@ import de.digidrivelog.services.CostService;
 import de.digidrivelog.services.UserService;
 import de.digidrivelog.repositories.CarRepository;
 import de.digidrivelog.repositories.CostRepository;
+import de.digidrivelog.repositories.CostCategoryRepository;
+import de.digidrivelog.models.CostCategory;
 import de.digidrivelog.repositories.DriveRepository;
 import de.digidrivelog.repositories.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -62,16 +64,27 @@ class CostControllerWebTest {
     @Autowired
     private CostRepository costRepository;
 
+    @Autowired
+    private CostCategoryRepository costCategoryRepository;
+
+    private CostCategory fuel;
+    private CostCategory insurance;
+
     private CarDto car;
     private UserDto buyer;
 
     @BeforeEach
     void setUp() {
         costRepository.deleteAll();
+        costCategoryRepository.deleteAll();
         driveRepository.deleteAll();
         carRepository.deleteAll();
         userRepository.deleteAll();
 
+        fuel = costCategoryRepository.save(new CostCategory(
+                null, "Fuel", CostType.VARIABLE, "Liter", true, true, null, null));
+        insurance = costCategoryRepository.save(new CostCategory(
+                null, "Insurance", CostType.FIXED, "pcs", false, false, null, null));
         buyer = userService.createUser(new CreateUserRequest(
                 "Bodo", "Buyer", true, LocalDate.of(1988, 8, 8)));
         car = carService.createCar(new CreateCarRequest(
@@ -80,12 +93,12 @@ class CostControllerWebTest {
 
     @Test
     void getAllCosts_shouldReturnList() throws Exception {
-        createCost("Fuel");
+        createCost(insurance);
 
         mockMvc.perform(get("/ddl/api/costs"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content.length()").value(1))
-                .andExpect(jsonPath("$.content[0].description").value("Fuel"));
+                .andExpect(jsonPath("$.content[0].costCategoryName").value("Insurance"));
     }
 
     @Test
@@ -93,12 +106,14 @@ class CostControllerWebTest {
         mockMvc.perform(post("/ddl/api/costs")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                                {"carId":%d,"buyerId":%d,"description":"Oil","price":19.99,
-                                 "quantity":1,"dayOfTransaction":"2025-05-05","costType":"variable","notes":"5W30"}
-                                """.formatted(car.getCarId(), buyer.getUserId())))
+                                {"carId":%d,"buyerId":%d,"costCategoryId":%d,"price":19.99,
+                                 "quantity":1,"dayOfTransaction":"2025-05-05","odometer":1000,"notes":"5W30"}
+                                """.formatted(car.getCarId(), buyer.getUserId(), fuel.getCostCategoryId())))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.costId").isNumber())
-                .andExpect(jsonPath("$.description").value("Oil"))
+                .andExpect(jsonPath("$.costCategoryName").value("Fuel"))
+                .andExpect(jsonPath("$.unit").value("Liter"))
+                .andExpect(jsonPath("$.odometer").value(1000))
                 .andExpect(jsonPath("$.costType").value("VARIABLE"));
     }
 
@@ -107,44 +122,53 @@ class CostControllerWebTest {
         mockMvc.perform(post("/ddl/api/costs")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                                {"carId":%d,"buyerId":%d,"description":"Oil","price":-1.00,
-                                 "quantity":1,"dayOfTransaction":"2025-05-05","costType":"variable"}
+                                {"carId":%d,"buyerId":%d,"costCategoryId":%d,"price":-1.00,
+                                 "quantity":1,"dayOfTransaction":"2025-05-05"}
+                                """.formatted(car.getCarId(), buyer.getUserId(), insurance.getCostCategoryId())))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void createCostWithoutCategory_shouldReturn400() throws Exception {
+        mockMvc.perform(post("/ddl/api/costs")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {"carId":%d,"buyerId":%d,"price":5.00,
+                                 "quantity":1,"dayOfTransaction":"2025-05-05"}
                                 """.formatted(car.getCarId(), buyer.getUserId())))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
-    void createCostWithInvalidCostType_shouldReturn400() throws Exception {
+    void createCostWithUnknownCategory_shouldReturn404() throws Exception {
         mockMvc.perform(post("/ddl/api/costs")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                                {"carId":%d,"buyerId":%d,"description":"Oil","price":5.00,
-                                 "quantity":1,"dayOfTransaction":"2025-05-05","costType":"sometimes"}
+                                {"carId":%d,"buyerId":%d,"costCategoryId":999999,"price":5.00,
+                                 "quantity":1,"dayOfTransaction":"2025-05-05"}
                                 """.formatted(car.getCarId(), buyer.getUserId())))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void createFuelCostWithoutOdometer_shouldReturn400() throws Exception {
+        mockMvc.perform(post("/ddl/api/costs")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {"carId":%d,"buyerId":%d,"costCategoryId":%d,"price":5.00,
+                                 "quantity":10,"dayOfTransaction":"2025-05-05"}
+                                """.formatted(car.getCarId(), buyer.getUserId(), fuel.getCostCategoryId())))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
-    void createCostWithTooShortDescription_shouldReturn400() throws Exception {
+    void createCostWithNonPositiveOdometer_shouldReturn400() throws Exception {
         mockMvc.perform(post("/ddl/api/costs")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                                {"carId":%d,"buyerId":%d,"description":"O","price":5.00,
-                                 "quantity":1,"dayOfTransaction":"2025-05-05","costType":"variable"}
-                                """.formatted(car.getCarId(), buyer.getUserId())))
-                .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    void createCostWithTooLongDescription_shouldReturn400() throws Exception {
-        String tooLongDescription = "D".repeat(64);
-
-        mockMvc.perform(post("/ddl/api/costs")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("""
-                                {"carId":%d,"buyerId":%d,"description":"%s","price":5.00,
-                                 "quantity":1,"dayOfTransaction":"2025-05-05","costType":"variable"}
-                                """.formatted(car.getCarId(), buyer.getUserId(), tooLongDescription)))
+                                {"carId":%d,"buyerId":%d,"costCategoryId":%d,"price":5.00,
+                                 "quantity":10,"dayOfTransaction":"2025-05-05","odometer":0}
+                                """.formatted(car.getCarId(), buyer.getUserId(), fuel.getCostCategoryId())))
                 .andExpect(status().isBadRequest());
     }
 
@@ -153,20 +177,20 @@ class CostControllerWebTest {
         mockMvc.perform(post("/ddl/api/costs")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                                {"carId":999999,"buyerId":%d,"description":"Oil","price":5.00,
-                                 "quantity":1,"dayOfTransaction":"2025-05-05","costType":"fixed"}
-                                """.formatted(buyer.getUserId())))
+                                {"carId":999999,"buyerId":%d,"costCategoryId":%d,"price":5.00,
+                                 "quantity":1,"dayOfTransaction":"2025-05-05"}
+                                """.formatted(buyer.getUserId(), insurance.getCostCategoryId())))
                 .andExpect(status().isNotFound());
     }
 
     @Test
     void getCostById_shouldReturnCost() throws Exception {
-        CostDto cost = createCost("Tires");
+        CostDto cost = createCost(insurance);
 
         mockMvc.perform(get("/ddl/api/costs/{id}", cost.getCostId()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.costId").value(cost.getCostId()))
-                .andExpect(jsonPath("$.description").value("Tires"));
+                .andExpect(jsonPath("$.costCategoryName").value("Insurance"));
     }
 
     @Test
@@ -177,23 +201,24 @@ class CostControllerWebTest {
 
     @Test
     void updateCost_shouldReturnUpdatedCost() throws Exception {
-        CostDto cost = createCost("Before");
+        CostDto cost = createCost(insurance);
 
         mockMvc.perform(put("/ddl/api/costs/{id}", cost.getCostId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                                {"carId":%d,"buyerId":%d,"description":"After","price":80.00,
-                                 "quantity":2,"dayOfTransaction":"2025-06-06","costType":"fixed","notes":"changed"}
-                                """.formatted(car.getCarId(), buyer.getUserId())))
+                                {"carId":%d,"buyerId":%d,"costCategoryId":%d,"price":80.00,
+                                 "quantity":2,"dayOfTransaction":"2025-06-06","odometer":2000,"notes":"changed"}
+                                """.formatted(car.getCarId(), buyer.getUserId(), fuel.getCostCategoryId())))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.description").value("After"))
-                .andExpect(jsonPath("$.costType").value("FIXED"))
+                .andExpect(jsonPath("$.costCategoryName").value("Fuel"))
+                .andExpect(jsonPath("$.costType").value("VARIABLE"))
+                .andExpect(jsonPath("$.odometer").value(2000))
                 .andExpect(jsonPath("$.quantity").value(2));
     }
 
     @Test
     void deleteCost_shouldReturn204() throws Exception {
-        CostDto cost = createCost("Del");
+        CostDto cost = createCost(insurance);
 
         mockMvc.perform(delete("/ddl/api/costs/{id}", cost.getCostId()))
                 .andExpect(status().isNoContent());
@@ -207,8 +232,8 @@ class CostControllerWebTest {
 
     @Test
     void listCostsByVehicleAndUser_shouldReturnFilteredLists() throws Exception {
-        createCost("A");
-        createCost("B");
+        createCost(insurance);
+        createCost(insurance);
 
         mockMvc.perform(get("/ddl/api/vehicles/{carId}/costs", car.getCarId()))
                 .andExpect(status().isOk())
@@ -223,15 +248,15 @@ class CostControllerWebTest {
                 .andExpect(jsonPath("$.content.length()").value(0));
     }
 
-    private CostDto createCost(String description) {
+    private CostDto createCost(CostCategory category) {
         return costService.createCost(new CreateCostRequest(
                 car.getCarId(),
                 buyer.getUserId(),
-                description,
+                category.getCostCategoryId(),
                 new BigDecimal("42.00"),
                 new BigDecimal("1"),
                 LocalDate.of(2025, 5, 5),
-                CostType.VARIABLE,
+                null,
                 null
         ));
     }

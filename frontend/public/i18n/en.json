@@ -6,7 +6,8 @@
       "chooseCar": "Choose car",
       "calculations": "Calculations",
       "manageUsers": "Manage users",
-      "manageCars": "Manage cars"
+      "manageCars": "Manage cars",
+      "manageCostCategories": "Manage cost categories"
     },
     "language": {
       "en": "English",
@@ -31,7 +32,8 @@
     "minLength": "Must be at least {{min}} characters.",
     "min": "Must be at least {{min}}.",
     "pastDate": "Must be a date in the past.",
-    "decimal": "Enter a number (use , or . for decimals)."
+    "decimal": "Enter a number (use , or . for decimals).",
+    "integer": "Enter a whole number greater than 0."
   },
   "userManagement": {
     "title": "User management",
@@ -139,13 +141,12 @@
       "viewCosts": "View costs",
       "addCost": "Add cost",
       "backToHub": "Back to car overview",
-      "upload": "Import from CSV"
+      "upload": "Import from CSV",
+      "statistics": "Fuel consumption statistics"
     },
     "messages": {
       "driveSaved": "Drive saved.",
       "driveSaveFailed": "Failed to save drive.",
-      "driveAndFuelSaved": "Drive and fuel transaction saved.",
-      "fuelSaveFailed": "Drive saved, but fuel transaction failed.",
       "driveFormInvalid": "Please correct the highlighted fields before submitting.",
       "transactionSaved": "Transaction saved.",
       "transactionSaveFailed": "Failed to save transaction.",
@@ -161,12 +162,6 @@
       "odometer": "Odometer",
       "driver": "Driver",
       "notes": "Notes",
-      "includeFuel": "Add fuel transaction",
-      "fuelPrice": "Fuel total price",
-      "fuelQuantity": "Fuel quantity",
-      "fuelDate": "Fuel transaction date",
-      "fuelBuyer": "Fuel buyer",
-      "fuelNotes": "Fuel notes",
       "submit": "Save drive",
       "backToList": "Back to drives list"
     },
@@ -174,13 +169,15 @@
       "title": "Transaction entry",
       "date": "Transaction date",
       "buyer": "Buyer",
-      "description": "Description",
-      "type": "Cost type",
       "price": "Price",
       "quantity": "Quantity",
       "notes": "Notes",
       "submit": "Save transaction",
-      "backToList": "Back to transactions list"
+      "backToList": "Back to transactions list",
+      "category": "Cost category",
+      "odometer": "Odometer",
+      "optional": "optional",
+      "noCategories": "No cost categories exist yet."
     },
     "drives": {
       "title": "Drives",
@@ -200,10 +197,11 @@
       "headers": {
         "date": "Date",
         "buyer": "Buyer",
-        "description": "Description",
         "price": "Price",
         "quantity": "Quantity",
-        "type": "Type"
+        "type": "Type",
+        "category": "Category",
+        "odometer": "Odometer"
       }
     },
     "upload": {
@@ -226,7 +224,7 @@
       },
       "costs": {
         "title": "Fuel & costs",
-        "hint": "Columns: buyer name, date, amount (decimals allowed), price, description, and cost type (Fix or Var)."
+        "hint": "Columns: buyer name, date, amount (decimals allowed), price, cost category name (must already exist) and optionally the odometer (required for categories that demand it)."
       }
     }
   },
@@ -364,5 +362,68 @@
       "adminOnly": "computed by the run",
       "explainer": "Factors are computed by the yearly run and are read-only here. The fixed factor is always an equal split — over the group of drivers plus anyone added on the participants screen."
     }
+  },
+  "costCategoryManagement": {
+    "title": "Cost categories",
+    "description": "Define the products that can be booked as costs, with cost type and unit.",
+    "loading": "Loading cost categories...",
+    "empty": "No cost categories yet. Create one to start booking costs.",
+    "form": {
+      "createTitle": "Create cost category",
+      "editTitle": "Update cost category",
+      "name": "Name",
+      "costType": "Cost type",
+      "unit": "Unit (e.g. Liter)",
+      "requiresOdometer": "Odometer required when booking",
+      "fuel": "Fuel (used for consumption statistics)",
+      "create": "Create category",
+      "update": "Update category",
+      "cancel": "Cancel"
+    },
+    "table": {
+      "name": "Name",
+      "costType": "Type",
+      "unit": "Unit",
+      "requiresOdometer": "Odometer required",
+      "fuel": "Fuel",
+      "actions": "Actions",
+      "yes": "Yes",
+      "no": "No"
+    },
+    "messages": {
+      "loadFailed": "Failed to load cost categories.",
+      "formInvalid": "Please correct the highlighted fields before submitting.",
+      "createSuccess": "Cost category created.",
+      "createFailed": "Failed to create cost category.",
+      "updateSuccess": "Cost category updated.",
+      "updateFailed": "Failed to update cost category.",
+      "deleteSuccess": "Cost category deleted.",
+      "deleteFailed": "Failed to delete cost category.",
+      "deleteDependencyBlocked": "Cost category cannot be deleted because costs use it.",
+      "nameInUse": "A cost category with this name already exists."
+    }
+  },
+  "statistics": {
+    "title": "Fuel consumption",
+    "description": "Consumption between consecutive fill-ups, assuming every fill-up is a full tank. The first fill-up only serves as baseline.",
+    "year": "Year",
+    "allYears": "All years",
+    "loading": "Loading statistics...",
+    "loadFailed": "Failed to load statistics.",
+    "empty": "Not enough fill-ups with odometer readings (at least two are needed).",
+    "average": "Average consumption",
+    "unit": "l/100 km",
+    "totalDistance": "Distance covered",
+    "totalLiters": "Fuel used",
+    "chartLabel": "Line chart of fuel consumption in l/100 km per fill-up",
+    "headers": {
+      "date": "Date",
+      "odometer": "Odometer",
+      "distance": "Distance (km)",
+      "liters": "Liters",
+      "price": "Price",
+      "consumption": "l/100 km"
+    },
+    "backToHub": "Back to car overview"
   }
 }

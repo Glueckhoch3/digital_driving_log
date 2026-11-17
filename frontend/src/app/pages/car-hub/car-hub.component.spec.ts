@@ -29,6 +29,6 @@ describe('CarHubComponent', () => {
     const hrefs = Array.from(fixture.nativeElement.querySelectorAll('a')).map((a) =>
       (a as HTMLAnchorElement).getAttribute('routerLink'),
     );
-    expect(hrefs).toEqual(['drives', 'drives/new', 'costs', 'costs/new', 'upload']);
+    expect(hrefs).toEqual(['drives', 'drives/new', 'costs', 'costs/new', 'statistics', 'upload']);
   });
 });

@@ -41,5 +41,6 @@ export class HeaderComponent {
     { labelKey: 'header.menu.calculations', route: '/calculations' },
     { labelKey: 'header.menu.manageUsers', route: '/manage/users' },
     { labelKey: 'header.menu.manageCars', route: '/manage/cars' },
+    { labelKey: 'header.menu.manageCostCategories', route: '/manage/cost-categories' },
   ];
 }

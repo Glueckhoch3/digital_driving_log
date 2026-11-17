@@ -16,24 +16,29 @@ import { CombinedSettlementComponent } from './pages/calculations/combined-settl
 import { participantsDirtyGuard } from './pages/calculations/participants-dirty.guard';
 import { carResolver } from './resolvers/car.resolver';
 import { usersResolver } from './resolvers/users.resolver';
+import { costCategoriesResolver } from './resolvers/cost-categories.resolver';
+import { CostCategoryManagementComponent } from './pages/cost-category-management/cost-category-management.component';
+import { StatisticsComponent } from './pages/statistics/statistics.component';
 
 export const routes: Routes = [
   { path: '', component: CarSelectionComponent },
   { path: 'cars/select', redirectTo: '' },
   {
     path: 'cars/:carId',
-    resolve: { car: carResolver, users: usersResolver },
+    resolve: { car: carResolver, users: usersResolver, costCategories: costCategoriesResolver },
     children: [
       { path: '', component: CarHubComponent },
       { path: 'drives', component: DrivesListComponent },
       { path: 'drives/new', component: DriveFormComponent },
       { path: 'costs', component: CostsListComponent },
       { path: 'costs/new', component: CostFormComponent },
+      { path: 'statistics', component: StatisticsComponent },
       { path: 'upload', component: UploadComponent },
     ],
   },
   { path: 'manage/cars', component: CarManagementComponent },
   { path: 'manage/users', component: UserManagementComponent },
+  { path: 'manage/cost-categories', component: CostCategoryManagementComponent },
   { path: 'overview', component: AdminOverviewComponent },
   {
     path: 'calculations',

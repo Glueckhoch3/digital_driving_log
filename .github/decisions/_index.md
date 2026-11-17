@@ -17,3 +17,4 @@
 | ADR-015 | Yearly cost distribution: distance-weighted variable, equal-split fixed factors | backend | accepted | 2026-07-23 | Issue #20 |
 | ADR-016 | CORS allowed origins: comma-separated origin patterns, fixed ports, fail-closed | security | accepted | 2026-07-25 | Extends ADR-011 |
 | ADR-017 | API access: relative apiUrl behind an nginx reverse proxy | frontend | accepted | 2026-07-25 | Follows ADR-016 |
+| ADR-018 | Cost categories, odometer on costs, fuel consumption statistics | backend | proposed | 2026-11-17 | Issue #42; extends ADR-014/015 |
