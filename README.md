@@ -208,6 +208,18 @@ This will start:
 - Backend API (port 8080)
 - Frontend (port 4200)
 
+### Deployment with Published DockerHub Images
+
+Instead of building the images locally, `docker-compose.prod.yml` pulls the `ddl-backend`/`ddl-frontend`
+images published by the [release workflow](.github/workflows/ci.yml) on each `vX.Y.Z` tag:
+
+```bash
+DOCKERHUB_USER=<dockerhub-namespace> TAG=<released-version> docker compose -f docker-compose.prod.yml up -d
+```
+
+- `DOCKERHUB_USER` is the DockerHub namespace the images were pushed to.
+- `TAG` must be a version that was actually released (e.g. `1.2.3`) - the workflow does not publish a `latest` tag.
+
 ### First-Run Data Flow
 - Create at least one user first in **User management** (`/manage/users`).
 - Then create and manage cars in **Car management** (`/manage/cars`).
