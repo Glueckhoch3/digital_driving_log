@@ -1,0 +1,98 @@
+/*
+ * Design tokens — theme "Ozean" (issue #22, docs/plans/WebdesignRedesign.md §4.1).
+ * Components must only use these variables, never raw hex values.
+ * Every text/background pair below was checked for WCAG AA (>= 4.5:1 text, >= 3:1 borders/focus),
+ * in light and dark. Re-check when changing a value.
+ *
+ * Dark mode follows the system (prefers-color-scheme). `data-theme="light|dark"` on <html>
+ * forces a theme (no switch in the UI yet).
+ */
+@mixin light-colors {
+  --bg: #f3f7fb;
+  --surface: #ffffff;
+  --ink: #14263a;
+  --muted: #4e6178;
+  --line: #d3deea;
+  --field: #6b819a; /* input borders, >= 3:1 on surface and bg */
+  --brand: #1b5e9b; /* filled buttons, active states */
+  --brand-ink: #ffffff; /* text on --brand */
+  --brand-text: #1b5e9b; /* brand coloured text on surface */
+  --brand-soft: #e1eefa;
+  --bar: #1b5e9b; /* top bar */
+  --bar-ink: #ffffff;
+  --bar-active-bg: #ffffff;
+  --bar-active-ink: #1b5e9b;
+  --pos: #14703f; /* receives money / success */
+  --pos-soft: #e8f5ee;
+  --neg: #a52a2a; /* pays money / error */
+  --neg-soft: #fbeaea;
+  --danger: #a52a2a; /* solid destructive button */
+  --danger-ink: #ffffff;
+  --warn: #7a4a00;
+  --warn-soft: #fdf1d9;
+  --focus: #c2410c;
+  --shadow: 0 1px 2px rgba(20, 40, 70, 0.08), 0 2px 8px rgba(20, 40, 70, 0.06);
+  --scrim: rgba(10, 20, 35, 0.5);
+}
+
+@mixin dark-colors {
+  --bg: #0e1824;
+  --surface: #162434;
+  --ink: #e5eef8;
+  --muted: #9fb4c9;
+  --line: #284058;
+  --field: #7f9bb8;
+  --brand: #7fb8ee;
+  --brand-ink: #07192b;
+  --brand-text: #8cc2f5;
+  --brand-soft: #1f3a56;
+  --bar: #143554;
+  --bar-ink: #e5eef8;
+  --bar-active-bg: #e5eef8;
+  --bar-active-ink: #143554;
+  --pos: #6fdc9a;
+  --pos-soft: #17302a;
+  --neg: #ff9a9d;
+  --neg-soft: #3a1f21;
+  --danger: #ff9a9d;
+  --danger-ink: #2a0a0b;
+  --warn: #f2c36b;
+  --warn-soft: #3a2f17;
+  --focus: #ffd27a;
+  --shadow: none;
+  --scrim: rgba(0, 0, 0, 0.6);
+}
+
+:root {
+  @include light-colors;
+
+  /* spacing scale (4/8 based) */
+  --s1: 4px;
+  --s2: 8px;
+  --s3: 12px;
+  --s4: 16px;
+  --s5: 24px;
+  --s6: 32px;
+  --s7: 48px;
+
+  --r: 12px; /* card radius */
+  --r-sm: 8px; /* control radius */
+  --tap: 48px; /* minimum touch target height */
+  --tabbar-h: 64px;
+  --font:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    @include dark-colors;
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme='dark'] {
+  @include dark-colors;
+  color-scheme: dark;
+}
