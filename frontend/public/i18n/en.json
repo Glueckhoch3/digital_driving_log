@@ -2,17 +2,25 @@
   "header": {
     "title": "Digital Driving Log",
     "menu": {
-      "entryOverview": "Management overview",
-      "chooseCar": "Choose car",
-      "calculations": "Calculations",
-      "manageUsers": "Manage users",
       "manageCars": "Manage cars",
-      "manageCostCategories": "Manage cost categories"
+      "manageCostCategories": "Cost types",
+      "cars": "Cars",
+      "log": "Log",
+      "settlement": "Settlement",
+      "more": "More",
+      "settings": "Settings",
+      "manageUsers": "People"
     },
     "language": {
       "en": "English",
       "de": "Deutsch"
-    }
+    },
+    "nav": {
+      "main": "Main menu",
+      "settings": "Settings"
+    },
+    "skipLink": "Skip to content",
+    "langSwitch": "Change language (current: {{lang}})"
   },
   "common": {
     "pagination": {
@@ -36,8 +44,7 @@
     "integer": "Enter a whole number greater than 0."
   },
   "userManagement": {
-    "title": "User management",
-    "description": "Create, update, and delete users.",
+    "title": "People",
     "loading": "Loading users...",
     "empty": "No users available.",
     "form": {
@@ -71,8 +78,7 @@
     }
   },
   "carManagement": {
-    "title": "Car management",
-    "description": "Create, update, and delete cars.",
+    "title": "Manage cars",
     "loading": "Loading cars and users...",
     "empty": "No cars available.",
     "usersRequiredFirst": "Create at least one user before creating a car.",
@@ -107,13 +113,14 @@
     }
   },
   "carSelection": {
-    "title": "Choose a car",
+    "title": "My cars",
     "loading": "Loading cars...",
     "empty": "No cars available.",
-    "loadError": "Failed to load cars."
+    "loadError": "Failed to load cars.",
+    "add": "Add car"
   },
   "managementOverview": {
-    "title": "Management overview",
+    "title": "Log",
     "loading": "Loading merged timeline...",
     "empty": "No entries available.",
     "loadError": "Failed to load management overview.",
@@ -121,13 +128,13 @@
       "date": "Date",
       "car": "Car",
       "type": "Type",
-      "participant": "Participant",
+      "participant": "Person",
       "details": "Details",
       "value": "Value"
     },
     "types": {
-      "drive": "Drive",
-      "transaction": "Transaction"
+      "drive": "Trip",
+      "transaction": "Expense"
     },
     "timelineLoadError": "Failed to load timeline entries."
   },
@@ -136,67 +143,70 @@
     "loadError": "Failed to load car workspace data.",
     "hub": {
       "navLabel": "Car sections",
-      "viewDrives": "View drives",
-      "addDrive": "Add drive",
-      "viewCosts": "View costs",
-      "addCost": "Add cost",
-      "backToHub": "Back to car overview",
-      "upload": "Import from CSV",
-      "statistics": "Fuel consumption statistics"
+      "viewDrives": "Trips",
+      "addDrive": "Add trip",
+      "viewCosts": "Expenses",
+      "addCost": "Add expense",
+      "backToHub": "Back",
+      "upload": "Upload file",
+      "statistics": "Fuel use",
+      "doGroup": "Add",
+      "viewGroup": "View"
     },
     "messages": {
-      "driveSaved": "Drive saved.",
-      "driveSaveFailed": "Failed to save drive.",
+      "driveSaved": "Trip saved.",
+      "driveSaveFailed": "Could not save the trip.",
       "driveFormInvalid": "Please correct the highlighted fields before submitting.",
-      "transactionSaved": "Transaction saved.",
-      "transactionSaveFailed": "Failed to save transaction.",
+      "transactionSaved": "Expense saved.",
+      "transactionSaveFailed": "Could not save the expense.",
       "transactionFormInvalid": "Please correct the highlighted fields before submitting."
     },
     "costTypes": {
-      "VARIABLE": "Variable",
-      "FIXED": "Fixed"
+      "VARIABLE": "Driving costs",
+      "FIXED": "Fixed costs"
     },
     "driveForm": {
-      "title": "Drive entry",
-      "driveDate": "Drive date",
+      "title": "Add trip",
+      "driveDate": "Date",
       "odometer": "Odometer",
-      "driver": "Driver",
-      "notes": "Notes",
-      "submit": "Save drive",
-      "backToList": "Back to drives list"
+      "driver": "Who drove?",
+      "notes": "Note (optional)",
+      "submit": "Save",
+      "backToList": "Back",
+      "odometerHint": "The number on the odometer after the trip."
     },
     "transactionForm": {
-      "title": "Transaction entry",
-      "date": "Transaction date",
-      "buyer": "Buyer",
+      "title": "Add expense",
+      "date": "Date",
+      "buyer": "Who paid?",
       "price": "Price",
       "quantity": "Quantity",
-      "notes": "Notes",
-      "submit": "Save transaction",
-      "backToList": "Back to transactions list",
+      "notes": "Note (optional)",
+      "submit": "Save",
+      "backToList": "Back",
       "category": "Cost category",
       "odometer": "Odometer",
       "optional": "optional",
       "noCategories": "No cost categories exist yet."
     },
     "drives": {
-      "title": "Drives",
-      "empty": "No drives for this car.",
-      "addLink": "Add drive",
+      "title": "Trips",
+      "empty": "No trips yet.",
+      "addLink": "Add trip",
       "headers": {
         "date": "Date",
-        "driver": "Driver",
+        "driver": "Person",
         "odometer": "Odometer",
-        "distance": "Driven distance"
+        "distance": "Distance"
       }
     },
     "transactions": {
-      "title": "Transactions",
-      "empty": "No transactions for this car.",
-      "addLink": "Add transaction",
+      "title": "Expenses",
+      "empty": "No expenses yet.",
+      "addLink": "Add expense",
       "headers": {
         "date": "Date",
-        "buyer": "Buyer",
+        "buyer": "Paid by",
         "price": "Price",
         "quantity": "Quantity",
         "type": "Type",
@@ -205,69 +215,65 @@
       }
     },
     "upload": {
-      "title": "Import from CSV",
-      "back": "Back to car overview",
-      "intro": "Bulk-load drives and costs for this car from semicolon-separated files. Every row is checked first — nothing is imported unless the whole file is valid.",
+      "title": "Upload file",
+      "back": "Back",
       "formatLabel": "Number format",
       "formatEn": "English  1,234.56",
       "formatDe": "Deutsch  1.234,56",
-      "importDrives": "Import drives",
-      "importCosts": "Import costs",
+      "importDrives": "Upload trips",
+      "importCosts": "Upload expenses",
       "importing": "Importing…",
       "imported": "{{count}} rows imported.",
       "rejected": "File rejected — {{count}} rows need fixing. Nothing was imported.",
       "line": "Line {{line}}:",
       "importFailed": "The import could not be completed.",
       "drives": {
-        "title": "Drives",
+        "title": "Trips",
         "hint": "Columns: odometer reading, driver first and last name, and drive date."
       },
       "costs": {
-        "title": "Fuel & costs",
+        "title": "Fuel & expenses",
         "hint": "Columns: buyer name, date, amount (decimals allowed), price, cost category name (must already exist) and optionally the odometer (required for categories that demand it)."
       }
     }
   },
   "calculations": {
-    "back": "← Back to calculations",
+    "back": "← Back",
     "loading": "Loading…",
-    "notCalculated": "No calculation for this selection yet. Run it on the action page.",
+    "notCalculated": "Nothing settled yet. Start it under “Settle year”.",
     "hub": {
-      "title": "Calculations",
-      "subtitle": "Review distances, factors and settlements, manage who shares a car's fixed costs, or run a monthly or yearly calculation.",
-      "viewResults": "View results",
-      "takeAction": "Take action",
-      "resultsTitle": "Results",
-      "resultsDesc": "Yearly settlement, monthly distances and distribution factors for a car.",
-      "combinedTitle": "Combined settlement",
-      "combinedDesc": "Each driver's net balance across all their cars.",
-      "runTitle": "Run a calculation",
-      "runDesc": "Aggregate a month, calculate a year, or delete a run."
+      "title": "Prepare settlement",
+      "viewResults": "View",
+      "takeAction": "Do",
+      "resultsTitle": "How it was calculated",
+      "resultsDesc": "Per car: kilometres, driving costs, fixed costs.",
+      "combinedTitle": "Result for all cars",
+      "combinedDesc": "Who gets money, who pays?",
+      "runTitle": "Settle year",
+      "runDesc": "Add up months, then settle the year."
     },
     "run": {
-      "title": "Run a calculation",
-      "subtitle": "Pick a car, year and month, then act on it below. A period is calculated only once — delete it before redoing.",
-      "aggregateBtn": "Aggregate month",
+      "title": "Settle year",
+      "aggregateBtn": "Add up month",
       "deleteMonthBtn": "Delete month",
       "confirmDeleteMonth": "Delete this month's aggregated distances? It can be re-aggregated afterwards.",
-      "calculateBtn": "Calculate year",
+      "calculateBtn": "Settle year",
       "deleteYearBtn": "Delete year",
       "confirmDeleteYear": "Delete this year's calculation? The combined settlement is rebuilt without this car until it is calculated again. To redo the year, calculate it again afterwards.",
-      "participantsBadge": "{{count}} participants · {{added}} added"
+      "participantsBadge": "{{count}} sharing · {{added}} added"
     },
     "participants": {
-      "title": "Participants",
-      "subtitle": "Who shares this car's fixed costs for the selected year.",
-      "driverCol": "Driver",
-      "distanceCol": "Distance (km)",
-      "fixShareCol": "Fixed share",
-      "varShareCol": "Variable share",
+      "title": "Who shares the costs?",
+      "driverCol": "Person",
+      "distanceCol": "Kilometres",
+      "fixShareCol": "Fixed costs share",
+      "varShareCol": "Driving costs share",
       "drove": "drove",
       "noDrives": "no drives in {{year}}",
       "lockedDriver": "Drivers can't be removed — their distance is already recorded.",
-      "driversOnly": "Drivers only",
-      "save": "Save participants",
-      "reset": "Reset to drivers only",
+      "driversOnly": "Only people who drove",
+      "save": "Save",
+      "reset": "Reset",
       "resetConfirm": "Remove every manually added participant and go back to drivers only?",
       "saved": "Participants saved.",
       "savedStaleRun": "Participants saved. The {{year}} calculation still uses the old group. Delete it here, then calculate the year again on the run page.",
@@ -280,11 +286,10 @@
       "deletedGoToRun": "Calculation deleted. Calculate the year again on the run page."
     },
     "results": {
-      "title": "Results",
-      "subtitle": "Yearly settlement, monthly distances and distribution factors for one car and year.",
-      "tabYearly": "Yearly settlement",
-      "tabMonthly": "Monthly distances",
-      "tabFactors": "Distribution factors",
+      "title": "How it was calculated",
+      "tabYearly": "Per person",
+      "tabMonthly": "Kilometres per month",
+      "tabFactors": "Shares",
       "notCalculatedForYear": "No calculation for {{year}} yet. Run it on the action page.",
       "fixedOnly": "fixed costs only",
       "notInThisRun": "not in this run",
@@ -326,46 +331,49 @@
       "loadFailed": "Failed to load the calculation results."
     },
     "cols": {
-      "driver": "Driver",
-      "distance": "Distance (km)",
-      "varFactor": "Var. factor",
-      "fixFactor": "Fix. factor",
-      "variableOwed": "Variable owed (€)",
-      "fixedOwed": "Fixed owed (€)",
-      "totalOwed": "Total owed (€)",
-      "total": "Total",
+      "driver": "Person",
+      "distance": "Kilometres",
+      "varFactor": "Driving costs share",
+      "fixFactor": "Fixed costs share",
+      "variableOwed": "Driving costs (€)",
+      "fixedOwed": "Fixed costs (€)",
+      "totalOwed": "Total (€)",
+      "total": "All",
       "paid": "Paid (€)",
-      "variableDiff": "Variable diff. (€)",
-      "fixedDiff": "Fixed diff. (€)",
-      "netBalance": "Net balance (€)",
+      "variableDiff": "Driving costs: difference (€)",
+      "fixedDiff": "Fixed costs: difference (€)",
+      "netBalance": "Result (€)",
       "month": "Month"
     },
     "yearly": {
-      "title": "Yearly settlement",
-      "subtitle": "One car's owed split per driver for the year.",
-      "explainer": "Variable owed = variable factor × the car's variable total (the factor follows distance, so a non-fueler still pays for km driven). Fixed owed = fixed factor × the car's fixed total. This view shows what each driver owes; paid and net balance are combined across cars — see the combined settlement."
+      "title": "Per person",
+      "explainer": "Driving costs (e.g. fuel) are split by kilometres. Fixed costs (e.g. insurance) are split equally."
     },
     "combined": {
-      "title": "Combined settlement",
-      "subtitle": "Net balance per driver across every car in their group.",
-      "explainer": "Variable / fixed diff. = what a driver paid of that cost type minus what they owe, summed across every calculated car. Net balance = the two differences added; positive means the group owes the driver. Each column nets to zero.",
-      "calculatedCars": "Calculated cars for this year:"
+      "title": "Result for all cars",
+      "explainer": "Plus = gets money, minus = pays. All amounts add up to 0. Difference = paid minus share.",
+      "calculatedCars": "Settled cars:",
+      "tabResult": "Result",
+      "tabDetails": "Details",
+      "gets": "gets",
+      "pays": "pays",
+      "even": "even",
+      "viewLabel": "View",
+      "howCalculated": "How it was calculated",
+      "prepare": "Prepare settlement"
     },
     "monthly": {
-      "title": "Monthly distances",
-      "subtitle": "Per-driver kilometres by month for a car.",
-      "empty": "No aggregated months for this car and year."
+      "title": "Kilometres per month",
+      "empty": "No months added up yet."
     },
     "factors": {
-      "title": "Distribution factors",
-      "subtitle": "The factors that split this car's yearly costs. Variable follows distance; fixed is an equal split over the participant group.",
+      "title": "Shares",
       "adminOnly": "computed by the run",
-      "explainer": "Factors are computed by the yearly run and are read-only here. The fixed factor is always an equal split — over the group of drivers plus anyone added on the participants screen."
+      "explainer": "The driving costs share follows the kilometres. Fixed costs are split equally among everyone who shares."
     }
   },
   "costCategoryManagement": {
-    "title": "Cost categories",
-    "description": "Define the products that can be booked as costs, with cost type and unit.",
+    "title": "Cost types",
     "loading": "Loading cost categories...",
     "empty": "No cost categories yet. Create one to start booking costs.",
     "form": {
@@ -404,7 +412,7 @@
     }
   },
   "statistics": {
-    "title": "Fuel consumption",
+    "title": "Fuel use",
     "description": "Consumption between consecutive fill-ups, assuming every fill-up is a full tank. The first fill-up only serves as baseline.",
     "year": "Year",
     "allYears": "All years",
@@ -424,6 +432,6 @@
       "price": "Price",
       "consumption": "l/100 km"
     },
-    "backToHub": "Back to car overview"
+    "backToHub": "Back"
   }
 }

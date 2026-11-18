@@ -1,31 +1,24 @@
-<section class="drive-form-page">
+<section class="page page--narrow">
+  <a class="crumb" [routerLink]="['/cars', car().carId, 'drives']"
+    ><app-icon name="left" [small]="true" />{{ 'carWorkspace.driveForm.backToList' | translate }}</a
+  >
   @if (car()) {
     <h2>{{ 'carWorkspace.driveForm.title' | translate }} — {{ car().name }}</h2>
   }
 
-  <a [routerLink]="['/cars', car().carId, 'drives']">{{
-    'carWorkspace.driveForm.backToList' | translate
-  }}</a>
-
   @if (message()) {
-    <p
-      #statusRegion
-      class="drive-form-page__message"
-      role="status"
-      aria-live="polite"
-      tabindex="-1"
-    >
+    <p #statusRegion class="msg msg--ok" role="status" aria-live="polite" tabindex="-1">
       {{ message() | translate }}
     </p>
   }
 
   @if (error()) {
-    <p class="drive-form-page__error" role="alert" aria-live="assertive">
+    <p class="msg msg--error" role="alert" aria-live="assertive">
       {{ error() | translate }}
     </p>
   }
 
-  <form #driveFormEl [formGroup]="driveForm" (ngSubmit)="saveDrive()">
+  <form class="form" #driveFormEl [formGroup]="driveForm" (ngSubmit)="saveDrive()">
     <label for="drive-driveDate">{{ 'carWorkspace.driveForm.driveDate' | translate }}</label>
     <input
       id="drive-driveDate"
@@ -43,6 +36,9 @@
     <app-field-error id="drive-driveDate-error" [control]="driveForm.controls.driveDate" />
 
     <label for="drive-odometer">{{ 'carWorkspace.driveForm.odometer' | translate }}</label>
+    <span class="form__hint" id="drive-odometer-hint">{{
+      'carWorkspace.driveForm.odometerHint' | translate
+    }}</span>
     <input
       id="drive-odometer"
       type="number"
@@ -53,8 +49,8 @@
       "
       [attr.aria-describedby]="
         driveForm.controls.odometer.invalid && driveForm.controls.odometer.touched
-          ? 'drive-odometer-error'
-          : null
+          ? 'drive-odometer-hint drive-odometer-error'
+          : 'drive-odometer-hint'
       "
     />
     <app-field-error id="drive-odometer-error" [control]="driveForm.controls.odometer" />
@@ -81,6 +77,8 @@
     <label for="drive-notes">{{ 'carWorkspace.driveForm.notes' | translate }}</label>
     <textarea id="drive-notes" rows="3" formControlName="notes"></textarea>
 
-    <button type="submit">{{ 'carWorkspace.driveForm.submit' | translate }}</button>
+    <div class="form__actions">
+      <button type="submit">{{ 'carWorkspace.driveForm.submit' | translate }}</button>
+    </div>
   </form>
 </section>

@@ -3,6 +3,7 @@ import { rxResource } from '@angular/core/rxjs-interop';
 import { HttpErrorResponse } from '@angular/common/http';
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
+import { IconComponent } from '../../components/icon/icon.component';
 import { DriveService } from '../../services/drive.service';
 import { CarDto } from '../../models/cars';
 import { UserDto } from '../../models/users';
@@ -22,7 +23,7 @@ interface DriveRow {
 @Component({
   selector: 'app-drives-list',
   standalone: true,
-  imports: [RouterLink, TranslateModule],
+  imports: [RouterLink, TranslateModule, IconComponent],
   templateUrl: './drives-list.component.html',
   styleUrl: './drives-list.component.scss',
 })

@@ -10,6 +10,7 @@ import { CarService } from '../../services/car.service';
 import { CarDto } from '../../models/cars';
 import { CombinedSettlementRow } from '../../models/calculations';
 import { selectableYears } from '../../utils/selectable-years';
+import { IconComponent } from '../../components/icon/icon.component';
 
 /** One car's calculated-for-the-selected-year status, for the chip strip. */
 export interface CarCalculationStatus {
@@ -21,7 +22,7 @@ export interface CarCalculationStatus {
 @Component({
   selector: 'app-combined-settlement',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, TranslateModule],
+  imports: [CommonModule, FormsModule, RouterLink, TranslateModule, IconComponent],
   templateUrl: './combined-settlement.component.html',
 })
 export class CombinedSettlementComponent implements OnInit {
@@ -30,6 +31,9 @@ export class CombinedSettlementComponent implements OnInit {
 
   readonly years: number[] = selectableYears();
   year = new Date().getFullYear();
+
+  /** 'result' = who gets / pays what (issue #41); 'details' = the intermediate columns */
+  readonly view = signal<'result' | 'details'>('result');
 
   readonly rows = signal<CombinedSettlementRow[]>([]);
   readonly loading = signal(false);
@@ -47,6 +51,20 @@ export class CombinedSettlementComponent implements OnInit {
       net: rows.reduce((sum, r) => sum + r.netBalance, 0),
     };
   });
+
+  abs(value: number): number {
+    return Math.abs(value);
+  }
+
+  initials(name: string): string {
+    return name
+      .split(/\s+/)
+      .filter(Boolean)
+      .slice(0, 2)
+      .map((word) => word[0])
+      .join('')
+      .toUpperCase();
+  }
 
   ngOnInit(): void {
     this.carService.getCars().subscribe({

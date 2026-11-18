@@ -1,21 +1,25 @@
-<section class="drives-list">
+<section class="page">
+  <a class="crumb" routerLink=".."
+    ><app-icon name="left" [small]="true" />{{ 'carWorkspace.hub.backToHub' | translate }}</a
+  >
   <h2>{{ 'carWorkspace.drives.title' | translate }}</h2>
 
-  <div class="drives-list__actions">
-    <a routerLink="..">{{ 'carWorkspace.hub.backToHub' | translate }}</a>
-    <a routerLink="new">{{ 'carWorkspace.drives.addLink' | translate }}</a>
+  <div class="btn-row actions-bar">
+    <a class="btn btn--primary" routerLink="new"
+      ><app-icon name="plus" />{{ 'carWorkspace.drives.addLink' | translate }}</a
+    >
   </div>
 
   @if (loading()) {
     <p>{{ 'carWorkspace.loading' | translate }}</p>
   } @else if (errorMessage()) {
-    <p class="drives-list__error" role="alert" aria-live="assertive">
+    <p class="msg msg--error" role="alert" aria-live="assertive">
       {{ errorMessage() | translate }}
     </p>
   } @else if (driveRows().length === 0) {
     <p>{{ 'carWorkspace.drives.empty' | translate }}</p>
   } @else {
-    <table>
+    <table class="tbl">
       <thead>
         <tr>
           <th scope="col">{{ 'carWorkspace.drives.headers.date' | translate }}</th>
@@ -29,15 +33,15 @@
           <tr>
             <td>{{ row.drive.driveDate }}</td>
             <td>{{ userLabelById().get(row.drive.driverId) || row.drive.driverId }}</td>
-            <td>{{ row.drive.odometer }}</td>
-            <td>{{ row.distance ?? '-' }}</td>
+            <td class="num">{{ row.drive.odometer }}</td>
+            <td class="num">{{ row.distance ?? '-' }}</td>
           </tr>
         }
       </tbody>
     </table>
 
     @if (totalPages() > 1) {
-      <nav class="drives-list__pager" aria-label="{{ 'common.pagination.navLabel' | translate }}">
+      <nav class="pager" aria-label="{{ 'common.pagination.navLabel' | translate }}">
         <button type="button" (click)="changePage(-1)" [disabled]="page() === 0">
           {{ 'common.pagination.previous' | translate }}
         </button>

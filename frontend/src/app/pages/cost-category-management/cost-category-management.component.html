@@ -1,20 +1,19 @@
-<section class="cost-category-management">
+<section class="page page--wide">
   <h2>{{ 'costCategoryManagement.title' | translate }}</h2>
-  <p>{{ 'costCategoryManagement.description' | translate }}</p>
 
   @if (message()) {
-    <p class="cost-category-management__message" role="status" aria-live="polite">
+    <p class="msg msg--ok" role="status" aria-live="polite">
       {{ message() | translate }}
     </p>
   }
 
   @if (error()) {
-    <p class="cost-category-management__error" role="alert" aria-live="assertive">
+    <p class="msg msg--error" role="alert" aria-live="assertive">
       {{ error() | translate }}
     </p>
   }
 
-  <form class="cost-category-management__form" [formGroup]="form" (ngSubmit)="submit()">
+  <form class="form" [formGroup]="form" (ngSubmit)="submit()">
     <h3>
       @if (editingId() !== null) {
         {{ 'costCategoryManagement.form.editTitle' | translate }}
@@ -54,17 +53,17 @@
     />
     <app-field-error id="cc-unit-error" [control]="form.controls.unit" />
 
-    <label class="cost-category-management__checkbox" for="cc-requiresOdometer">
+    <label class="check-row" for="cc-requiresOdometer">
       <input id="cc-requiresOdometer" type="checkbox" formControlName="requiresOdometer" />
       {{ 'costCategoryManagement.form.requiresOdometer' | translate }}
     </label>
 
-    <label class="cost-category-management__checkbox" for="cc-fuel">
+    <label class="check-row" for="cc-fuel">
       <input id="cc-fuel" type="checkbox" formControlName="fuel" />
       {{ 'costCategoryManagement.form.fuel' | translate }}
     </label>
 
-    <div class="cost-category-management__form-actions">
+    <div class="form__actions">
       <button type="submit">
         @if (editingId() !== null) {
           {{ 'costCategoryManagement.form.update' | translate }}
@@ -85,7 +84,7 @@
   } @else if (categories().length === 0) {
     <p>{{ 'costCategoryManagement.empty' | translate }}</p>
   } @else {
-    <table class="cost-category-management__table">
+    <table class="tbl">
       <thead>
         <tr>
           <th scope="col">{{ 'costCategoryManagement.table.name' | translate }}</th>
@@ -118,12 +117,12 @@
                 ) | translate
               }}
             </td>
-            <td>
-              <div class="cost-category-management__row-actions">
+            <td class="actions-cell">
+              <div class="actions">
                 <button type="button" (click)="edit(category)">
                   {{ 'common.edit' | translate }}
                 </button>
-                <button type="button" (click)="delete(category.costCategoryId)">
+                <button type="button" class="btn--danger" (click)="delete(category.costCategoryId)">
                   {{ 'common.delete' | translate }}
                 </button>
               </div>

@@ -1,73 +1,68 @@
-.statistics {
-  max-width: 60rem;
-  margin: 2rem auto;
-  padding: 1rem;
+.statistics__filter {
+  margin: var(--s4) 0;
+  max-width: 20rem;
 
-  &__filter {
-    margin: 1rem 0;
+  label {
+    margin-top: 0;
+  }
+}
 
-    select {
-      margin-left: 0.5rem;
-    }
+.statistics__summary {
+  display: grid;
+  gap: var(--s3);
+  margin: var(--s4) 0;
+
+  @media (min-width: 36rem) {
+    grid-template-columns: repeat(3, 1fr);
   }
 
-  &__error {
-    color: #b02020;
+  > div {
+    padding: var(--s4);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--r);
+    box-shadow: var(--shadow);
   }
 
-  &__summary {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1.5rem;
-    margin: 1rem 0;
-
-    dt {
-      font-size: 0.85rem;
-      opacity: 0.75;
-    }
-
-    dd {
-      margin: 0;
-      font-size: 1.25rem;
-      font-weight: 600;
-    }
+  dt {
+    font-size: 0.875rem;
+    color: var(--muted);
   }
 
-  &__chart {
-    width: 100%;
-    height: auto;
-    margin: 1rem 0;
+  dd {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
   }
+}
 
-  &__grid {
-    stroke: currentColor;
-    stroke-opacity: 0.15;
-  }
+.statistics__chart {
+  width: 100%;
+  height: auto;
+  margin: var(--s4) 0;
+  padding: var(--s3);
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+}
 
-  &__tick {
-    fill: currentColor;
-    font-size: 11px;
-    opacity: 0.75;
-  }
+.statistics__grid {
+  stroke: currentColor;
+  stroke-opacity: 0.2;
+}
 
-  &__line {
-    stroke: #1f6feb;
-    stroke-width: 2;
-  }
+.statistics__tick {
+  fill: var(--muted);
+  font-size: 11px;
+}
 
-  &__point {
-    fill: #1f6feb;
-  }
+.statistics__line {
+  stroke: var(--brand-text);
+  stroke-width: 2.5;
+}
 
-  &__table {
-    width: 100%;
-    border-collapse: collapse;
-
-    th,
-    td {
-      border: 1px solid #e0e0e0;
-      padding: 0.5rem;
-      text-align: left;
-    }
-  }
+.statistics__point {
+  fill: var(--brand-text);
 }

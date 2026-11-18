@@ -4,6 +4,7 @@ import { DecimalPipe } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
+import { IconComponent } from '../../components/icon/icon.component';
 import { CostService } from '../../services/cost.service';
 import { CarDto } from '../../models/cars';
 import { UserDto } from '../../models/users';
@@ -15,7 +16,7 @@ const PAGE_SIZE = 10;
 @Component({
   selector: 'app-costs-list',
   standalone: true,
-  imports: [RouterLink, TranslateModule, DecimalPipe],
+  imports: [RouterLink, TranslateModule, DecimalPipe, IconComponent],
   templateUrl: './costs-list.component.html',
   styleUrl: './costs-list.component.scss',
 })

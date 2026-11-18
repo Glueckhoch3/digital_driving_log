@@ -1,6 +1,7 @@
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { forkJoin } from 'rxjs';
 import { TranslateModule } from '@ngx-translate/core';
+import { IconComponent } from '../../components/icon/icon.component';
 import { CarService } from '../../services/car.service';
 import { DriveService } from '../../services/drive.service';
 import { CostService } from '../../services/cost.service';
@@ -34,7 +35,7 @@ const PAGE_SIZE = 20;
 @Component({
   selector: 'app-admin-overview',
   standalone: true,
-  imports: [TranslateModule],
+  imports: [TranslateModule, IconComponent],
   templateUrl: './admin-overview.component.html',
   styleUrl: './admin-overview.component.scss',
 })
