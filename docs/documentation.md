@@ -454,7 +454,7 @@ Both return an `ImportResult` (`{ imported, errors: [{ line, message }] }`). Fie
 
 ### Frontend routes
 - `/` - Start page
-- `/overview` - Management overview
+- `/log` - Log (formerly `/overview`, which redirects)
 - `/cars/select` - Car selection
 - `/cars/{carId}` - Car workspace
 - `/cars/{carId}/upload` - CSV import (drives and costs)

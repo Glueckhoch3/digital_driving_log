@@ -29,10 +29,11 @@ Layered; all REST under `/ddl/api`.
 - Run: `cd backend && ./mvnw verify` (tests) / `./mvnw spring-boot:run`
 
 ## Frontend — `frontend/src/app/`
-- `pages/` — `car-selection` (home `/`), `car-hub`, `drives-list`, `drive-form`, `costs-list`, `cost-form`, `upload` (CSV import), `statistics` (fuel consumption), `car-management`, `user-management`, `cost-category-management`, `admin-overview`, `calculations/` (hub, run, results, yearly-settlement, monthly-distances, distribution-factors, combined-settlement, `availability.store.ts`, `participants-dirty.guard.ts`)
+- `pages/` — `car-selection` (home `/`), `car-hub`, `drives-list`, `drive-form`, `costs-list`, `cost-form`, `upload` (CSV import), `statistics` (fuel consumption), `car-management`, `user-management`, `cost-category-management`, `admin-overview` (route `/log`), `calculations/` (hub, run, results, yearly-settlement, monthly-distances, distribution-factors, combined-settlement, `availability.store.ts`, `participants-dirty.guard.ts`)
 - `services/` (HttpClient wrappers, base `environment.apiUrl`: car, user, drive, cost, calculation, import), `models/` (TS mirrors of DTOs, `page.ts`/`page-query.ts` for paginated lists, `api-error.ts`, `locale-number.ts`), `resolvers/` (`car`, `users`), `validators/`, `components/` (`header`, `field-error`), `utils/`
-- Routes in `app.routes.ts`: `cars/:carId/{drives,drives/new,costs,costs/new,statistics,upload}`, `manage/cars`, `manage/users`, `manage/cost-categories`, `overview`, `calculations/{run,results,combined}`
+- Routes in `app.routes.ts`: `cars/:carId/{drives,drives/new,costs,costs/new,statistics,upload}`, `manage/cars`, `manage/users`, `manage/cost-categories`, `log` (`overview` redirects), `calculations/{run,results,combined}`; nav = `components/header` (top bar wide / bottom tab bar phone, ADR-019)
 - i18n: `frontend/public/i18n/{en,de}.json` — **always add keys to both**
+- Styling (ADR-019): colours/spacing only from tokens in `frontend/src/styles/_tokens.scss` (never raw hex; light+dark); shared classes in `styles/_base.scss` (`.page .card .card-link .btn .msg .seg .badge .tbl .form`); tables use `class="tbl"` (stack on phones, labels via `utils/stacked-tables.ts`); icons via `<app-icon name=…>` (sprite in `app.html`); min tap size 48px; breakpoint 48rem
 - Conventions: ReactiveForms + `FieldErrorComponent`, `input.required()`, signals, `| translate`
 - Commands (in `frontend/`): `npm start`, `npm run build`, `npm test -- --watch=false` (vitest via `ng test`)
 
