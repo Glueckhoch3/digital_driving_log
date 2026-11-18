@@ -39,7 +39,8 @@ export const routes: Routes = [
   { path: 'manage/cars', component: CarManagementComponent },
   { path: 'manage/users', component: UserManagementComponent },
   { path: 'manage/cost-categories', component: CostCategoryManagementComponent },
-  { path: 'overview', component: AdminOverviewComponent },
+  { path: 'log', component: AdminOverviewComponent },
+  { path: 'overview', redirectTo: 'log' },
   {
     path: 'calculations',
     children: [
