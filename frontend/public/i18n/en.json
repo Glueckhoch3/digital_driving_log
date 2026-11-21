@@ -383,10 +383,11 @@
       "costType": "Cost type",
       "unit": "Unit (e.g. Liter)",
       "requiresOdometer": "Odometer required when booking",
-      "fuel": "Fuel (used for consumption statistics)",
+      "fuel": "Fuel",
       "create": "Create category",
       "update": "Update category",
-      "cancel": "Cancel"
+      "cancel": "Cancel",
+      "fuelHint": "The quantity of this cost type counts as litres in the consumption calculation (l/100 km). The unit should be litres."
     },
     "table": {
       "name": "Name",

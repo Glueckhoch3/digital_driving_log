@@ -383,10 +383,11 @@
       "costType": "Kostentyp",
       "unit": "Einheit (z. B. Liter)",
       "requiresOdometer": "Kilometerstand bei Buchung erforderlich",
-      "fuel": "Kraftstoff (für die Verbrauchsstatistik)",
+      "fuel": "Kraftstoff",
       "create": "Kostenart anlegen",
       "update": "Kostenart ändern",
-      "cancel": "Abbrechen"
+      "cancel": "Abbrechen",
+      "fuelHint": "Die Menge dieser Kostenart zählt als Liter für die Verbrauchsberechnung (l/100 km). Die Einheit sollte Liter sein."
     },
     "table": {
       "name": "Name",

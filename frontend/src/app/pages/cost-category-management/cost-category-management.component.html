@@ -59,9 +59,12 @@
     </label>
 
     <label class="check-row" for="cc-fuel">
-      <input id="cc-fuel" type="checkbox" formControlName="fuel" />
+      <input id="cc-fuel" type="checkbox" formControlName="fuel" aria-describedby="cc-fuel-hint" />
       {{ 'costCategoryManagement.form.fuel' | translate }}
     </label>
+    <p id="cc-fuel-hint" class="form__hint fuel-hint">
+      {{ 'costCategoryManagement.form.fuelHint' | translate }}
+    </p>
 
     <div class="form__actions">
       <button type="submit">
