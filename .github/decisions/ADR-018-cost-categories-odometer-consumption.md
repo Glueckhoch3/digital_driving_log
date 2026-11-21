@@ -42,6 +42,12 @@ and an implicit unit that had to be entered again each time.
 - **No data migration** was written (dev/test data only). Existing databases need a
   manual migration before this runs under `ddl-auto=validate` — there is still no Flyway
   (ADR-012), so this must be solved before the first real deployment.
+  Symptom on a database created before this change: every cost insert and CSV import fails
+  with HTTP 409 "Request violates a data integrity constraint" because the old columns
+  `cost.cost_type` and `cost.description` are still `NOT NULL` (`ddl-auto=update` never drops
+  columns). For a dev database without cost rows worth keeping:
+  `ALTER TABLE cost DROP COLUMN cost_type, DROP COLUMN description;` (existing rows would first
+  need a `cost_category_id` derived from their old description/type).
 - The "every fill-up is a full tank" assumption skews single intervals when a tank was
   only partly filled; the average over many intervals stays reasonable. A "full tank"
   flag per fill-up was considered and rejected for now to keep entry simple.
