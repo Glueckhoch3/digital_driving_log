@@ -38,7 +38,7 @@ Layered; all REST under `/ddl/api`.
 
 ## Gotchas
 - Drive `odometer` = cumulative total reading, not per-trip distance (ADR-014 pending review). Frontend `models/drives.ts` may still use older field names — verify against `docs/api_doc.yaml`.
-- A Cost references a `CostCategory` (name, cost type, unit, `requiresOdometer`, `fuel`; ADR-018) instead of carrying `description`/`costType`; it has `quantity` and an optional `odometer`. List endpoints return paginated `Page`. Cost CSV: `firstname;lastname;date;amount;price;category[;odometer]`, category must exist.
+- A Cost references a `CostCategory` (name, cost type, unit, `requiresOdometer`, `fuel`; ADR-018) instead of carrying `description`/`costType`; it has `quantity` and an optional `odometer`. List endpoints return paginated `Page`. Cost CSV: `firstname;lastname;date;amount;price;category[;odometer]`, category must exist; delimiter `;` or tab is auto-detected per file.
 - Spring Boot 4: MockMvc is in `spring-boot-webmvc-test` (`org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc`).
 - Sample CSVs are German: `;` separated, `,` decimal, `dd.mm.yy(yy)` dates, names are initials.
 - Prefer the ADRs over guessing: cost distribution = ADR-015 (distance-weighted variable, equal-split fixed).
