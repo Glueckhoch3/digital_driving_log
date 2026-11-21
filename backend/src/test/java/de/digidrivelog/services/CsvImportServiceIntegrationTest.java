@@ -126,6 +126,45 @@ class CsvImportServiceIntegrationTest {
     }
 
     @Test
+    void importCosts_tabSeparatedSpreadsheetExport_isAccepted() {
+        // columns: Firstname, Lastname, Datum, Anzahl, Preis, Beschreibung (no odometer), tab-separated
+        String content = "\uFEFFFirstname\tLastname\tDatum\tAnzahl\tPreis\tBeschreibung\n"
+                + "Stefan\tMeyer\t06.10.2020\t1\t2700\tKaufpreis\n"
+                + "Anna\tKönig\t17.10.2020\t1\t160,77\tKaufpreis\n";
+
+        ImportResultDto result = csvImportService.importCosts(car.getCarId(), csv(content), CsvLocale.DE);
+
+        assertThat(result.getErrors()).isEmpty();
+        assertThat(result.getImported()).isEqualTo(2);
+        assertThat(costRepository.findAll()).anySatisfy(c -> {
+            assertThat(c.getPrice()).isEqualByComparingTo("160.77");
+            assertThat(c.getDayOfTransaction()).isEqualTo(LocalDate.of(2020, 10, 17));
+            assertThat(c.getOdometer()).isNull();
+        });
+    }
+
+    @Test
+    void importDrives_tabSeparated_isAccepted() {
+        String content = "km-end\tfirstname\tlastname\tdate\n146739\tStefan\tMeyer\t27.12.2020\n";
+
+        ImportResultDto result = csvImportService.importDrives(car.getCarId(), csv(content), CsvLocale.DE);
+
+        assertThat(result.getErrors()).isEmpty();
+        assertThat(result.getImported()).isEqualTo(1);
+    }
+
+    @Test
+    void importCosts_tabSeparatedWithWrongColumnCount_reportsLine() {
+        String content = "Stefan\tMeyer\t06.10.2020\t1\n";
+
+        ImportResultDto result = csvImportService.importCosts(car.getCarId(), csv(content), CsvLocale.DE);
+
+        assertThat(result.getImported()).isZero();
+        assertThat(result.getErrors()).hasSize(1);
+        assertThat(result.getErrors().get(0).getLine()).isEqualTo(1);
+    }
+
+    @Test
     void importCosts_unknownCategory_isRowError() {
         ImportResultDto result = csvImportService.importCosts(car.getCarId(),
                 csv("Stefan;Meyer;29.01.2021;1,00;5,00;Unbekannt;\n"), CsvLocale.DE);

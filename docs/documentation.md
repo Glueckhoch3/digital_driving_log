@@ -440,6 +440,8 @@ Two `multipart/form-data` endpoints bulk-load historical data for a car. They ar
 - `POST /vehicles/{carId}/drives/import` — columns `km-end;firstname;lastname;date`
 - `POST /vehicles/{carId}/costs/import` — columns `firstname;lastname;date;amount;price;description;cost_type`
 
+Columns may be separated by `;` or by a tab (e.g. copied from a spreadsheet) — the separator is detected from the first data line of the file; a leading byte order mark is ignored. The cost file may omit the odometer column (6 columns: `Firstname  Lastname  Datum  Anzahl  Preis  Beschreibung`, where *Beschreibung* is the cost category name and must already exist).
+
 Both return an `ImportResult` (`{ imported, errors: [{ line, message }] }`). Field structure and restrictions:
 
 | Field | Rules |
