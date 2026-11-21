@@ -387,7 +387,7 @@
       "create": "Kostenart anlegen",
       "update": "Kostenart ändern",
       "cancel": "Abbrechen",
-      "fuelHint": "Die Menge dieser Kostenart zählt als Liter für die Verbrauchsberechnung (l/100 km). Die Einheit sollte Liter sein."
+      "fuelHint": "Die Menge in der Verbrauchsberechnung verwenden."
     },
     "table": {
       "name": "Name",

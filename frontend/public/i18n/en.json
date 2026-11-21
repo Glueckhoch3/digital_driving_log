@@ -387,7 +387,7 @@
       "create": "Create category",
       "update": "Update category",
       "cancel": "Cancel",
-      "fuelHint": "The quantity of this cost type counts as litres in the consumption calculation (l/100 km). The unit should be litres."
+      "fuelHint": "Use the quantity in consumption calculation."
     },
     "table": {
       "name": "Name",
