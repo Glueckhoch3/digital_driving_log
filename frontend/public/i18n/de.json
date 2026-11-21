@@ -163,7 +163,7 @@
     },
     "costTypes": {
       "VARIABLE": "Fahrkosten",
-      "FIXED": "Normal"
+      "FIXED": "Feste Kosten"
     },
     "driveForm": {
       "title": "Fahrt eintragen",

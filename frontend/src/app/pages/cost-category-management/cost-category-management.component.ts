@@ -29,7 +29,7 @@ export class CostCategoryManagementComponent implements OnInit {
 
   readonly form = this.fb.group({
     name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(63)]],
-    costType: ['VARIABLE' as CostType, Validators.required],
+    costType: ['FIXED' as CostType, Validators.required],
     unit: ['', [Validators.required, Validators.maxLength(20)]],
     requiresOdometer: [false],
     fuel: [false],
@@ -66,7 +66,7 @@ export class CostCategoryManagementComponent implements OnInit {
     const value = this.form.getRawValue();
     const payload: CreateCostCategoryRequest = {
       name: (value.name ?? '').trim(),
-      costType: value.costType ?? 'VARIABLE',
+      costType: value.costType ?? 'FIXED',
       unit: (value.unit ?? '').trim(),
       requiresOdometer: !!value.requiresOdometer,
       fuel: !!value.fuel,
@@ -135,7 +135,7 @@ export class CostCategoryManagementComponent implements OnInit {
     this.editingId.set(null);
     this.form.reset({
       name: '',
-      costType: 'VARIABLE',
+      costType: 'FIXED',
       unit: '',
       requiresOdometer: false,
       fuel: false,

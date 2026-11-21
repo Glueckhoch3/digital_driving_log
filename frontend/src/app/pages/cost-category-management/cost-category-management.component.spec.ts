@@ -48,6 +48,14 @@ describe('CostCategoryManagementComponent', () => {
     expect(fixture.nativeElement.textContent).toContain('Fuel');
   });
 
+  it('preselects the fixed cost type, also after a reset', () => {
+    expect(component.form.controls.costType.value).toBe('FIXED');
+
+    component.edit(fuel);
+    component.cancelEdit();
+    expect(component.form.controls.costType.value).toBe('FIXED');
+  });
+
   it('does not submit an invalid form', () => {
     component.submit();
 
