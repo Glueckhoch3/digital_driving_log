@@ -1,19 +1,29 @@
-<section class="car-selection">
+<section class="page">
   <h2>{{ 'carSelection.title' | translate }}</h2>
 
   @if (loading()) {
     <p>{{ 'carSelection.loading' | translate }}</p>
   } @else if (error()) {
-    <p>{{ error() | translate }}</p>
-  } @else if (cars().length === 0) {
-    <p>{{ 'carSelection.empty' | translate }}</p>
+    <p class="msg msg--error" role="alert">{{ error() | translate }}</p>
   } @else {
-    <ul class="car-selection__list">
+    <div class="grid grid--2">
       @for (car of cars(); track car.carId) {
-        <li class="car-selection__item">
-          <a [routerLink]="['/cars', car.carId]">{{ car.name }} ({{ car.plateNumber }})</a>
-        </li>
+        <a class="card-link" [routerLink]="['/cars', car.carId]">
+          <span class="icon-box"><app-icon name="car" /></span>
+          <span>
+            <b>{{ car.name }}</b>
+            <small>{{ car.plateNumber }}</small>
+          </span>
+          <app-icon class="go" name="right" />
+        </a>
       }
-    </ul>
+      <a class="card-link card-link--add" routerLink="/manage/cars">
+        <span class="icon-box"><app-icon name="plus" /></span>
+        <b>{{ 'carSelection.add' | translate }}</b>
+      </a>
+    </div>
+    @if (cars().length === 0) {
+      <p class="empty">{{ 'carSelection.empty' | translate }}</p>
+    }
   }
 </section>

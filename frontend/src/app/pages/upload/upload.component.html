@@ -1,32 +1,17 @@
-<section class="upload-page">
-  <a class="upload-page__back" [routerLink]="['/cars', car().carId]">{{
-    'carWorkspace.upload.back' | translate
-  }}</a>
+<section class="page">
+  <a class="crumb" [routerLink]="['/cars', car().carId]"
+    ><app-icon name="left" [small]="true" />{{ 'carWorkspace.upload.back' | translate }}</a
+  >
 
   <h2>{{ 'carWorkspace.upload.title' | translate }} — {{ car().name }}</h2>
-  <p class="upload-page__intro">{{ 'carWorkspace.upload.intro' | translate }}</p>
 
   <fieldset class="upload-page__locale">
     <legend>{{ 'carWorkspace.upload.formatLabel' | translate }}</legend>
-    <div
-      class="upload-page__toggle"
-      role="group"
-      aria-label="{{ 'carWorkspace.upload.formatLabel' | translate }}"
-    >
-      <button
-        type="button"
-        [class.active]="locale() === 'en'"
-        [attr.aria-pressed]="locale() === 'en'"
-        (click)="setLocale('en')"
-      >
+    <div class="seg" role="group" aria-label="{{ 'carWorkspace.upload.formatLabel' | translate }}">
+      <button type="button" [attr.aria-pressed]="locale() === 'en'" (click)="setLocale('en')">
         {{ 'carWorkspace.upload.formatEn' | translate }}
       </button>
-      <button
-        type="button"
-        [class.active]="locale() === 'de'"
-        [attr.aria-pressed]="locale() === 'de'"
-        (click)="setLocale('de')"
-      >
+      <button type="button" [attr.aria-pressed]="locale() === 'de'" (click)="setLocale('de')">
         {{ 'carWorkspace.upload.formatDe' | translate }}
       </button>
     </div>

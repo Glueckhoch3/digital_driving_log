@@ -1,13 +1,14 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
+import { IconComponent } from '../../components/icon/icon.component';
 import { CarService } from '../../services/car.service';
 import { CarDto } from '../../models/cars';
 
 @Component({
   selector: 'app-car-selection',
   standalone: true,
-  imports: [RouterLink, TranslateModule],
+  imports: [RouterLink, TranslateModule, IconComponent],
   templateUrl: './car-selection.component.html',
   styleUrl: './car-selection.component.scss',
 })

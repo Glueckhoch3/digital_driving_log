@@ -1,20 +1,19 @@
-<section class="car-management">
+<section class="page page--wide">
   <h2>{{ 'carManagement.title' | translate }}</h2>
-  <p>{{ 'carManagement.description' | translate }}</p>
 
   @if (message()) {
-    <p class="car-management__message">{{ message() | translate }}</p>
+    <p class="msg msg--ok">{{ message() | translate }}</p>
   }
 
   @if (error()) {
-    <p class="car-management__error">{{ error() | translate }}</p>
+    <p class="msg msg--error">{{ error() | translate }}</p>
   }
 
   @if (users().length === 0 && !loading()) {
     <p>{{ 'carManagement.usersRequiredFirst' | translate }}</p>
   }
 
-  <form class="car-management__form" [formGroup]="carForm" (ngSubmit)="submit()">
+  <form class="form" [formGroup]="carForm" (ngSubmit)="submit()">
     <h3>
       @if (editingCarId()) {
         {{ 'carManagement.form.editTitle' | translate }}
@@ -53,7 +52,7 @@
     <label>{{ 'carManagement.form.data' | translate }}</label>
     <textarea rows="3" formControlName="data"></textarea>
 
-    <div class="car-management__form-actions">
+    <div class="form__actions">
       <button type="submit">
         @if (editingCarId()) {
           {{ 'carManagement.form.update' | translate }}
@@ -74,7 +73,7 @@
   } @else if (cars().length === 0) {
     <p>{{ 'carManagement.empty' | translate }}</p>
   } @else {
-    <table class="car-management__table">
+    <table class="tbl">
       <thead>
         <tr>
           <th>{{ 'carManagement.table.name' | translate }}</th>
@@ -95,10 +94,10 @@
                 -
               }
             </td>
-            <td>
-              <div class="car-management__row-actions">
+            <td class="actions-cell">
+              <div class="actions">
                 <button type="button" (click)="edit(car)">{{ 'common.edit' | translate }}</button>
-                <button type="button" (click)="delete(car.carId)">
+                <button type="button" class="btn--danger" (click)="delete(car.carId)">
                   {{ 'common.delete' | translate }}
                 </button>
               </div>

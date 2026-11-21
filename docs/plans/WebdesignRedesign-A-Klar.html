@@ -1,0 +1,362 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DDL Redesign – Variante A „Klar“</title>
+<!--
+  Mockup for docs/plans/WebdesignRedesign.md — Variant A "Klar" (top bar + left burger).
+  Self-contained: no external fonts/scripts. Resize the browser or use the Handy/Desktop switch;
+  the layout reacts to the width of the preview frame (CSS container queries), like the real app will.
+  Demo data is invented.
+-->
+<style>
+/* ---------- review chrome (not part of the design) ---------- */
+*{box-sizing:border-box;margin:0;padding:0}
+body{font:15px/1.5 system-ui,sans-serif;background:#dfe5e3;color:#1b2a2e}
+.rv{max-width:1240px;margin:0 auto;padding:16px}
+.rv h1{font-size:1.1rem}
+.rv p.sub{color:#52625f;font-size:.85rem;margin:2px 0 12px}
+.rv-bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:14px}
+.rv-bar button{font:inherit;font-size:.85rem;padding:8px 12px;border:1px solid #9fb0ab;background:#fff;border-radius:8px;cursor:pointer;min-height:40px}
+.rv-bar button[aria-pressed=true]{background:#0f6b62;border-color:#0f6b62;color:#fff}
+.rv-bar .sp{flex:1}
+.rv-notes{margin-top:16px;background:#fff;border-radius:10px;padding:14px 18px;font-size:.85rem}
+.rv-notes h2{font-size:.95rem;margin-bottom:6px}
+.rv-notes li{margin:4px 0 4px 18px}
+.rv-notes b{color:#0f6b62}
+
+/* ---------- design tokens (Variant A) ---------- */
+.device{
+  --bg:#f5f7f6; --surface:#fff; --ink:#1b2a2e; --muted:#52625f; --line:#d5dedb;
+  --brand:#0f6b62; --brand-ink:#fff; --brand-soft:#e0f0ed;
+  --pos:#14703f; --pos-soft:#e8f5ee; --neg:#a52a2a; --neg-soft:#fbeaea;
+  --warn:#7a4a00; --warn-soft:#fdf1d9; --focus:#1d4ed8;
+  --r:12px; --r-sm:8px; --tap:48px;
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:32px; --s7:48px;
+  --shadow:0 1px 2px rgba(20,40,40,.08),0 2px 8px rgba(20,40,40,.06);
+}
+.device{container-type:inline-size;position:relative;margin:0 auto;width:var(--w,390px);max-width:100%;
+  min-height:760px;background:var(--bg);color:var(--ink);font:1rem/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  border:1px solid #9fb0ab;border-radius:16px;overflow:hidden;transition:width .2s}
+:where(.device) a{color:inherit}
+.device :focus-visible{outline:3px solid var(--focus);outline-offset:2px;border-radius:6px}
+.i{width:24px;height:24px;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.i--sm{width:20px;height:20px}
+
+/* top bar: burger LEFT (issue #22.4) */
+.top{display:flex;align-items:center;gap:var(--s2);min-height:64px;padding:0 var(--s3);background:var(--brand);color:var(--brand-ink)}
+.top h1{font-size:1.125rem;font-weight:700;white-space:nowrap}
+.icon-btn{display:inline-flex;align-items:center;justify-content:center;gap:var(--s2);min-width:var(--tap);min-height:var(--tap);
+  background:none;border:0;color:inherit;font:inherit;cursor:pointer;border-radius:var(--r-sm)}
+.icon-btn:hover{background:rgba(255,255,255,.14)}
+.top .sp{flex:1}
+.top-nav{display:none;gap:var(--s1);margin-left:var(--s4)}
+.top-nav a{display:inline-flex;align-items:center;min-height:var(--tap);padding:0 var(--s4);border-radius:var(--r-sm);text-decoration:none;font-weight:600}
+.top-nav a:hover{background:rgba(255,255,255,.14)}
+.top-nav a[aria-current=page]{background:#fff;color:var(--brand)}
+.lang{font-weight:700}
+@container (min-width:760px){.top-nav{display:flex}.top .burger{display:none}}
+
+/* drawer */
+.scrim{position:absolute;inset:0;background:rgba(10,25,25,.5);z-index:20;display:none}
+.drawer{position:absolute;top:0;bottom:0;left:0;width:min(86%,320px);background:var(--surface);z-index:21;transform:translateX(-102%);transition:transform .2s;display:flex;flex-direction:column;box-shadow:var(--shadow)}
+.device[data-menu=open] .scrim{display:block}
+.device[data-menu=open] .drawer{transform:none}
+.drawer-head{display:flex;align-items:center;gap:var(--s2);min-height:64px;padding:0 var(--s3);border-bottom:1px solid var(--line);font-weight:700}
+.drawer nav{overflow:auto;padding:var(--s3)}
+.drawer h3{font-size:.8125rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:var(--s4) var(--s3) var(--s1)}
+.drawer a{display:flex;align-items:center;gap:var(--s3);min-height:var(--tap);padding:0 var(--s3);border-radius:var(--r-sm);text-decoration:none;font-weight:600}
+.drawer a:hover{background:var(--bg)}
+.drawer a[aria-current=page]{background:var(--brand-soft);color:var(--brand)}
+
+/* page */
+main{padding:var(--s5) var(--s4) var(--s7);max-width:960px;margin:0 auto}
+.crumb{display:inline-flex;align-items:center;gap:var(--s1);min-height:var(--tap);color:var(--brand);font-weight:600;text-decoration:none;margin-bottom:var(--s2)}
+h2.title{font-size:1.75rem;line-height:1.2;margin-bottom:var(--s4)}
+h3.sec{font-size:1.125rem;margin:var(--s5) 0 var(--s3)}
+.chip{display:inline-block;padding:2px var(--s3);border-radius:999px;background:var(--brand-soft);color:var(--brand);font-weight:700;font-size:.875rem;vertical-align:middle}
+.muted{color:var(--muted)}
+.grid{display:grid;gap:var(--s3)}
+@container (min-width:560px){.grid--2,.grid--3{grid-template-columns:repeat(2,1fr)}}
+@container (min-width:760px){.grid--3{grid-template-columns:repeat(3,1fr)}}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow)}
+a.card{display:flex;align-items:center;gap:var(--s4);padding:var(--s4);text-decoration:none;min-height:72px}
+a.card:hover{border-color:var(--brand)}
+.card .ico{display:grid;place-items:center;width:48px;height:48px;border-radius:12px;background:var(--brand-soft);color:var(--brand);flex:none}
+.card b{display:block;font-size:1.0625rem}
+.card small{color:var(--muted);font-size:.875rem}
+.card .go{margin-left:auto;color:var(--muted)}
+.card--add{border-style:dashed;box-shadow:none;background:transparent;color:var(--brand)}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:var(--s2);min-height:var(--tap);padding:0 var(--s5);border-radius:var(--r-sm);
+  border:2px solid var(--brand);background:var(--surface);color:var(--brand);font:inherit;font-weight:700;cursor:pointer;text-decoration:none}
+.btn--primary{background:var(--brand);color:var(--brand-ink)}
+.btn--primary:hover{background:#0b574f}
+.btn-row{display:flex;flex-wrap:wrap;gap:var(--s3)}
+.btn-row .btn{flex:1 1 200px}
+
+.stat{padding:var(--s4)}
+.stat span{display:block;font-size:.875rem;color:var(--muted)}
+.stat strong{font-size:1.5rem}
+
+/* forms */
+.field{margin-bottom:var(--s4)}
+.field label{display:block;font-weight:700;margin-bottom:var(--s1)}
+.field .hint{display:block;font-size:.875rem;color:var(--muted);margin-bottom:var(--s1)}
+.field input,.field select,.field textarea{width:100%;min-height:var(--tap);padding:var(--s2) var(--s3);font:inherit;color:var(--ink);background:var(--surface);border:2px solid #7d8f8b;border-radius:var(--r-sm)}
+.field textarea{min-height:96px}
+.field[data-invalid] input{border-color:var(--neg);background:var(--neg-soft)}
+.err{display:flex;gap:var(--s2);align-items:flex-start;margin-top:var(--s1);color:var(--neg);font-weight:600;font-size:.9375rem}
+.form{padding:var(--s5)}
+.form-wrap{max-width:560px}
+
+/* segmented control / tabs */
+.seg{display:inline-flex;flex-wrap:wrap;gap:var(--s1);padding:var(--s1);background:#e5ebe9;border-radius:var(--r-sm);margin-bottom:var(--s4)}
+.seg button{font:inherit;font-weight:700;min-height:44px;padding:0 var(--s4);border:0;border-radius:6px;background:none;color:var(--muted);cursor:pointer}
+.seg button[aria-pressed=true]{background:var(--surface);color:var(--brand);box-shadow:var(--shadow)}
+
+/* tables → cards on narrow */
+.tbl{width:100%;border-collapse:collapse;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.tbl th{font-size:.8125rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);text-align:left;padding:var(--s3) var(--s4);background:#eef2f1}
+.tbl td{padding:var(--s3) var(--s4);border-top:1px solid var(--line)}
+.tbl .num{text-align:right;font-variant-numeric:tabular-nums}
+.tbl tfoot td{font-weight:700;background:#eef2f1}
+@container (max-width:759px){
+  .tbl thead{position:absolute;left:-9999px}
+  .tbl,.tbl tbody,.tbl tfoot{display:block}
+  .tbl tr{display:block;padding:var(--s3) var(--s4);border-top:1px solid var(--line)}
+  .tbl tr:first-child{border-top:0}
+  .tbl td{display:flex;justify-content:space-between;gap:var(--s4);padding:2px 0;border:0}
+  .tbl td::before{content:attr(data-label);color:var(--muted)}
+  .tbl .num{text-align:right}
+  .tbl td:first-child{font-weight:700;font-size:1.0625rem;justify-content:flex-start;padding-bottom:var(--s1)}
+  .tbl td:first-child::before{content:none}
+}
+.badge{display:inline-flex;align-items:center;gap:6px;padding:2px 10px;border-radius:999px;font-weight:700;font-size:.875rem}
+.badge--drive{background:var(--brand-soft);color:var(--brand)}
+.badge--cost{background:var(--warn-soft);color:var(--warn)}
+.pager{display:flex;align-items:center;justify-content:center;gap:var(--s4);margin-top:var(--s4)}
+
+/* settlement */
+.person{display:flex;align-items:center;gap:var(--s4);padding:var(--s4)}
+.avatar{display:grid;place-items:center;width:48px;height:48px;border-radius:50%;background:var(--brand-soft);color:var(--brand);font-weight:800;flex:none}
+.person .who{font-weight:700;font-size:1.0625rem}
+.person .amount{margin-left:auto;text-align:right}
+.amount b{display:inline-flex;align-items:center;gap:6px;font-size:1.375rem;font-variant-numeric:tabular-nums}
+.amount small{display:block;font-weight:700}
+.amount.pos{color:var(--pos)}.amount.neg{color:var(--neg)}
+.pay{display:flex;align-items:center;gap:var(--s3);padding:var(--s4);flex-wrap:wrap}
+.pay b{font-variant-numeric:tabular-nums;margin-left:auto;font-size:1.125rem}
+.note{display:flex;gap:var(--s3);align-items:flex-start;padding:var(--s3) var(--s4);border-radius:var(--r-sm);background:var(--brand-soft);margin-top:var(--s4)}
+.hidden{display:none!important}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+  <symbol id="i-car" viewBox="0 0 24 24"><path d="M5 17h14M5 17v-5l2-5h10l2 5v5M5 17v2M19 17v2M5 12h14"/></symbol>
+  <symbol id="i-route" viewBox="0 0 24 24"><circle cx="6" cy="18" r="2"/><circle cx="18" cy="6" r="2"/><path d="M8 18h6a3 3 0 0 0 0-6h-4a3 3 0 0 1 0-6h6"/></symbol>
+  <symbol id="i-coin" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M15 9a4 4 0 1 0 0 6M8 11h5M8 13h5"/></symbol>
+  <symbol id="i-calc" viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h8M8 12h2M14 12h2M8 16h2M14 16h2"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M3 20v-1a5 5 0 0 1 10 0v1M16 5a3 3 0 0 1 0 6M17 14a4 4 0 0 1 4 4v2"/></symbol>
+  <symbol id="i-list" viewBox="0 0 24 24"><path d="M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 16V4M7 9l5-5 5 5M4 20h16"/></symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M2 20h20"/></symbol>
+  <symbol id="i-right" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></symbol>
+  <symbol id="i-left" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></symbol>
+  <symbol id="i-up" viewBox="0 0 24 24"><path d="M12 19V5M6 11l6-6 6 6"/></symbol>
+  <symbol id="i-down" viewBox="0 0 24 24"><path d="M12 5v14M6 13l6 6 6-6"/></symbol>
+  <symbol id="i-tag" viewBox="0 0 24 24"><path d="M4 4h8l8 8-8 8-8-8zM8 8h.01"/></symbol>
+  <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v6M12 16.5h.01"/></symbol>
+</svg>
+
+<div class="rv">
+  <h1>DDL Redesign – Variante A „Klar“ <span class="muted" style="font-weight:400">· Top-Leiste, Burger links, Karten</span></h1>
+  <p class="sub">Entwurf zu docs/plans/WebdesignRedesign.md · Beispieldaten erfunden · Klick auf Tabs, Burger-Menü und Karten funktioniert.</p>
+  <div class="rv-bar" role="group" aria-label="Bildschirm wählen" id="screens"></div>
+  <div class="rv-bar" role="group" aria-label="Vorschaubreite">
+    <button type="button" data-w="390" aria-pressed="true">Handy (390 px)</button>
+    <button type="button" data-w="320" aria-pressed="false">Klein (320 px)</button>
+    <button type="button" data-w="1120" aria-pressed="false">Desktop</button>
+  </div>
+
+  <div class="device" id="dev" data-menu="closed">
+    <header class="top">
+      <button class="icon-btn burger" id="burger" type="button" aria-label="Menü öffnen" aria-expanded="false"><svg class="i"><use href="#i-menu"/></svg></button>
+      <h1>Fahrtenbuch</h1>
+      <nav class="top-nav" aria-label="Hauptmenü">
+        <a href="#" data-go="home">Meine Autos</a>
+        <a href="#" data-go="log">Verlauf</a>
+        <a href="#" data-go="settle">Abrechnung</a>
+      </nav>
+      <span class="sp"></span>
+      <button class="icon-btn lang" type="button" aria-label="Sprache wählen: Deutsch"><svg class="i i--sm"><use href="#i-globe"/></svg>DE</button>
+    </header>
+
+    <div class="scrim" id="scrim"></div>
+    <aside class="drawer" id="drawer" aria-label="Menü">
+      <div class="drawer-head"><button class="icon-btn" id="burger2" type="button" aria-label="Menü schließen"><svg class="i"><use href="#i-close"/></svg></button>Fahrtenbuch</div>
+      <nav aria-label="Hauptmenü">
+        <h3>Täglich</h3>
+        <a href="#" data-go="home"><svg class="i"><use href="#i-car"/></svg>Meine Autos</a>
+        <a href="#" data-go="log"><svg class="i"><use href="#i-list"/></svg>Verlauf</a>
+        <a href="#" data-go="settle"><svg class="i"><use href="#i-calc"/></svg>Abrechnung</a>
+        <h3>Einstellungen</h3>
+        <a href="#"><svg class="i"><use href="#i-users"/></svg>Personen</a>
+        <a href="#"><svg class="i"><use href="#i-car"/></svg>Autos verwalten</a>
+        <a href="#"><svg class="i"><use href="#i-tag"/></svg>Kostenarten</a>
+      </nav>
+    </aside>
+
+    <!-- 1. HOME -->
+    <main data-screen="home">
+      <h2 class="title">Meine Autos</h2>
+      <div class="grid grid--2">
+        <a class="card" href="#" data-go="car"><span class="ico"><svg class="i"><use href="#i-car"/></svg></span><span><b>Familienkombi</b><small>HH-AB 123 · 48.230 km</small></span><svg class="i go"><use href="#i-right"/></svg></a>
+        <a class="card" href="#" data-go="car"><span class="ico"><svg class="i"><use href="#i-car"/></svg></span><span><b>Stadtflitzer</b><small>HH-CD 456 · 12.870 km</small></span><svg class="i go"><use href="#i-right"/></svg></a>
+        <a class="card card--add" href="#"><span class="ico"><svg class="i"><use href="#i-plus"/></svg></span><b>Auto hinzufügen</b></a>
+      </div>
+    </main>
+
+    <!-- 2. CAR HUB -->
+    <main data-screen="car" class="hidden">
+      <a class="crumb" href="#" data-go="home"><svg class="i i--sm"><use href="#i-left"/></svg>Meine Autos</a>
+      <h2 class="title">Familienkombi <span class="chip">HH-AB 123</span></h2>
+      <div class="btn-row">
+        <a class="btn btn--primary" href="#" data-go="form"><svg class="i"><use href="#i-route"/></svg>Fahrt eintragen</a>
+        <a class="btn" href="#"><svg class="i"><use href="#i-coin"/></svg>Ausgabe eintragen</a>
+      </div>
+      <h3 class="sec">Ansehen</h3>
+      <div class="grid grid--3">
+        <a class="card" href="#" data-go="log"><span class="ico"><svg class="i"><use href="#i-route"/></svg></span><b>Fahrten</b><svg class="i go"><use href="#i-right"/></svg></a>
+        <a class="card" href="#"><span class="ico"><svg class="i"><use href="#i-coin"/></svg></span><b>Ausgaben</b><svg class="i go"><use href="#i-right"/></svg></a>
+        <a class="card" href="#"><span class="ico"><svg class="i"><use href="#i-chart"/></svg></span><b>Verbrauch</b><svg class="i go"><use href="#i-right"/></svg></a>
+        <a class="card" href="#"><span class="ico"><svg class="i"><use href="#i-upload"/></svg></span><b>Datei hochladen</b><svg class="i go"><use href="#i-right"/></svg></a>
+      </div>
+      <div class="grid grid--2" style="margin-top:24px">
+        <div class="card stat"><span>Kilometerstand</span><strong>48.230 km</strong></div>
+        <div class="card stat"><span>Ausgaben 2026</span><strong>1.284,50 €</strong></div>
+      </div>
+    </main>
+
+    <!-- 3. LOG -->
+    <main data-screen="log" class="hidden">
+      <h2 class="title">Verlauf</h2>
+      <div class="seg" role="group" aria-label="Filter">
+        <button type="button" aria-pressed="true">Alles</button><button type="button" aria-pressed="false">Fahrten</button><button type="button" aria-pressed="false">Ausgaben</button>
+      </div>
+      <table class="tbl">
+        <thead><tr><th>Datum</th><th>Auto</th><th>Art</th><th>Person</th><th class="num">Wert</th></tr></thead>
+        <tbody>
+          <tr><td data-label="Datum">12.11.2026</td><td data-label="Auto">Familienkombi</td><td data-label="Art"><span class="badge badge--drive"><svg class="i i--sm"><use href="#i-route"/></svg>Fahrt</span></td><td data-label="Person">A. M.</td><td class="num" data-label="Wert">48.230 km</td></tr>
+          <tr><td data-label="Datum">10.11.2026</td><td data-label="Auto">Familienkombi</td><td data-label="Art"><span class="badge badge--cost"><svg class="i i--sm"><use href="#i-coin"/></svg>Ausgabe</span></td><td data-label="Person">L. S.</td><td class="num" data-label="Wert">62,40 € · Tanken</td></tr>
+          <tr><td data-label="Datum">08.11.2026</td><td data-label="Auto">Stadtflitzer</td><td data-label="Art"><span class="badge badge--drive"><svg class="i i--sm"><use href="#i-route"/></svg>Fahrt</span></td><td data-label="Person">T. K.</td><td class="num" data-label="Wert">12.870 km</td></tr>
+          <tr><td data-label="Datum">03.11.2026</td><td data-label="Auto">Familienkombi</td><td data-label="Art"><span class="badge badge--cost"><svg class="i i--sm"><use href="#i-coin"/></svg>Ausgabe</span></td><td data-label="Person">A. M.</td><td class="num" data-label="Wert">310,00 € · Versicherung</td></tr>
+        </tbody>
+      </table>
+      <nav class="pager" aria-label="Seiten"><button class="btn" type="button" disabled style="opacity:.5">Zurück</button><span aria-live="polite">Seite 1 von 6</span><button class="btn" type="button">Weiter</button></nav>
+    </main>
+
+    <!-- 4. FORM (with error state) -->
+    <main data-screen="form" class="hidden">
+      <a class="crumb" href="#" data-go="car"><svg class="i i--sm"><use href="#i-left"/></svg>Familienkombi</a>
+      <h2 class="title">Fahrt eintragen</h2>
+      <form class="card form form-wrap" onsubmit="return false" novalidate>
+        <div class="field"><label for="d1">Datum</label><input id="d1" type="date" value="2026-11-18"></div>
+        <div class="field" data-invalid>
+          <label for="d2">Kilometerstand</label>
+          <span class="hint" id="d2h">Die Zahl auf dem Tacho nach der Fahrt.</span>
+          <input id="d2" inputmode="numeric" value="0" aria-invalid="true" aria-describedby="d2h d2e">
+          <p class="err" id="d2e"><svg class="i i--sm"><use href="#i-alert"/></svg>Bitte eine Zahl größer als 0 eingeben.</p>
+        </div>
+        <div class="field"><label for="d3">Wer ist gefahren?</label><select id="d3"><option>A. M.</option><option>L. S.</option><option>T. K.</option></select></div>
+        <div class="field"><label for="d4">Notiz <span class="muted" style="font-weight:400">(freiwillig)</span></label><textarea id="d4"></textarea></div>
+        <div class="btn-row"><button class="btn btn--primary" type="submit">Speichern</button><button class="btn" type="button" data-go="car">Abbrechen</button></div>
+      </form>
+    </main>
+
+    <!-- 5. SETTLEMENT (#41: only final result) -->
+    <main data-screen="settle" class="hidden">
+      <h2 class="title">Abrechnung</h2>
+      <div class="seg" role="group" aria-label="Jahr"><button type="button" aria-pressed="false">2025</button><button type="button" aria-pressed="true">2026</button></div>
+      <h3 class="sec" style="margin-top:0">Ergebnis für alle Autos</h3>
+      <div class="grid">
+        <div class="card person"><span class="avatar">AM</span><span class="who">A. M.</span><span class="amount pos"><small>bekommt</small><b><svg class="i i--sm"><use href="#i-up"/></svg>62,40 €</b></span></div>
+        <div class="card person"><span class="avatar">LS</span><span class="who">L. S.</span><span class="amount neg"><small>zahlt</small><b><svg class="i i--sm"><use href="#i-down"/></svg>18,15 €</b></span></div>
+        <div class="card person"><span class="avatar">TK</span><span class="who">T. K.</span><span class="amount neg"><small>zahlt</small><b><svg class="i i--sm"><use href="#i-down"/></svg>44,25 €</b></span></div>
+      </div>
+      <h3 class="sec">Wer zahlt wem?</h3>
+      <div class="grid grid--2">
+        <div class="card pay"><span class="avatar">TK</span><svg class="i"><use href="#i-right"/></svg><span class="avatar">AM</span><b>44,25 €</b></div>
+        <div class="card pay"><span class="avatar">LS</span><svg class="i"><use href="#i-right"/></svg><span class="avatar">AM</span><b>18,15 €</b></div>
+      </div>
+      <div class="btn-row" style="margin-top:24px"><a class="btn" href="#" data-go="details"><svg class="i"><use href="#i-list"/></svg>So wurde gerechnet</a></div>
+    </main>
+
+    <!-- 6. DETAILS (#41: fix/var parts live here) -->
+    <main data-screen="details" class="hidden">
+      <a class="crumb" href="#" data-go="settle"><svg class="i i--sm"><use href="#i-left"/></svg>Abrechnung</a>
+      <h2 class="title">So wurde gerechnet</h2>
+      <div class="seg" role="group" aria-label="Ansicht"><button type="button" aria-pressed="true">Pro Person</button><button type="button" aria-pressed="false">Kilometer pro Monat</button><button type="button" aria-pressed="false">Anteile</button></div>
+      <table class="tbl">
+        <thead><tr><th>Person</th><th class="num">Kilometer</th><th class="num">Fahrkosten</th><th class="num">Feste Kosten</th><th class="num">Zusammen</th></tr></thead>
+        <tbody>
+          <tr><td data-label="Person">A. M.</td><td class="num" data-label="Kilometer">6.420 km</td><td class="num" data-label="Fahrkosten">412,10 €</td><td class="num" data-label="Feste Kosten">290,00 €</td><td class="num" data-label="Zusammen"><b>702,10 €</b></td></tr>
+          <tr><td data-label="Person">L. S.</td><td class="num" data-label="Kilometer">3.180 km</td><td class="num" data-label="Fahrkosten">204,10 €</td><td class="num" data-label="Feste Kosten">290,00 €</td><td class="num" data-label="Zusammen"><b>494,10 €</b></td></tr>
+          <tr><td data-label="Person">T. K.</td><td class="num" data-label="Kilometer">1.050 km</td><td class="num" data-label="Fahrkosten">67,40 €</td><td class="num" data-label="Feste Kosten">290,00 €</td><td class="num" data-label="Zusammen"><b>357,40 €</b></td></tr>
+        </tbody>
+        <tfoot><tr><td data-label="Alle">Alle</td><td class="num" data-label="Kilometer">10.650 km</td><td class="num" data-label="Fahrkosten">683,60 €</td><td class="num" data-label="Feste Kosten">870,00 €</td><td class="num" data-label="Zusammen">1.553,60 €</td></tr></tfoot>
+      </table>
+      <p class="note"><svg class="i"><use href="#i-info"/></svg><span><b>Fahrkosten</b> (z. B. Sprit) teilen wir nach Kilometern. <b>Feste Kosten</b> (z. B. Versicherung) teilen alle gleich.</span></p>
+    </main>
+  </div>
+
+  <section class="rv-notes" aria-live="polite"><h2 id="pt">Prinzipien auf diesem Bildschirm</h2><ul id="pl"></ul></section>
+</div>
+
+<script>
+const P={1:'Visuelle Hierarchie',2:'Konsistenz / Design-Tokens',3:'Nähe & Gruppierung',4:'Kontrast & Bedeutung nicht nur über Farbe',5:'Große Tippflächen',6:'Erkennen statt Erinnern',7:'Schrittweise Offenlegung',8:'Mobile-first / Umfließen',9:'Einfache Sprache',10:'Rückmeldung & Zustände',11:'Daumenzone / Fitts',12:'Typografie & Weißraum',13:'Fokus & Tastatur',14:'Weniger Auswahl (Hick)',15:'Icon + Text'};
+const S={
+ home:['Meine Autos',[[1,'Eine Überschrift, Karten als einzige Aktion – nichts konkurriert.'],[5,'Karten sind ≥ 72 px hoch, ganze Fläche klickbar.'],[15,'Icon und Text zusammen; die gestrichelte Karte „Auto hinzufügen“ ist klar als Zusatz erkennbar.'],[8,'1 Spalte auf dem Handy, 2 Spalten ab ca. 560 px.']]],
+ car:['Auto-Startseite',[[1,'Zwei Hauptaktionen groß und oben (gefüllt = häufigste Aufgabe), Rest als ruhige Karten.'],[3,'„Eintragen“ und „Ansehen“ sind getrennt gruppiert.'],[9,'„Fahrt eintragen“ statt „Fahrt hinzufügen / Drive“; „Datei hochladen“ statt „CSV importieren“.'],[7,'Erklärende Fließtexte entfallen (Issue #22.3).']]],
+ log:['Verlauf',[[9,'„Verlauf“ ersetzt „Managementübersicht“ (Issue #22.6, Namen noch mit Nutzern abstimmen).'],[8,'Tabelle wird auf dem Handy zu Karten-Zeilen – kein seitliches Scrollen.'],[4,'Art steht als Wort + Icon + Farbe, nicht nur Farbe.'],[14,'Filter mit nur drei Optionen.']]],
+ form:['Fahrt eintragen',[[6,'Sichtbare Beschriftung über dem Feld, nicht nur Platzhalter.'],[10,'Fehler: rote Umrandung + Icon + Satz, per aria-describedby verknüpft.'],[5,'Felder 48 px hoch; Schrift 16 px verhindert Zoom auf iOS.'],[13,'Deutlicher Fokusrahmen (3 px).'],[9,'„Wer ist gefahren?“ statt „Fahrer“; Hilfe zum Tacho kurz am Feld.']]],
+ settle:['Abrechnung',[[7,'Nur das Endergebnis (Issue #41); Rechenweg hinter „So wurde gerechnet“.'],[4,'„bekommt/zahlt“ als Wort + Pfeil + Farbe; Summe aller Beträge = 0.'],[1,'Betrag ist das größte Element der Karte.'],[9,'„Wer zahlt wem?“ statt „Nettosaldo“ (Leichte Sprache, Issue #43). Ausgleichsliste ist eine Zusatzidee.']]],
+ details:['So wurde gerechnet',[[7,'Fix-/Var-Anteile aus der Endabrechnung hierher verlagert (Issue #41).'],[9,'„Fahrkosten“ / „Feste Kosten“ mit Beispiel statt „variabel/fix“.'],[8,'Tabelle → gestapelte Zeilen mit Beschriftung vor jedem Wert.'],[3,'Fußzeile „Alle“ zeigt die Summe getrennt.']]]
+};
+const order=['home','car','log','form','settle','details'];
+const dev=document.getElementById('dev');
+const bar=document.getElementById('screens');
+order.forEach(id=>{const b=document.createElement('button');b.type='button';b.textContent=S[id][0];b.dataset.s=id;b.setAttribute('aria-pressed','false');bar.appendChild(b);});
+function go(id){
+  document.querySelectorAll('[data-screen]').forEach(m=>m.classList.toggle('hidden',m.dataset.screen!==id));
+  bar.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.s===id));
+  const top={home:'home',car:'home',form:'home',log:'log',settle:'settle',details:'settle'}[id];
+  dev.querySelectorAll('[data-go]').forEach(a=>{if(a.closest('.top-nav')||a.closest('.drawer')){a.dataset.go===top?a.setAttribute('aria-current','page'):a.removeAttribute('aria-current')}});
+  document.getElementById('pt').textContent='Prinzipien auf diesem Bildschirm: '+S[id][0];
+  document.getElementById('pl').innerHTML=S[id][1].map(([n,t])=>`<li><b>P${n} ${P[n]}</b> – ${t}</li>`).join('');
+  setMenu(false);
+}
+function setMenu(o){dev.dataset.menu=o?'open':'closed';document.getElementById('burger').setAttribute('aria-expanded',o)}
+document.addEventListener('click',e=>{
+  const g=e.target.closest('[data-go]');if(g){e.preventDefault();go(g.dataset.go);return}
+  const s=e.target.closest('[data-s]');if(s){go(s.dataset.s);return}
+  const w=e.target.closest('[data-w]');if(w){dev.style.setProperty('--w',w.dataset.w+'px');document.querySelectorAll('[data-w]').forEach(b=>b.setAttribute('aria-pressed',b===w));return}
+  const sg=e.target.closest('.seg button');if(sg){sg.parentElement.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',b===sg))}
+  if(e.target.closest('#burger'))setMenu(true);
+  if(e.target.closest('#burger2')||e.target.closest('#scrim'))setMenu(false);
+});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')setMenu(false)});
+const q=new URLSearchParams(location.search);
+if(q.get('w'))document.querySelector('[data-w="'+q.get('w')+'"]')?.click();
+if(q.get('t'))document.querySelector('[data-t="'+q.get('t')+'"]')?.click();
+go(order.includes(location.hash.slice(1))?location.hash.slice(1):'home');
+</script>
+</body>
+</html>

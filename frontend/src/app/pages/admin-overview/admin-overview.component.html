@@ -1,15 +1,15 @@
-<section class="admin-overview">
+<section class="page page--wide">
   <h2>{{ 'managementOverview.title' | translate }}</h2>
 
   @if (loading()) {
     <p>{{ 'managementOverview.loading' | translate }}</p>
   } @else if (error()) {
-    <p>{{ error() | translate }}</p>
+    <p class="msg msg--error" role="alert">{{ error() | translate }}</p>
   } @else if (timelineEntries().length === 0) {
     <p>{{ 'managementOverview.empty' | translate }}</p>
   } @else {
-    <div class="admin-overview__table-wrapper">
-      <table class="admin-overview__table">
+    <div>
+      <table class="tbl">
         <thead>
           <tr>
             <th>{{ 'managementOverview.headers.date' | translate }}</th>
@@ -27,14 +27,22 @@
               <td>{{ entry.carName }} ({{ entry.plateNumber }})</td>
               <td>
                 @if (entry.type === 'drive') {
-                  {{ 'managementOverview.types.drive' | translate }}
+                  <span class="badge"
+                    ><app-icon name="route" [small]="true" />{{
+                      'managementOverview.types.drive' | translate
+                    }}</span
+                  >
                 } @else {
-                  {{ 'managementOverview.types.transaction' | translate }}
+                  <span class="badge badge--cost"
+                    ><app-icon name="coin" [small]="true" />{{
+                      'managementOverview.types.transaction' | translate
+                    }}</span
+                  >
                 }
               </td>
               <td>{{ entry.participantName }}</td>
               <td>{{ entry.details }}</td>
-              <td>{{ entry.valueLabel || '-' }}</td>
+              <td class="num">{{ entry.valueLabel || '-' }}</td>
             </tr>
           }
         </tbody>
@@ -42,7 +50,7 @@
     </div>
 
     @if (totalPages() > 1) {
-      <div class="admin-overview__pager">
+      <div class="pager">
         <button type="button" (click)="changePage(-1)" [disabled]="page() === 0">
           {{ 'common.pagination.previous' | translate }}
         </button>

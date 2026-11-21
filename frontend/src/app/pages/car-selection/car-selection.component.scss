@@ -1,18 +1,11 @@
-.car-selection {
-  max-width: 56rem;
-  margin: 2rem auto;
-  padding: 1rem;
+.card-link--add {
+  color: var(--brand-text);
+  background: transparent;
+  border-style: dashed;
+  box-shadow: none;
+}
 
-  &__list {
-    list-style: none;
-    padding: 0;
-    margin: 1rem 0 0;
-  }
-
-  &__item {
-    padding: 0.75rem;
-    border: 1px solid #d9d9d9;
-    border-radius: 0.5rem;
-    margin-bottom: 0.75rem;
-  }
+.empty {
+  margin-top: var(--s4);
+  color: var(--muted);
 }

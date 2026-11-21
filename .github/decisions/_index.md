@@ -18,3 +18,4 @@
 | ADR-016 | CORS allowed origins: comma-separated origin patterns, fixed ports, fail-closed | security | accepted | 2026-07-25 | Extends ADR-011 |
 | ADR-017 | API access: relative apiUrl behind an nginx reverse proxy | frontend | accepted | 2026-07-25 | Follows ADR-016 |
 | ADR-018 | Cost categories, odometer on costs, fuel consumption statistics | backend | proposed | 2026-11-17 | Issue #42; extends ADR-014/015 |
+| ADR-019 | UI design system: global tokens (Ozean, light + dark), bottom tabs / top bar, stacked tables | frontend | proposed | 2026-11-18 | Issues #22, #41, #43; plan `docs/plans/WebdesignRedesign.md` |

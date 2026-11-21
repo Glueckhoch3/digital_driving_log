@@ -1,21 +1,25 @@
-<section class="costs-list">
+<section class="page">
+  <a class="crumb" routerLink=".."
+    ><app-icon name="left" [small]="true" />{{ 'carWorkspace.hub.backToHub' | translate }}</a
+  >
   <h2>{{ 'carWorkspace.transactions.title' | translate }}</h2>
 
-  <div class="costs-list__actions">
-    <a routerLink="..">{{ 'carWorkspace.hub.backToHub' | translate }}</a>
-    <a routerLink="new">{{ 'carWorkspace.transactions.addLink' | translate }}</a>
+  <div class="btn-row actions-bar">
+    <a class="btn btn--primary" routerLink="new"
+      ><app-icon name="plus" />{{ 'carWorkspace.transactions.addLink' | translate }}</a
+    >
   </div>
 
   @if (loading()) {
     <p>{{ 'carWorkspace.loading' | translate }}</p>
   } @else if (errorMessage()) {
-    <p class="costs-list__error" role="alert" aria-live="assertive">
+    <p class="msg msg--error" role="alert" aria-live="assertive">
       {{ errorMessage() | translate }}
     </p>
   } @else if (costs().length === 0) {
     <p>{{ 'carWorkspace.transactions.empty' | translate }}</p>
   } @else {
-    <table>
+    <table class="tbl">
       <thead>
         <tr>
           <th scope="col">{{ 'carWorkspace.transactions.headers.date' | translate }}</th>
@@ -33,9 +37,9 @@
             <td>{{ cost.dayOfTransaction }}</td>
             <td>{{ userLabelById().get(cost.buyerId) || cost.buyerId }}</td>
             <td>{{ cost.costCategoryName }}</td>
-            <td>{{ cost.price | number: '1.2-2' }}</td>
-            <td>{{ cost.quantity }} {{ cost.unit }}</td>
-            <td>{{ cost.odometer ?? '–' }}</td>
+            <td class="num">{{ cost.price | number: '1.2-2' }}</td>
+            <td class="num">{{ cost.quantity }} {{ cost.unit }}</td>
+            <td class="num">{{ cost.odometer ?? '–' }}</td>
             <td>{{ 'carWorkspace.costTypes.' + cost.costType | translate }}</td>
           </tr>
         }
@@ -43,7 +47,7 @@
     </table>
 
     @if (totalPages() > 1) {
-      <nav class="costs-list__pager" aria-label="{{ 'common.pagination.navLabel' | translate }}">
+      <nav class="pager" aria-label="{{ 'common.pagination.navLabel' | translate }}">
         <button type="button" (click)="changePage(-1)" [disabled]="page() === 0">
           {{ 'common.pagination.previous' | translate }}
         </button>

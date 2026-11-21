@@ -13,6 +13,7 @@ import {
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
+import { IconComponent } from '../../components/icon/icon.component';
 import { HttpErrorResponse } from '@angular/common/http';
 import { DriveService } from '../../services/drive.service';
 import { CarDto } from '../../models/cars';
@@ -24,7 +25,7 @@ import { FieldErrorComponent } from '../../components/field-error/field-error.co
 @Component({
   selector: 'app-drive-form',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink, TranslateModule, FieldErrorComponent],
+  imports: [ReactiveFormsModule, RouterLink, TranslateModule, FieldErrorComponent, IconComponent],
   templateUrl: './drive-form.component.html',
   styleUrl: './drive-form.component.scss',
 })

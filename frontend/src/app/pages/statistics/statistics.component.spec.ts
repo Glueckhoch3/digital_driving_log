@@ -70,7 +70,9 @@ describe('StatisticsComponent', () => {
   it('renders the table rows and one chart point per interval', () => {
     expect(fixture.nativeElement.querySelectorAll('tbody tr')).toHaveLength(2);
     expect(fixture.nativeElement.querySelectorAll('circle')).toHaveLength(2);
-    expect(fixture.nativeElement.querySelector('svg').getAttribute('role')).toBe('img');
+    expect(fixture.nativeElement.querySelector('svg.statistics__chart').getAttribute('role')).toBe(
+      'img',
+    );
   });
 
   it('reloads when a year is selected', async () => {
