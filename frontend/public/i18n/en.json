@@ -163,7 +163,7 @@
     },
     "costTypes": {
       "VARIABLE": "Driving costs",
-      "FIXED": "Fixed costs"
+      "FIXED": "Normal"
     },
     "driveForm": {
       "title": "Add trip",
