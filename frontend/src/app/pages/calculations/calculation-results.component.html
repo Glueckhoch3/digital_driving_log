@@ -1,7 +1,6 @@
 <section class="calc">
   <a class="calc__back" routerLink="/calculations">{{ 'calculations.back' | translate }}</a>
   <h2 class="calc__title">{{ 'calculations.results.title' | translate }}</h2>
-  <p class="calc__sub">{{ 'calculations.results.subtitle' | translate }}</p>
 
   <div class="calc__panel">
     <div class="calc__panel-body">
@@ -14,6 +13,7 @@
       type="button"
       class="calc__tab"
       [class.calc__tab--active]="tab() === 'yearly'"
+      [attr.aria-pressed]="tab() === 'yearly'"
       (click)="selectTab('yearly')"
     >
       {{ 'calculations.results.tabYearly' | translate }}
@@ -22,6 +22,7 @@
       type="button"
       class="calc__tab"
       [class.calc__tab--active]="tab() === 'monthly'"
+      [attr.aria-pressed]="tab() === 'monthly'"
       (click)="selectTab('monthly')"
     >
       {{ 'calculations.results.tabMonthly' | translate }}
@@ -30,6 +31,7 @@
       type="button"
       class="calc__tab"
       [class.calc__tab--active]="tab() === 'factors'"
+      [attr.aria-pressed]="tab() === 'factors'"
       (click)="selectTab('factors')"
     >
       {{ 'calculations.results.tabFactors' | translate }}

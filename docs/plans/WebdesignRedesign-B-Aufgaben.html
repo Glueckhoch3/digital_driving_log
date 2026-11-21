@@ -1,0 +1,369 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DDL Redesign – Variante B „Aufgaben“</title>
+<!--
+  Mockup for docs/plans/WebdesignRedesign.md — Variant B "Aufgaben" (bottom tab bar on phone, sidebar on desktop, dark mode).
+  Self-contained: no external fonts/scripts. The layout reacts to the width of the preview frame (CSS container queries).
+  Demo data is invented.
+-->
+<style>
+/* ---------- review chrome (not part of the design) ---------- */
+*{box-sizing:border-box;margin:0;padding:0}
+body{font:15px/1.5 system-ui,sans-serif;background:#dde2f0;color:#16203a}
+.rv{max-width:1240px;margin:0 auto;padding:16px}
+.rv h1{font-size:1.1rem}
+.rv p.sub{color:#505b75;font-size:.85rem;margin:2px 0 12px}
+.rv-bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:14px}
+.rv-bar button{font:inherit;font-size:.85rem;padding:8px 12px;border:1px solid #9aa3c0;background:#fff;border-radius:8px;cursor:pointer;min-height:40px;color:#16203a}
+.rv-bar button[aria-pressed=true]{background:#2a4bd7;border-color:#2a4bd7;color:#fff}
+.rv-notes{margin-top:16px;background:#fff;border-radius:10px;padding:14px 18px;font-size:.85rem}
+.rv-notes h2{font-size:.95rem;margin-bottom:6px}
+.rv-notes li{margin:4px 0 4px 18px}
+.rv-notes b{color:#2a4bd7}
+
+/* ---------- design tokens (Variant B) ---------- */
+.device{
+  --bg:#f4f6fb; --surface:#fff; --ink:#16203a; --muted:#505b75; --line:#d9deec;
+  --brand:#2a4bd7; --brand-ink:#fff; --brand-text:#2a4bd7; --brand-soft:#e6ebfc;
+  --pos:#126b3a; --pos-soft:#e5f5ea; --neg:#a3262a; --neg-soft:#fdeaea;
+  --cost:#7a4a00; --cost-soft:#fdf1d9; --focus:#1d4ed8;
+  --r:16px; --r-sm:10px; --tap:48px;
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:32px; --s7:48px;
+  --shadow:0 1px 2px rgba(20,30,70,.08),0 4px 12px rgba(20,30,70,.06);
+}
+@media (prefers-color-scheme:dark){
+  .device:not([data-theme=light]){--bg:#121829;--surface:#1b2238;--ink:#e8ecf8;--muted:#a3adc9;--line:#2d3756;--brand:#8fa8ff;--brand-ink:#0e1426;--brand-text:#9db4ff;--brand-soft:#26315a;--pos:#6fdc9a;--pos-soft:#1a2a22;--neg:#ff9a9d;--neg-soft:#2c1b1d;--cost:#f2c36b;--cost-soft:#3a2f17;--focus:#b8c8ff;--shadow:none}
+}
+.device[data-theme=dark]{--bg:#121829;--surface:#1b2238;--ink:#e8ecf8;--muted:#a3adc9;--line:#2d3756;--brand:#8fa8ff;--brand-ink:#0e1426;--brand-text:#9db4ff;--brand-soft:#26315a;--pos:#6fdc9a;--pos-soft:#1a2a22;--neg:#ff9a9d;--neg-soft:#2c1b1d;--cost:#f2c36b;--cost-soft:#3a2f17;--focus:#b8c8ff;--shadow:none}
+
+.device{container-type:inline-size;position:relative;margin:0 auto;width:var(--w,390px);max-width:100%;min-height:780px;
+  background:var(--bg);color:var(--ink);font:1rem/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  border:1px solid #9aa3c0;border-radius:20px;overflow:hidden;transition:width .2s}
+:where(.device) a{color:inherit}
+.device :focus-visible{outline:3px solid var(--focus);outline-offset:2px;border-radius:6px}
+.i{width:24px;height:24px;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.i--sm{width:20px;height:20px}
+.hidden{display:none!important}
+
+/* shell: phone = top title + bottom tabs, desktop = sidebar */
+.shell{display:flex;flex-direction:column;min-height:780px}
+.content{flex:1;min-width:0}
+.top{display:flex;align-items:center;gap:var(--s2);min-height:60px;padding:0 var(--s4);background:var(--surface);border-bottom:1px solid var(--line)}
+.top b{font-size:1.0625rem}
+.top .sp{flex:1}
+.icon-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-width:var(--tap);min-height:var(--tap);background:none;border:0;color:var(--ink);font:inherit;font-weight:700;cursor:pointer;border-radius:var(--r-sm)}
+.tabs{position:sticky;bottom:0;display:grid;grid-template-columns:repeat(4,1fr);background:var(--surface);border-top:1px solid var(--line);padding-bottom:6px}
+.tabs a,.tabs button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:64px;background:none;border:0;font:inherit;font-size:.8125rem;font-weight:700;color:var(--muted);text-decoration:none;cursor:pointer}
+.tabs [aria-current=page]{color:var(--brand-text)}
+.tabs [aria-current=page] .pill{background:var(--brand-soft)}
+.pill{display:grid;place-items:center;width:64px;height:32px;border-radius:999px}
+.side{display:none}
+@container (min-width:760px){
+  .shell{flex-direction:row}
+  .top,.tabs{display:none}
+  .side{display:flex;flex-direction:column;gap:var(--s1);width:248px;flex:none;padding:var(--s4);background:var(--surface);border-right:1px solid var(--line)}
+  .side .brand{display:flex;align-items:center;gap:var(--s3);font-weight:800;font-size:1.125rem;padding:var(--s2) var(--s3) var(--s4)}
+  .side .logo{display:grid;place-items:center;width:40px;height:40px;border-radius:12px;background:var(--brand);color:var(--brand-ink)}
+  .side a{display:flex;align-items:center;gap:var(--s3);min-height:var(--tap);padding:0 var(--s3);border-radius:var(--r-sm);text-decoration:none;font-weight:700}
+  .side a:hover{background:var(--bg)}
+  .side a[aria-current=page]{background:var(--brand-soft);color:var(--brand-text)}
+  .side h3{font-size:.8125rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:var(--s4) var(--s3) var(--s1)}
+}
+
+/* sheet "Mehr" */
+.scrim{position:absolute;inset:0;background:rgba(5,10,30,.55);z-index:20;display:none}
+.sheet{position:absolute;left:0;right:0;bottom:0;z-index:21;background:var(--surface);border-radius:24px 24px 0 0;padding:var(--s3) var(--s4) var(--s5);transform:translateY(105%);transition:transform .2s}
+.sheet::before{content:"";display:block;width:44px;height:5px;border-radius:3px;background:var(--line);margin:0 auto var(--s3)}
+.device[data-menu=open] .scrim{display:block}
+.device[data-menu=open] .sheet{transform:none}
+.sheet a{display:flex;align-items:center;gap:var(--s3);min-height:var(--tap);padding:0 var(--s2);text-decoration:none;font-weight:700;border-radius:var(--r-sm)}
+.sheet a:hover{background:var(--bg)}
+.sheet h3{font-size:.8125rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:var(--s3) var(--s2) var(--s1)}
+
+main{padding:var(--s4) var(--s4) var(--s6);max-width:880px;margin:0 auto}
+@container (min-width:760px){main{padding:var(--s6) var(--s6) var(--s7)}}
+h2.title{font-size:1.625rem;line-height:1.2;margin:var(--s2) 0 var(--s4)}
+h3.sec{font-size:.875rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:var(--s5) 0 var(--s2)}
+.crumb{display:inline-flex;align-items:center;min-height:var(--tap);gap:var(--s1);color:var(--brand-text);font-weight:700;text-decoration:none}
+.muted{color:var(--muted)}
+
+/* list rows */
+.list{background:var(--surface);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden}
+.row{display:flex;align-items:center;gap:var(--s3);min-height:64px;padding:var(--s3) var(--s4);text-decoration:none;border-top:1px solid var(--line)}
+.list>.row:first-child,.list>a.row:first-child{border-top:0}
+a.row:hover{background:var(--bg)}
+.row .t{flex:1;min-width:0}
+.row .t b{display:block}
+.row .t small{color:var(--muted);font-size:.875rem}
+.row .v{text-align:right;font-weight:700;font-variant-numeric:tabular-nums}
+.row .go{color:var(--muted)}
+.dot{display:grid;place-items:center;width:44px;height:44px;border-radius:50%;flex:none}
+.dot--drive{background:var(--brand-soft);color:var(--brand-text)}
+.dot--cost{background:var(--cost-soft);color:var(--cost)}
+.dot--car{background:var(--brand-soft);color:var(--brand-text)}
+.day{font-size:.875rem;font-weight:700;color:var(--muted);margin:var(--s5) 0 var(--s2)}
+
+/* big action tiles */
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:var(--s3)}
+.tile{display:flex;flex-direction:column;justify-content:space-between;gap:var(--s5);min-height:128px;padding:var(--s4);border-radius:var(--r);text-decoration:none;font-weight:800;font-size:1.0625rem;background:var(--surface);box-shadow:var(--shadow);border:2px solid transparent}
+.tile .dot{width:48px;height:48px}
+.tile--main{background:var(--brand);color:var(--brand-ink)}
+.tile--main .dot{background:rgba(255,255,255,.2);color:inherit}
+.device[data-theme=dark] .tile--main .dot{background:rgba(0,0,0,.15)}
+.tile:hover{border-color:var(--brand)}
+
+/* chips */
+.chips{display:flex;gap:var(--s2);overflow-x:auto;padding-bottom:var(--s1);margin-bottom:var(--s2)}
+.chip{flex:none;min-height:44px;padding:0 var(--s4);border-radius:999px;border:2px solid var(--line);background:var(--surface);color:var(--ink);font:inherit;font-weight:700;cursor:pointer}
+.chip[aria-pressed=true]{background:var(--brand);border-color:var(--brand);color:var(--brand-ink)}
+
+/* forms */
+.field{margin-bottom:var(--s4)}
+.field label{display:block;font-weight:700;margin-bottom:var(--s1)}
+.field .hint{display:block;font-size:.875rem;color:var(--muted);margin-bottom:var(--s1)}
+.field input,.field select,.field textarea{width:100%;min-height:52px;padding:var(--s2) var(--s4);font:inherit;color:var(--ink);background:var(--surface);border:2px solid var(--muted);border-radius:var(--r-sm)}
+.field textarea{min-height:96px}
+.field[data-invalid] input{border-color:var(--neg);background:var(--neg-soft)}
+.err{display:flex;gap:var(--s2);margin-top:var(--s1);color:var(--neg);font-weight:700;font-size:.9375rem}
+.form-wrap{max-width:560px}
+.sticky-actions{position:sticky;bottom:0;display:flex;gap:var(--s3);padding:var(--s3) 0;background:linear-gradient(transparent,var(--bg) 30%)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:var(--s2);min-height:52px;padding:0 var(--s5);border-radius:var(--r-sm);border:2px solid var(--brand);background:var(--surface);color:var(--brand-text);font:inherit;font-weight:800;cursor:pointer;text-decoration:none}
+.btn--primary{background:var(--brand);color:var(--brand-ink);flex:1}
+
+/* settlement chart */
+.chart{background:var(--surface);border-radius:var(--r);box-shadow:var(--shadow);padding:var(--s4)}
+.bars{display:grid;gap:var(--s4)}
+.bar-row .lbl{display:flex;justify-content:space-between;font-weight:700;margin-bottom:6px}
+.track{position:relative;height:20px;background:var(--bg);border-radius:6px}
+.track::after{content:"";position:absolute;left:50%;top:-4px;bottom:-4px;width:2px;background:var(--muted)}
+.fill{position:absolute;top:0;bottom:0;border-radius:6px}
+.fill--pos{left:50%;background:var(--pos)}
+.fill--neg{right:50%;background:var(--neg)}
+.axis{display:flex;justify-content:space-between;font-size:.8125rem;color:var(--muted);margin-top:var(--s2)}
+.v-pos{color:var(--pos)}.v-neg{color:var(--neg)}
+.chart .lbl .v-pos,.chart .lbl .v-neg{display:inline-flex;gap:4px;align-items:center}
+.flow{display:flex;align-items:center;gap:var(--s3);flex-wrap:wrap}
+.av{display:grid;place-items:center;width:44px;height:44px;border-radius:50%;background:var(--brand-soft);color:var(--brand-text);font-weight:800;flex:none}
+
+/* details accordion */
+details{background:var(--surface);border-radius:var(--r);box-shadow:var(--shadow);margin-bottom:var(--s3)}
+summary{display:flex;align-items:center;gap:var(--s3);min-height:64px;padding:var(--s3) var(--s4);cursor:pointer;list-style:none;font-weight:700}
+summary::-webkit-details-marker{display:none}
+summary .v{margin-left:auto;font-variant-numeric:tabular-nums}
+summary .chev{transition:transform .15s;color:var(--muted)}
+details[open] summary .chev{transform:rotate(90deg)}
+dl{display:grid;grid-template-columns:1fr auto;gap:var(--s2) var(--s4);padding:0 var(--s4) var(--s4)}
+dd{text-align:right;font-weight:700;font-variant-numeric:tabular-nums}
+dt{color:var(--muted)}
+.note{display:flex;gap:var(--s3);padding:var(--s3) var(--s4);border-radius:var(--r-sm);background:var(--brand-soft);color:var(--ink);margin-top:var(--s4)}
+.note svg{color:var(--brand-text)}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-car" viewBox="0 0 24 24"><path d="M5 17h14M5 17v-5l2-5h10l2 5v5M5 17v2M19 17v2M5 12h14"/></symbol>
+  <symbol id="i-route" viewBox="0 0 24 24"><circle cx="6" cy="18" r="2"/><circle cx="18" cy="6" r="2"/><path d="M8 18h6a3 3 0 0 0 0-6h-4a3 3 0 0 1 0-6h6"/></symbol>
+  <symbol id="i-coin" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M15 9a4 4 0 1 0 0 6M8 11h5M8 13h5"/></symbol>
+  <symbol id="i-calc" viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h8M8 12h2M14 12h2M8 16h2M14 16h2"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M3 20v-1a5 5 0 0 1 10 0v1M16 5a3 3 0 0 1 0 6M17 14a4 4 0 0 1 4 4v2"/></symbol>
+  <symbol id="i-list" viewBox="0 0 24 24"><path d="M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01"/></symbol>
+  <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 16V4M7 9l5-5 5 5M4 20h16"/></symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M2 20h20"/></symbol>
+  <symbol id="i-right" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></symbol>
+  <symbol id="i-left" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></symbol>
+  <symbol id="i-up" viewBox="0 0 24 24"><path d="M12 19V5M6 11l6-6 6 6"/></symbol>
+  <symbol id="i-down" viewBox="0 0 24 24"><path d="M12 5v14M6 13l6 6 6-6"/></symbol>
+  <symbol id="i-tag" viewBox="0 0 24 24"><path d="M4 4h8l8 8-8 8-8-8zM8 8h.01"/></symbol>
+  <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></symbol>
+  <symbol id="i-more" viewBox="0 0 24 24"><path d="M5 12h.01M12 12h.01M19 12h.01"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v6M12 16.5h.01"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+</svg>
+
+<div class="rv">
+  <h1>DDL Redesign – Variante B „Aufgaben“ <span style="font-weight:400;color:#505b75">· Tab-Leiste unten, Seitenleiste am Desktop, Dunkelmodus</span></h1>
+  <p class="sub">Entwurf zu docs/plans/WebdesignRedesign.md · Beispieldaten erfunden · Klicks auf Tabs, „Mehr“ und Listen funktionieren.</p>
+  <div class="rv-bar" role="group" aria-label="Bildschirm wählen" id="screens"></div>
+  <div class="rv-bar" role="group" aria-label="Vorschaubreite">
+    <button type="button" data-w="390" aria-pressed="true">Handy (390 px)</button>
+    <button type="button" data-w="320" aria-pressed="false">Klein (320 px)</button>
+    <button type="button" data-w="1120" aria-pressed="false">Desktop</button>
+    <span style="width:12px"></span>
+    <button type="button" data-t="auto" aria-pressed="true">Hell/Dunkel: System</button>
+    <button type="button" data-t="light" aria-pressed="false">Hell</button>
+    <button type="button" data-t="dark" aria-pressed="false">Dunkel</button>
+  </div>
+
+  <div class="device" id="dev" data-menu="closed">
+    <div class="shell">
+      <aside class="side" aria-label="Seitenleiste">
+        <div class="brand"><span class="logo"><svg class="i"><use href="#i-car"/></svg></span>Fahrtenbuch</div>
+        <a href="#" data-go="home" data-tab="home"><svg class="i"><use href="#i-car"/></svg>Meine Autos</a>
+        <a href="#" data-go="log" data-tab="log"><svg class="i"><use href="#i-list"/></svg>Verlauf</a>
+        <a href="#" data-go="settle" data-tab="settle"><svg class="i"><use href="#i-calc"/></svg>Abrechnung</a>
+        <h3>Einstellungen</h3>
+        <a href="#"><svg class="i"><use href="#i-users"/></svg>Personen</a>
+        <a href="#"><svg class="i"><use href="#i-car"/></svg>Autos verwalten</a>
+        <a href="#"><svg class="i"><use href="#i-tag"/></svg>Kostenarten</a>
+        <a href="#"><svg class="i"><use href="#i-globe"/></svg>Sprache: Deutsch</a>
+      </aside>
+
+      <div class="content">
+        <header class="top"><b id="ptitle">Meine Autos</b><span class="sp"></span><button class="icon-btn" type="button" aria-label="Sprache wählen: Deutsch"><svg class="i i--sm"><use href="#i-globe"/></svg>DE</button></header>
+
+        <!-- HOME -->
+        <main data-screen="home">
+          <h2 class="title">Meine Autos</h2>
+          <div class="list">
+            <a class="row" href="#" data-go="car"><span class="dot dot--car"><svg class="i"><use href="#i-car"/></svg></span><span class="t"><b>Familienkombi</b><small>HH-AB 123 · 48.230 km</small></span><svg class="i go"><use href="#i-right"/></svg></a>
+            <a class="row" href="#" data-go="car"><span class="dot dot--car"><svg class="i"><use href="#i-car"/></svg></span><span class="t"><b>Stadtflitzer</b><small>HH-CD 456 · 12.870 km</small></span><svg class="i go"><use href="#i-right"/></svg></a>
+          </div>
+        </main>
+
+        <!-- CAR -->
+        <main data-screen="car" class="hidden">
+          <a class="crumb" href="#" data-go="home"><svg class="i i--sm"><use href="#i-left"/></svg>Meine Autos</a>
+          <h2 class="title" style="margin-top:0">Familienkombi <span class="muted" style="font-size:1rem;font-weight:600">HH-AB 123</span></h2>
+          <div class="tiles">
+            <a class="tile tile--main" href="#" data-go="form"><span class="dot"><svg class="i"><use href="#i-route"/></svg></span>Fahrt eintragen</a>
+            <a class="tile" href="#"><span class="dot dot--cost"><svg class="i"><use href="#i-coin"/></svg></span>Ausgabe eintragen</a>
+          </div>
+          <h3 class="sec">Ansehen</h3>
+          <div class="list">
+            <a class="row" href="#" data-go="log"><span class="dot dot--drive"><svg class="i"><use href="#i-route"/></svg></span><span class="t"><b>Fahrten</b></span><svg class="i go"><use href="#i-right"/></svg></a>
+            <a class="row" href="#"><span class="dot dot--cost"><svg class="i"><use href="#i-coin"/></svg></span><span class="t"><b>Ausgaben</b></span><svg class="i go"><use href="#i-right"/></svg></a>
+            <a class="row" href="#"><span class="dot dot--car"><svg class="i"><use href="#i-chart"/></svg></span><span class="t"><b>Verbrauch</b></span><svg class="i go"><use href="#i-right"/></svg></a>
+            <a class="row" href="#"><span class="dot dot--car"><svg class="i"><use href="#i-upload"/></svg></span><span class="t"><b>Datei hochladen</b></span><svg class="i go"><use href="#i-right"/></svg></a>
+          </div>
+        </main>
+
+        <!-- LOG -->
+        <main data-screen="log" class="hidden">
+          <h2 class="title">Verlauf</h2>
+          <div class="chips" role="group" aria-label="Filter"><button class="chip" type="button" aria-pressed="true">Alles</button><button class="chip" type="button" aria-pressed="false">Fahrten</button><button class="chip" type="button" aria-pressed="false">Ausgaben</button><button class="chip" type="button" aria-pressed="false">Familienkombi</button><button class="chip" type="button" aria-pressed="false">Stadtflitzer</button></div>
+          <p class="day">12. November 2026</p>
+          <div class="list"><div class="row"><span class="dot dot--drive"><svg class="i"><use href="#i-route"/></svg></span><span class="t"><b>Fahrt · A. M.</b><small>Familienkombi</small></span><span class="v">48.230 km</span></div></div>
+          <p class="day">10. November 2026</p>
+          <div class="list"><div class="row"><span class="dot dot--cost"><svg class="i"><use href="#i-coin"/></svg></span><span class="t"><b>Tanken · L. S.</b><small>Familienkombi</small></span><span class="v">62,40 €</span></div></div>
+          <p class="day">8. November 2026</p>
+          <div class="list"><div class="row"><span class="dot dot--drive"><svg class="i"><use href="#i-route"/></svg></span><span class="t"><b>Fahrt · T. K.</b><small>Stadtflitzer</small></span><span class="v">12.870 km</span></div></div>
+          <p class="day">3. November 2026</p>
+          <div class="list"><div class="row"><span class="dot dot--cost"><svg class="i"><use href="#i-coin"/></svg></span><span class="t"><b>Versicherung · A. M.</b><small>Familienkombi</small></span><span class="v">310,00 €</span></div></div>
+          <div style="display:flex;justify-content:center;margin-top:24px"><button class="btn" type="button">Mehr laden</button></div>
+        </main>
+
+        <!-- FORM -->
+        <main data-screen="form" class="hidden">
+          <a class="crumb" href="#" data-go="car"><svg class="i i--sm"><use href="#i-close"/></svg>Abbrechen</a>
+          <h2 class="title" style="margin-top:0">Fahrt eintragen</h2>
+          <form class="form-wrap" onsubmit="return false" novalidate>
+            <div class="field"><label for="d1">Datum</label><input id="d1" type="date" value="2026-11-18"></div>
+            <div class="field" data-invalid><label for="d2">Kilometerstand</label><span class="hint" id="d2h">Die Zahl auf dem Tacho nach der Fahrt.</span><input id="d2" inputmode="numeric" value="0" aria-invalid="true" aria-describedby="d2h d2e"><p class="err" id="d2e"><svg class="i i--sm"><use href="#i-alert"/></svg>Bitte eine Zahl größer als 0 eingeben.</p></div>
+            <div class="field"><label for="d3">Wer ist gefahren?</label><select id="d3"><option>A. M.</option><option>L. S.</option><option>T. K.</option></select></div>
+            <div class="field"><label for="d4">Notiz <span class="muted" style="font-weight:400">(freiwillig)</span></label><textarea id="d4"></textarea></div>
+            <div class="sticky-actions"><button class="btn btn--primary" type="submit">Speichern</button></div>
+          </form>
+        </main>
+
+        <!-- SETTLE (#41) -->
+        <main data-screen="settle" class="hidden">
+          <h2 class="title">Abrechnung</h2>
+          <div class="chips" role="group" aria-label="Jahr"><button class="chip" type="button" aria-pressed="false">2025</button><button class="chip" type="button" aria-pressed="true">2026</button></div>
+          <h3 class="sec">Ergebnis für alle Autos</h3>
+          <div class="chart">
+            <div class="bars">
+              <div class="bar-row"><div class="lbl"><span>A. M.</span><span class="v-pos"><svg class="i i--sm"><use href="#i-up"/></svg>bekommt 62,40 €</span></div><div class="track" aria-hidden="true"><span class="fill fill--pos" style="width:50%"></span></div></div>
+              <div class="bar-row"><div class="lbl"><span>L. S.</span><span class="v-neg"><svg class="i i--sm"><use href="#i-down"/></svg>zahlt 18,15 €</span></div><div class="track" aria-hidden="true"><span class="fill fill--neg" style="width:14.5%"></span></div></div>
+              <div class="bar-row"><div class="lbl"><span>T. K.</span><span class="v-neg"><svg class="i i--sm"><use href="#i-down"/></svg>zahlt 44,25 €</span></div><div class="track" aria-hidden="true"><span class="fill fill--neg" style="width:35.4%"></span></div></div>
+            </div>
+            <div class="axis" aria-hidden="true"><span>← zahlt</span><span>bekommt →</span></div>
+          </div>
+          <h3 class="sec">Wer zahlt wem?</h3>
+          <div class="list">
+            <div class="row"><span class="flow"><span class="av">TK</span><svg class="i"><use href="#i-right"/></svg><span class="av">AM</span></span><span class="v" style="margin-left:auto">44,25 €</span></div>
+            <div class="row"><span class="flow"><span class="av">LS</span><svg class="i"><use href="#i-right"/></svg><span class="av">AM</span></span><span class="v" style="margin-left:auto">18,15 €</span></div>
+          </div>
+          <div style="margin-top:24px"><a class="btn" href="#" data-go="details" style="width:100%"><svg class="i"><use href="#i-list"/></svg>So wurde gerechnet</a></div>
+        </main>
+
+        <!-- DETAILS -->
+        <main data-screen="details" class="hidden">
+          <a class="crumb" href="#" data-go="settle"><svg class="i i--sm"><use href="#i-left"/></svg>Abrechnung</a>
+          <h2 class="title" style="margin-top:0">So wurde gerechnet</h2>
+          <div class="chips" role="group" aria-label="Ansicht"><button class="chip" type="button" aria-pressed="true">Pro Person</button><button class="chip" type="button" aria-pressed="false">Kilometer pro Monat</button><button class="chip" type="button" aria-pressed="false">Anteile</button></div>
+          <details open><summary><span class="av">AM</span>A. M.<span class="v">702,10 €</span><svg class="i chev"><use href="#i-right"/></svg></summary>
+            <dl><dt>Gefahrene Kilometer</dt><dd>6.420 km</dd><dt>Fahrkosten (nach Kilometern)</dt><dd>412,10 €</dd><dt>Feste Kosten (gleich verteilt)</dt><dd>290,00 €</dd></dl></details>
+          <details><summary><span class="av">LS</span>L. S.<span class="v">494,10 €</span><svg class="i chev"><use href="#i-right"/></svg></summary>
+            <dl><dt>Gefahrene Kilometer</dt><dd>3.180 km</dd><dt>Fahrkosten (nach Kilometern)</dt><dd>204,10 €</dd><dt>Feste Kosten (gleich verteilt)</dt><dd>290,00 €</dd></dl></details>
+          <details><summary><span class="av">TK</span>T. K.<span class="v">357,40 €</span><svg class="i chev"><use href="#i-right"/></svg></summary>
+            <dl><dt>Gefahrene Kilometer</dt><dd>1.050 km</dd><dt>Fahrkosten (nach Kilometern)</dt><dd>67,40 €</dd><dt>Feste Kosten (gleich verteilt)</dt><dd>290,00 €</dd></dl></details>
+          <p class="note"><svg class="i"><use href="#i-info"/></svg><span>Fahrkosten (z. B. Sprit) teilen wir nach Kilometern. Feste Kosten (z. B. Versicherung) teilen alle gleich.</span></p>
+        </main>
+
+        <nav class="tabs" aria-label="Hauptmenü">
+          <a href="#" data-go="home" data-tab="home"><span class="pill"><svg class="i"><use href="#i-car"/></svg></span>Autos</a>
+          <a href="#" data-go="log" data-tab="log"><span class="pill"><svg class="i"><use href="#i-list"/></svg></span>Verlauf</a>
+          <a href="#" data-go="settle" data-tab="settle"><span class="pill"><svg class="i"><use href="#i-calc"/></svg></span>Abrechnung</a>
+          <button type="button" id="more" aria-haspopup="dialog"><span class="pill"><svg class="i"><use href="#i-more"/></svg></span>Mehr</button>
+        </nav>
+      </div>
+    </div>
+
+    <div class="scrim" id="scrim"></div>
+    <div class="sheet" id="sheet" role="dialog" aria-label="Mehr">
+      <h3>Einstellungen</h3>
+      <a href="#"><svg class="i"><use href="#i-users"/></svg>Personen</a>
+      <a href="#"><svg class="i"><use href="#i-car"/></svg>Autos verwalten</a>
+      <a href="#"><svg class="i"><use href="#i-tag"/></svg>Kostenarten</a>
+      <a href="#"><svg class="i"><use href="#i-globe"/></svg>Sprache: Deutsch</a>
+    </div>
+  </div>
+
+  <section class="rv-notes" aria-live="polite"><h2 id="pt">Prinzipien auf diesem Bildschirm</h2><ul id="pl"></ul></section>
+</div>
+
+<script>
+const P={1:'Visuelle Hierarchie',2:'Konsistenz / Design-Tokens',3:'Nähe & Gruppierung',4:'Kontrast & Bedeutung nicht nur über Farbe',5:'Große Tippflächen',6:'Erkennen statt Erinnern',7:'Schrittweise Offenlegung',8:'Mobile-first / Umfließen',9:'Einfache Sprache',10:'Rückmeldung & Zustände',11:'Daumenzone / Fitts',12:'Typografie & Weißraum',13:'Fokus & Tastatur',14:'Weniger Auswahl (Hick)',15:'Icon + Text'};
+const S={
+ home:['Meine Autos',[[11,'Navigation liegt unten – im Bereich, den der Daumen erreicht.'],[14,'Nur 4 Hauptziele in der Tab-Leiste; Seltenes steckt unter „Mehr“.'],[6,'Aktive Seite ist doppelt markiert (Farbe + Pille); Icons haben immer Text.'],[8,'Am Desktop wird aus der Tab-Leiste eine Seitenleiste – gleiche Struktur.']]],
+ car:['Auto-Startseite',[[1,'Eine gefüllte Kachel für die häufigste Aufgabe, daneben die zweite – dann erst die Listen.'],[5,'Kacheln ≥ 128 px hoch, Listenzeilen ≥ 64 px.'],[3,'„Eintragen“ (Tun) oben, „Ansehen“ (Lesen) unten, getrennt durch Überschrift.'],[2,'Gleiche Icon-Kreise wie im Verlauf: Fahrten = blau, Ausgaben = bernstein.']]],
+ log:['Verlauf',[[3,'Einträge nach Tag gruppiert; Datum nur einmal pro Gruppe.'],[8,'Keine Tabelle: Zeilen funktionieren auf 320 px ohne Seitwärts-Scrollen.'],[4,'Fahrt/Ausgabe unterscheiden sich durch Icon und Text, nicht nur Farbe.'],[14,'Filter als Chips; seitlich scrollbar, Auswahl bleibt sichtbar.']]],
+ form:['Fahrt eintragen',[[11,'„Speichern“ klebt unten am Rand – immer erreichbar, auch bei Tastatur.'],[10,'Fehler: Umrandung + Icon + Satz, per aria-describedby verknüpft.'],[5,'Felder 52 px hoch.'],[9,'„Wer ist gefahren?“, „Die Zahl auf dem Tacho“ – Alltagswörter.']]],
+ settle:['Abrechnung',[[7,'Nur das Endergebnis (Issue #41); Rechenweg ist ein Schritt weiter.'],[1,'Ein Balkendiagramm zeigt auf einen Blick, wer Geld bekommt und wer zahlt.'],[4,'Richtung steht als Text („bekommt/zahlt“) + Pfeil + Farbe; Mittellinie = 0.'],[9,'„Wer zahlt wem?“ statt „Nettosaldo“ (Issue #43); Ausgleichsliste ist eine Zusatzidee.']]],
+ details:['So wurde gerechnet',[[7,'Aufklappbare Zeilen pro Person: Details nur, wenn man sie will (native <details>, tastaturbedienbar).'],[9,'„Fahrkosten“ / „Feste Kosten“ mit Beispiel statt „variabel/fix“.'],[13,'Zusammenfassung ist ein echtes Bedienelement mit Fokusrahmen.'],[12,'Zahlen rechtsbündig mit gleich breiten Ziffern.']]]
+};
+const order=['home','car','log','form','settle','details'];
+const dev=document.getElementById('dev'),bar=document.getElementById('screens');
+order.forEach(id=>{const b=document.createElement('button');b.type='button';b.textContent=S[id][0];b.dataset.s=id;b.setAttribute('aria-pressed','false');bar.appendChild(b);});
+function go(id){
+  document.querySelectorAll('[data-screen]').forEach(m=>m.classList.toggle('hidden',m.dataset.screen!==id));
+  bar.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.s===id));
+  const tab={home:'home',car:'home',form:'home',log:'log',settle:'settle',details:'settle'}[id];
+  dev.querySelectorAll('[data-tab]').forEach(a=>a.dataset.tab===tab?a.setAttribute('aria-current','page'):a.removeAttribute('aria-current'));
+  document.getElementById('ptitle').textContent=S[id][0];
+  document.getElementById('pt').textContent='Prinzipien auf diesem Bildschirm: '+S[id][0];
+  document.getElementById('pl').innerHTML=S[id][1].map(([n,t])=>`<li><b>P${n} ${P[n]}</b> – ${t}</li>`).join('');
+  setMenu(false);
+}
+function setMenu(o){dev.dataset.menu=o?'open':'closed'}
+document.addEventListener('click',e=>{
+  const g=e.target.closest('[data-go]');if(g){e.preventDefault();go(g.dataset.go);return}
+  const s=e.target.closest('[data-s]');if(s){go(s.dataset.s);return}
+  const w=e.target.closest('[data-w]');if(w){dev.style.setProperty('--w',w.dataset.w+'px');document.querySelectorAll('[data-w]').forEach(b=>b.setAttribute('aria-pressed',b===w));return}
+  const t=e.target.closest('[data-t]');if(t){t.dataset.t==='auto'?dev.removeAttribute('data-theme'):dev.setAttribute('data-theme',t.dataset.t);document.querySelectorAll('[data-t]').forEach(b=>b.setAttribute('aria-pressed',b===t));return}
+  const ch=e.target.closest('.chips .chip');if(ch){ch.parentElement.querySelectorAll('.chip').forEach(b=>b.setAttribute('aria-pressed',b===ch));return}
+  if(e.target.closest('#more'))setMenu(true);
+  if(e.target.closest('#scrim'))setMenu(false);
+});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')setMenu(false)});
+const q=new URLSearchParams(location.search);
+if(q.get('w'))document.querySelector('[data-w="'+q.get('w')+'"]')?.click();
+if(q.get('t'))document.querySelector('[data-t="'+q.get('t')+'"]')?.click();
+go(order.includes(location.hash.slice(1))?location.hash.slice(1):'home');
+</script>
+</body>
+</html>

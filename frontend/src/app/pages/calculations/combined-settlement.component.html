@@ -1,12 +1,10 @@
 <section class="calc">
-  <a class="calc__back" routerLink="/calculations">{{ 'calculations.back' | translate }}</a>
   <h2 class="calc__title">{{ 'calculations.combined.title' | translate }}</h2>
-  <p class="calc__sub">{{ 'calculations.combined.subtitle' | translate }}</p>
 
-  <div class="calc__fields" style="margin-bottom: 1.3rem">
+  <div class="calc__fields calc__fields--spaced">
     <div class="calc__field">
-      <label>{{ 'calculations.fields.year' | translate }}</label>
-      <select class="calc__control" [(ngModel)]="year" (ngModelChange)="load()">
+      <label for="combined-year">{{ 'calculations.fields.year' | translate }}</label>
+      <select id="combined-year" class="calc__control" [(ngModel)]="year" (ngModelChange)="load()">
         @for (y of years; track y) {
           <option [ngValue]="y">{{ y }}</option>
         }
@@ -28,63 +26,133 @@
   @if (loading()) {
     <p>{{ 'calculations.loading' | translate }}</p>
   } @else if (error()) {
-    <p class="calc__note calc__note--error">{{ error() | translate }}</p>
+    <p class="calc__note calc__note--error" role="alert">{{ error() | translate }}</p>
   } @else if (rows().length === 0) {
     <p class="calc__note calc__note--info">{{ 'calculations.notCalculated' | translate }}</p>
   } @else {
-    <div class="calc__tbl-wrap">
-      <table class="calc__table">
-        <thead>
-          <tr>
-            <th>{{ 'calculations.cols.driver' | translate }}</th>
-            <th class="num">{{ 'calculations.cols.paid' | translate }}</th>
-            <th class="num">{{ 'calculations.cols.variableDiff' | translate }}</th>
-            <th class="num">{{ 'calculations.cols.fixedDiff' | translate }}</th>
-            <th class="num">{{ 'calculations.cols.netBalance' | translate }}</th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (row of rows(); track row.userId) {
-            <tr>
-              <td>{{ row.userName }}</td>
-              <td class="num">{{ row.paid | number: '1.2-2' }}</td>
-              <td
-                class="num"
-                [class.calc__money-pos]="row.differenceVariableCost > 0"
-                [class.calc__money-neg]="row.differenceVariableCost < 0"
-              >
-                {{ row.differenceVariableCost | number: '1.2-2' }}
-              </td>
-              <td
-                class="num"
-                [class.calc__money-pos]="row.differenceFixCost > 0"
-                [class.calc__money-neg]="row.differenceFixCost < 0"
-              >
-                {{ row.differenceFixCost | number: '1.2-2' }}
-              </td>
-              <td
-                class="num"
-                [class.calc__money-pos]="row.netBalance > 0"
-                [class.calc__money-neg]="row.netBalance < 0"
-              >
-                {{ row.netBalance | number: '1.2-2' }}
-              </td>
-            </tr>
-          }
-        </tbody>
-        <tfoot>
-          <tr>
-            <td>{{ 'calculations.cols.total' | translate }}</td>
-            <td class="num">{{ totals().paid | number: '1.2-2' }}</td>
-            <td class="num">{{ totals().variable | number: '1.2-2' }}</td>
-            <td class="num">{{ totals().fixed | number: '1.2-2' }}</td>
-            <td class="num">{{ totals().net | number: '1.2-2' }}</td>
-          </tr>
-        </tfoot>
-      </table>
+    <div
+      class="calc__tabs"
+      role="group"
+      [attr.aria-label]="'calculations.combined.viewLabel' | translate"
+    >
+      <button
+        type="button"
+        class="calc__tab"
+        [class.calc__tab--active]="view() === 'result'"
+        [attr.aria-pressed]="view() === 'result'"
+        (click)="view.set('result')"
+      >
+        {{ 'calculations.combined.tabResult' | translate }}
+      </button>
+      <button
+        type="button"
+        class="calc__tab"
+        [class.calc__tab--active]="view() === 'details'"
+        [attr.aria-pressed]="view() === 'details'"
+        (click)="view.set('details')"
+      >
+        {{ 'calculations.combined.tabDetails' | translate }}
+      </button>
     </div>
-    <p class="calc__note calc__note--info" style="margin-top: 1.2rem">
-      {{ 'calculations.combined.explainer' | translate }}
-    </p>
+
+    @if (view() === 'result') {
+      <!-- only the final result per person: who gets money, who pays (issue #41) -->
+      <div class="calc__people">
+        @for (row of rows(); track row.userId) {
+          <div class="calc__person">
+            <span class="calc__avatar" aria-hidden="true">{{ initials(row.userName) }}</span>
+            <span class="calc__who">{{ row.userName }}</span>
+            <span
+              class="calc__amount"
+              [class.calc__amount--pos]="row.netBalance > 0"
+              [class.calc__amount--neg]="row.netBalance < 0"
+            >
+              <small>
+                {{
+                  (row.netBalance > 0
+                    ? 'calculations.combined.gets'
+                    : row.netBalance < 0
+                      ? 'calculations.combined.pays'
+                      : 'calculations.combined.even'
+                  ) | translate
+                }}
+              </small>
+              <b>
+                @if (row.netBalance > 0) {
+                  <app-icon name="up" [small]="true" />
+                } @else if (row.netBalance < 0) {
+                  <app-icon name="down" [small]="true" />
+                }
+                {{ abs(row.netBalance) | number: '1.2-2' }} €
+              </b>
+            </span>
+          </div>
+        }
+      </div>
+    } @else {
+      <div class="calc__tbl-wrap">
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>{{ 'calculations.cols.driver' | translate }}</th>
+              <th class="num">{{ 'calculations.cols.paid' | translate }}</th>
+              <th class="num">{{ 'calculations.cols.variableDiff' | translate }}</th>
+              <th class="num">{{ 'calculations.cols.fixedDiff' | translate }}</th>
+              <th class="num">{{ 'calculations.cols.netBalance' | translate }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (row of rows(); track row.userId) {
+              <tr>
+                <td>{{ row.userName }}</td>
+                <td class="num">{{ row.paid | number: '1.2-2' }}</td>
+                <td
+                  class="num"
+                  [class.calc__money-pos]="row.differenceVariableCost > 0"
+                  [class.calc__money-neg]="row.differenceVariableCost < 0"
+                >
+                  {{ row.differenceVariableCost | number: '1.2-2' }}
+                </td>
+                <td
+                  class="num"
+                  [class.calc__money-pos]="row.differenceFixCost > 0"
+                  [class.calc__money-neg]="row.differenceFixCost < 0"
+                >
+                  {{ row.differenceFixCost | number: '1.2-2' }}
+                </td>
+                <td
+                  class="num"
+                  [class.calc__money-pos]="row.netBalance > 0"
+                  [class.calc__money-neg]="row.netBalance < 0"
+                >
+                  {{ row.netBalance | number: '1.2-2' }}
+                </td>
+              </tr>
+            }
+          </tbody>
+          <tfoot>
+            <tr>
+              <td>{{ 'calculations.cols.total' | translate }}</td>
+              <td class="num">{{ totals().paid | number: '1.2-2' }}</td>
+              <td class="num">{{ totals().variable | number: '1.2-2' }}</td>
+              <td class="num">{{ totals().fixed | number: '1.2-2' }}</td>
+              <td class="num">{{ totals().net | number: '1.2-2' }}</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+      <p class="calc__note calc__note--info">
+        {{ 'calculations.combined.explainer' | translate }}
+      </p>
+    }
   }
+
+  <div class="btn-row calc__footer-actions">
+    <a class="btn" routerLink="/calculations/results"
+      ><app-icon name="list" />{{ 'calculations.combined.howCalculated' | translate }}</a
+    >
+    <a class="btn" routerLink="/calculations"
+      ><app-icon name="calc" />{{ 'calculations.combined.prepare' | translate }}</a
+    >
+  </div>
 </section>

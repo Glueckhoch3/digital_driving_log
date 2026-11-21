@@ -1,16 +1,15 @@
-<section class="user-management">
+<section class="page page--wide">
   <h2>{{ 'userManagement.title' | translate }}</h2>
-  <p>{{ 'userManagement.description' | translate }}</p>
 
   @if (message()) {
-    <p class="user-management__message">{{ message() | translate }}</p>
+    <p class="msg msg--ok">{{ message() | translate }}</p>
   }
 
   @if (error()) {
-    <p class="user-management__error">{{ error() | translate }}</p>
+    <p class="msg msg--error">{{ error() | translate }}</p>
   }
 
-  <form class="user-management__form" [formGroup]="userForm" (ngSubmit)="submit()">
+  <form class="form" [formGroup]="userForm" (ngSubmit)="submit()">
     <h3>
       @if (editingUserId()) {
         {{ 'userManagement.form.editTitle' | translate }}
@@ -43,12 +42,12 @@
     />
     <app-field-error [control]="userForm.controls.birthday" />
 
-    <label class="user-management__checkbox">
+    <label class="check-row">
       <input type="checkbox" formControlName="driverLicense" />
       {{ 'userManagement.form.driverLicense' | translate }}
     </label>
 
-    <div class="user-management__form-actions">
+    <div class="form__actions">
       <button type="submit">
         @if (editingUserId()) {
           {{ 'userManagement.form.update' | translate }}
@@ -69,7 +68,7 @@
   } @else if (users().length === 0) {
     <p>{{ 'userManagement.empty' | translate }}</p>
   } @else {
-    <table class="user-management__table">
+    <table class="tbl">
       <thead>
         <tr>
           <th>{{ 'userManagement.table.firstname' | translate }}</th>
@@ -88,10 +87,10 @@
             <td>
               {{ user.driverLicense ? ('common.yes' | translate) : ('common.no' | translate) }}
             </td>
-            <td>
-              <div class="user-management__row-actions">
+            <td class="actions-cell">
+              <div class="actions">
                 <button type="button" (click)="edit(user)">{{ 'common.edit' | translate }}</button>
-                <button type="button" (click)="delete(user.userId)">
+                <button type="button" class="btn--danger" (click)="delete(user.userId)">
                   {{ 'common.delete' | translate }}
                 </button>
               </div>

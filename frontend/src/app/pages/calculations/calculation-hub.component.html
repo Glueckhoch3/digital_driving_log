@@ -1,6 +1,5 @@
 <section class="calc">
   <h2 class="calc__title">{{ 'calculations.hub.title' | translate }}</h2>
-  <p class="calc__sub">{{ 'calculations.hub.subtitle' | translate }}</p>
 
   <div class="calc__group">
     <p class="calc__eyebrow">{{ 'calculations.hub.viewResults' | translate }}</p>
@@ -30,7 +29,6 @@
     <div class="calc__panel-head">
       <div>
         <h3>{{ 'calculations.participants.title' | translate }}</h3>
-        <p>{{ 'calculations.participants.subtitle' | translate }}</p>
       </div>
     </div>
     <div class="calc__panel-body">
@@ -53,7 +51,7 @@
         <p>{{ 'calculations.loading' | translate }}</p>
       } @else {
         <div class="calc__tbl-wrap">
-          <table class="calc__table">
+          <table class="tbl">
             <thead>
               <tr>
                 <th class="calc__check"></th>
@@ -112,7 +110,7 @@
           </table>
         </div>
 
-        <div class="calc__actions-grid" style="margin-top: 1rem">
+        <div class="calc__actions-grid calc__actions-grid--spaced">
           <button class="calc__btn calc__btn--primary" [disabled]="busy()" (click)="save()">
             {{ 'calculations.participants.save' | translate }}
           </button>

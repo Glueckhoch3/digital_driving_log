@@ -2,17 +2,25 @@
   "header": {
     "title": "Digitales Fahrtenbuch",
     "menu": {
-      "entryOverview": "Managementübersicht",
-      "chooseCar": "Auto auswählen",
-      "calculations": "Berechnungen",
-      "manageUsers": "Benutzer verwalten",
       "manageCars": "Autos verwalten",
-      "manageCostCategories": "Kostenarten verwalten"
+      "manageCostCategories": "Kostenarten",
+      "cars": "Autos",
+      "log": "Log",
+      "settlement": "Abrechnung",
+      "more": "Mehr",
+      "settings": "Einstellungen",
+      "manageUsers": "Personen"
     },
     "language": {
       "en": "English",
       "de": "Deutsch"
-    }
+    },
+    "nav": {
+      "main": "Hauptmenü",
+      "settings": "Einstellungen"
+    },
+    "skipLink": "Zum Inhalt springen",
+    "langSwitch": "Sprache wechseln (aktuell: {{lang}})"
   },
   "common": {
     "pagination": {
@@ -36,8 +44,7 @@
     "integer": "Bitte eine ganze Zahl größer als 0 eingeben."
   },
   "userManagement": {
-    "title": "Benutzerverwaltung",
-    "description": "Benutzer erstellen, bearbeiten und löschen.",
+    "title": "Personen",
     "loading": "Benutzer werden geladen...",
     "empty": "Keine Benutzer verfügbar.",
     "form": {
@@ -71,8 +78,7 @@
     }
   },
   "carManagement": {
-    "title": "Autoverwaltung",
-    "description": "Autos erstellen, bearbeiten und löschen.",
+    "title": "Autos verwalten",
     "loading": "Autos und Benutzer werden geladen...",
     "empty": "Keine Autos verfügbar.",
     "usersRequiredFirst": "Erstelle zuerst mindestens einen Benutzer, bevor du ein Auto anlegst.",
@@ -107,27 +113,28 @@
     }
   },
   "carSelection": {
-    "title": "Auto auswählen",
+    "title": "Meine Autos",
     "loading": "Autos werden geladen...",
     "empty": "Keine Autos verfügbar.",
-    "loadError": "Autos konnten nicht geladen werden."
+    "loadError": "Autos konnten nicht geladen werden.",
+    "add": "Auto hinzufügen"
   },
   "managementOverview": {
-    "title": "Managementübersicht",
+    "title": "Log",
     "loading": "Zusammengeführte Zeitleiste wird geladen...",
     "empty": "Keine Einträge verfügbar.",
     "loadError": "Managementübersicht konnte nicht geladen werden.",
     "headers": {
       "date": "Datum",
       "car": "Auto",
-      "type": "Typ",
-      "participant": "Beteiligte Person",
+      "type": "Art",
+      "participant": "Person",
       "details": "Details",
       "value": "Wert"
     },
     "types": {
       "drive": "Fahrt",
-      "transaction": "Transaktion"
+      "transaction": "Ausgabe"
     },
     "timelineLoadError": "Zeitleisten-Einträge konnten nicht geladen werden."
   },
@@ -136,44 +143,47 @@
     "loadError": "Fahrzeugdaten konnten nicht geladen werden.",
     "hub": {
       "navLabel": "Fahrzeugbereiche",
-      "viewDrives": "Fahrten ansehen",
-      "addDrive": "Fahrt hinzufügen",
-      "viewCosts": "Kosten ansehen",
-      "addCost": "Kosten hinzufügen",
-      "backToHub": "Zurück zur Fahrzeugübersicht",
-      "upload": "CSV importieren",
-      "statistics": "Verbrauchsstatistik"
+      "viewDrives": "Fahrten",
+      "addDrive": "Fahrt eintragen",
+      "viewCosts": "Ausgaben",
+      "addCost": "Ausgabe eintragen",
+      "backToHub": "Zurück",
+      "upload": "Datei hochladen",
+      "statistics": "Verbrauch",
+      "doGroup": "Eintragen",
+      "viewGroup": "Ansehen"
     },
     "messages": {
       "driveSaved": "Fahrt gespeichert.",
       "driveSaveFailed": "Fahrt konnte nicht gespeichert werden.",
       "driveFormInvalid": "Bitte korrigiere die markierten Felder, bevor du absendest.",
-      "transactionSaved": "Transaktion gespeichert.",
-      "transactionSaveFailed": "Transaktion konnte nicht gespeichert werden.",
+      "transactionSaved": "Ausgabe gespeichert.",
+      "transactionSaveFailed": "Ausgabe konnte nicht gespeichert werden.",
       "transactionFormInvalid": "Bitte korrigiere die markierten Felder, bevor du absendest."
     },
     "costTypes": {
-      "VARIABLE": "Variabel",
-      "FIXED": "Fix"
+      "VARIABLE": "Fahrkosten",
+      "FIXED": "Feste Kosten"
     },
     "driveForm": {
-      "title": "Fahrt erfassen",
-      "driveDate": "Fahrtdatum",
+      "title": "Fahrt eintragen",
+      "driveDate": "Datum",
       "odometer": "Kilometerstand",
-      "driver": "Fahrer",
-      "notes": "Notizen",
-      "submit": "Fahrt speichern",
-      "backToList": "Zurück zur Fahrtenliste"
+      "driver": "Wer ist gefahren?",
+      "notes": "Notiz (freiwillig)",
+      "submit": "Speichern",
+      "backToList": "Zurück",
+      "odometerHint": "Die Zahl auf dem Tacho nach der Fahrt."
     },
     "transactionForm": {
-      "title": "Transaktion erfassen",
-      "date": "Transaktionsdatum",
-      "buyer": "Käufer",
+      "title": "Ausgabe eintragen",
+      "date": "Datum",
+      "buyer": "Wer hat bezahlt?",
       "price": "Preis",
       "quantity": "Menge",
-      "notes": "Notizen",
-      "submit": "Transaktion speichern",
-      "backToList": "Zurück zur Transaktionsliste",
+      "notes": "Notiz (freiwillig)",
+      "submit": "Speichern",
+      "backToList": "Zurück",
       "category": "Kostenart",
       "odometer": "Kilometerstand",
       "optional": "optional",
@@ -181,38 +191,37 @@
     },
     "drives": {
       "title": "Fahrten",
-      "empty": "Keine Fahrten für dieses Auto.",
-      "addLink": "Fahrt hinzufügen",
+      "empty": "Noch keine Fahrten.",
+      "addLink": "Fahrt eintragen",
       "headers": {
         "date": "Datum",
-        "driver": "Fahrer",
+        "driver": "Person",
         "odometer": "Kilometerstand",
-        "distance": "Gefahrene Distanz"
+        "distance": "Strecke"
       }
     },
     "transactions": {
-      "title": "Transaktionen",
-      "empty": "Keine Transaktionen für dieses Auto.",
-      "addLink": "Transaktion hinzufügen",
+      "title": "Ausgaben",
+      "empty": "Noch keine Ausgaben.",
+      "addLink": "Ausgabe eintragen",
       "headers": {
         "date": "Datum",
-        "buyer": "Käufer",
+        "buyer": "Bezahlt von",
         "price": "Preis",
         "quantity": "Menge",
-        "type": "Typ",
+        "type": "Art",
         "category": "Kostenart",
         "odometer": "Kilometerstand"
       }
     },
     "upload": {
-      "title": "CSV importieren",
-      "back": "Zurück zur Fahrzeugübersicht",
-      "intro": "Fahrten und Kosten für dieses Fahrzeug aus semikolongetrennten Dateien importieren. Jede Zeile wird zuerst geprüft — es wird nichts importiert, solange nicht die gesamte Datei gültig ist.",
+      "title": "Datei hochladen",
+      "back": "Zurück",
       "formatLabel": "Zahlenformat",
       "formatEn": "Englisch  1,234.56",
       "formatDe": "Deutsch  1.234,56",
-      "importDrives": "Fahrten importieren",
-      "importCosts": "Kosten importieren",
+      "importDrives": "Fahrten hochladen",
+      "importCosts": "Ausgaben hochladen",
       "importing": "Importiere…",
       "imported": "{{count}} Zeilen importiert.",
       "rejected": "Datei abgelehnt — {{count}} Zeilen müssen korrigiert werden. Es wurde nichts importiert.",
@@ -223,51 +232,48 @@
         "hint": "Spalten: Kilometerstand, Vor- und Nachname der fahrenden Person und Fahrtdatum."
       },
       "costs": {
-        "title": "Tanken & Kosten",
+        "title": "Tanken & Ausgaben",
         "hint": "Spalten: Name der kaufenden Person, Datum, Menge (Dezimalzahlen erlaubt), Preis, Name der Kostenart (muss bereits existieren) und optional der Kilometerstand (Pflicht bei Kostenarten, die ihn verlangen)."
       }
     }
   },
   "calculations": {
-    "back": "← Zurück zu den Berechnungen",
+    "back": "← Zurück",
     "loading": "Wird geladen…",
-    "notCalculated": "Für diese Auswahl gibt es noch keine Berechnung. Starte sie auf der Aktionsseite.",
+    "notCalculated": "Dafür gibt es noch keine Abrechnung. Starte sie unter „Jahr abrechnen“.",
     "hub": {
-      "title": "Berechnungen",
-      "subtitle": "Distanzen, Faktoren und Abrechnungen ansehen, festlegen, wer die Fixkosten eines Autos mitträgt, oder eine Monats- oder Jahresberechnung starten.",
-      "viewResults": "Ergebnisse ansehen",
-      "takeAction": "Aktion ausführen",
-      "resultsTitle": "Ergebnisse",
-      "resultsDesc": "Jahresabrechnung, Monatsdistanzen und Verteilungsfaktoren für ein Auto.",
-      "combinedTitle": "Gesamtabrechnung",
-      "combinedDesc": "Nettosaldo jedes Fahrers über alle seine Autos.",
-      "runTitle": "Berechnung starten",
-      "runDesc": "Einen Monat aggregieren, ein Jahr berechnen oder einen Lauf löschen."
+      "title": "Abrechnung vorbereiten",
+      "viewResults": "Ansehen",
+      "takeAction": "Machen",
+      "resultsTitle": "So wurde gerechnet",
+      "resultsDesc": "Pro Auto: Kilometer, Fahrkosten, Feste Kosten.",
+      "combinedTitle": "Ergebnis für alle Autos",
+      "combinedDesc": "Wer bekommt Geld, wer zahlt?",
+      "runTitle": "Jahr abrechnen",
+      "runDesc": "Monate zusammenrechnen, dann das Jahr abrechnen."
     },
     "run": {
-      "title": "Berechnung starten",
-      "subtitle": "Wähle Auto, Jahr und Monat und handle dann unten. Eine Periode wird nur einmal berechnet — lösche sie vor einer Neuberechnung.",
-      "aggregateBtn": "Monat aggregieren",
+      "title": "Jahr abrechnen",
+      "aggregateBtn": "Monat zusammenrechnen",
       "deleteMonthBtn": "Monat löschen",
       "confirmDeleteMonth": "Die aggregierten Distanzen dieses Monats löschen? Er kann danach erneut aggregiert werden.",
-      "calculateBtn": "Jahr berechnen",
+      "calculateBtn": "Jahr abrechnen",
       "deleteYearBtn": "Jahr löschen",
       "confirmDeleteYear": "Die Berechnung dieses Jahres löschen? Die Gesamtabrechnung wird ohne dieses Auto neu aufgebaut, bis es erneut berechnet wird. Um das Jahr neu zu berechnen, danach erneut berechnen.",
-      "participantsBadge": "{{count}} Beteiligte · {{added}} hinzugefügt"
+      "participantsBadge": "{{count}} zahlen mit · {{added}} dazu"
     },
     "participants": {
-      "title": "Beteiligte",
-      "subtitle": "Wer die Fixkosten dieses Autos für das gewählte Jahr mitträgt.",
-      "driverCol": "Fahrer",
-      "distanceCol": "Distanz (km)",
-      "fixShareCol": "Fixanteil",
-      "varShareCol": "Variabler Anteil",
+      "title": "Wer zahlt mit?",
+      "driverCol": "Person",
+      "distanceCol": "Kilometer",
+      "fixShareCol": "Anteil Feste Kosten",
+      "varShareCol": "Anteil Fahrkosten",
       "drove": "gefahren",
       "noDrives": "keine Fahrten in {{year}}",
       "lockedDriver": "Fahrer können nicht entfernt werden — ihre Distanz ist bereits erfasst.",
-      "driversOnly": "Nur Fahrer",
-      "save": "Beteiligte speichern",
-      "reset": "Auf nur Fahrer zurücksetzen",
+      "driversOnly": "Nur wer gefahren ist",
+      "save": "Speichern",
+      "reset": "Zurücksetzen",
       "resetConfirm": "Alle manuell hinzugefügten Beteiligten entfernen und auf nur Fahrer zurücksetzen?",
       "saved": "Beteiligte gespeichert.",
       "savedStaleRun": "Beteiligte gespeichert. Die Berechnung für {{year}} verwendet noch die alte Gruppe. Lösche sie hier und berechne das Jahr danach auf der Aktionsseite neu.",
@@ -280,13 +286,12 @@
       "deletedGoToRun": "Berechnung gelöscht. Berechne das Jahr auf der Aktionsseite neu."
     },
     "results": {
-      "title": "Ergebnisse",
-      "subtitle": "Jahresabrechnung, Monatsdistanzen und Verteilungsfaktoren für ein Auto und Jahr.",
-      "tabYearly": "Jahresabrechnung",
-      "tabMonthly": "Monatsdistanzen",
-      "tabFactors": "Verteilungsfaktoren",
+      "title": "So wurde gerechnet",
+      "tabYearly": "Pro Person",
+      "tabMonthly": "Kilometer pro Monat",
+      "tabFactors": "Anteile",
       "notCalculatedForYear": "Für {{year}} gibt es noch keine Berechnung. Starte sie auf der Aktionsseite.",
-      "fixedOnly": "nur Fixkosten",
+      "fixedOnly": "nur Feste Kosten",
       "notInThisRun": "nicht in diesem Lauf",
       "sourceDistance": "Distanzanteil",
       "sourceEqual": "gleichmäßige Aufteilung · {{count}} Beteiligte"
@@ -326,46 +331,49 @@
       "loadFailed": "Die Berechnungsergebnisse konnten nicht geladen werden."
     },
     "cols": {
-      "driver": "Fahrer",
-      "distance": "Distanz (km)",
-      "varFactor": "Var. Faktor",
-      "fixFactor": "Fix. Faktor",
-      "variableOwed": "Variabel geschuldet (€)",
-      "fixedOwed": "Fix geschuldet (€)",
-      "totalOwed": "Gesamt geschuldet (€)",
-      "total": "Gesamt",
+      "driver": "Person",
+      "distance": "Kilometer",
+      "varFactor": "Anteil Fahrkosten",
+      "fixFactor": "Anteil Feste Kosten",
+      "variableOwed": "Fahrkosten (€)",
+      "fixedOwed": "Feste Kosten (€)",
+      "totalOwed": "Zusammen (€)",
+      "total": "Alle",
       "paid": "Bezahlt (€)",
-      "variableDiff": "Variable Differenz (€)",
-      "fixedDiff": "Fixe Differenz (€)",
-      "netBalance": "Nettosaldo (€)",
+      "variableDiff": "Fahrkosten: Differenz (€)",
+      "fixedDiff": "Feste Kosten: Differenz (€)",
+      "netBalance": "Ergebnis (€)",
       "month": "Monat"
     },
     "yearly": {
-      "title": "Jahresabrechnung",
-      "subtitle": "Schuldenaufteilung eines Autos pro Fahrer für das Jahr.",
-      "explainer": "Variabel geschuldet = variabler Faktor × variable Gesamtkosten des Autos (der Faktor folgt der Distanz, also zahlt auch, wer nicht tankt, für gefahrene Kilometer). Fix geschuldet = fixer Faktor × fixe Gesamtkosten des Autos. Diese Ansicht zeigt, was jeder Fahrer schuldet; Bezahltes und Nettosaldo werden über alle Autos zusammengefasst — siehe Gesamtabrechnung."
+      "title": "Pro Person",
+      "explainer": "Fahrkosten (z. B. Sprit) teilen wir nach Kilometern. Feste Kosten (z. B. Versicherung) teilen alle gleich."
     },
     "combined": {
-      "title": "Gesamtabrechnung",
-      "subtitle": "Nettosaldo pro Fahrer über alle Autos seiner Gruppe.",
-      "explainer": "Variable / fixe Differenz = was ein Fahrer von dieser Kostenart bezahlt hat minus was er schuldet, summiert über alle berechneten Autos. Nettosaldo = Summe der beiden Differenzen; positiv bedeutet, die Gruppe schuldet dem Fahrer. Jede Spalte summiert sich zu null.",
-      "calculatedCars": "Berechnete Autos für dieses Jahr:"
+      "title": "Ergebnis für alle Autos",
+      "explainer": "Plus = bekommt Geld, Minus = zahlt. Alle Beträge zusammen ergeben 0. Differenz = bezahlt minus Anteil.",
+      "calculatedCars": "Abgerechnete Autos:",
+      "tabResult": "Ergebnis",
+      "tabDetails": "Details",
+      "gets": "bekommt",
+      "pays": "zahlt",
+      "even": "ausgeglichen",
+      "viewLabel": "Ansicht",
+      "howCalculated": "So wurde gerechnet",
+      "prepare": "Abrechnung vorbereiten"
     },
     "monthly": {
-      "title": "Monatsdistanzen",
-      "subtitle": "Kilometer pro Fahrer und Monat für ein Auto.",
-      "empty": "Keine aggregierten Monate für dieses Auto und Jahr."
+      "title": "Kilometer pro Monat",
+      "empty": "Noch keine Monate zusammengerechnet."
     },
     "factors": {
-      "title": "Verteilungsfaktoren",
-      "subtitle": "Die Faktoren, die die Jahreskosten des Autos aufteilen. Variabel folgt der Distanz; fix ist eine gleichmäßige Aufteilung über die Beteiligtengruppe.",
+      "title": "Anteile",
       "adminOnly": "vom Lauf berechnet",
-      "explainer": "Faktoren werden vom Jahreslauf berechnet und sind hier schreibgeschützt. Der fixe Faktor ist immer eine gleichmäßige Aufteilung — über die Gruppe der Fahrer plus alle auf der Beteiligten-Seite hinzugefügten Personen."
+      "explainer": "Der Anteil für Fahrkosten folgt den Kilometern. Feste Kosten teilen alle gleich, die mitzahlen."
     }
   },
   "costCategoryManagement": {
     "title": "Kostenarten",
-    "description": "Definiere die Produkte, die als Kosten gebucht werden können, samt Kostentyp und Einheit.",
     "loading": "Kostenarten werden geladen...",
     "empty": "Noch keine Kostenarten vorhanden. Lege eine an, um Kosten zu erfassen.",
     "form": {
@@ -375,10 +383,11 @@
       "costType": "Kostentyp",
       "unit": "Einheit (z. B. Liter)",
       "requiresOdometer": "Kilometerstand bei Buchung erforderlich",
-      "fuel": "Kraftstoff (für die Verbrauchsstatistik)",
+      "fuel": "Kraftstoff",
       "create": "Kostenart anlegen",
       "update": "Kostenart ändern",
-      "cancel": "Abbrechen"
+      "cancel": "Abbrechen",
+      "fuelHint": "Die Menge in der Verbrauchsberechnung verwenden."
     },
     "table": {
       "name": "Name",
@@ -404,7 +413,7 @@
     }
   },
   "statistics": {
-    "title": "Kraftstoffverbrauch",
+    "title": "Verbrauch",
     "description": "Verbrauch zwischen aufeinanderfolgenden Tankungen unter der Annahme, dass jede Tankung ein Volltanken ist. Die erste Tankung dient nur als Ausgangswert.",
     "year": "Jahr",
     "allYears": "Alle Jahre",
@@ -424,6 +433,6 @@
       "price": "Preis",
       "consumption": "l/100 km"
     },
-    "backToHub": "Zurück zur Fahrzeugübersicht"
+    "backToHub": "Zurück"
   }
 }

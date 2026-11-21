@@ -1,61 +1,71 @@
-<header class="header">
-  <div class="header__container">
-    <div class="header__logo">
-      <h1>{{ 'header.title' | translate }}</h1>
-    </div>
+<header class="top">
+  <a class="top__title" routerLink="/">{{ 'header.title' | translate }}</a>
 
+  <nav class="top__nav" [attr.aria-label]="'header.nav.main' | translate">
+    @for (item of navItems; track item.key) {
+      <a
+        class="top__link"
+        [routerLink]="item.route"
+        [attr.aria-current]="isActive(item) ? 'page' : null"
+      >
+        <app-icon [name]="item.icon" [small]="true" />{{ 'header.menu.' + item.key | translate }}
+      </a>
+    }
     <button
-      class="header__burger"
-      (click)="toggleMenu()"
-      [attr.aria-expanded]="isMenuOpen()"
-      aria-label="Toggle navigation menu"
+      type="button"
+      class="top__link top__more"
+      [class.is-active]="settingsActive()"
+      aria-haspopup="dialog"
+      [attr.aria-expanded]="settingsOpen()"
+      (click)="toggleSettings($event)"
     >
-      <span class="header__burger-line"></span>
-      <span class="header__burger-line"></span>
-      <span class="header__burger-line"></span>
+      <app-icon name="more" [small]="true" />{{ 'header.menu.settings' | translate }}
+      <app-icon name="chevron-down" [small]="true" />
     </button>
+  </nav>
 
-    <nav class="header__nav header__nav--desktop">
-      <a
-        *ngFor="let item of menuItems"
-        [routerLink]="item.route"
-        routerLinkActive="active"
-        [routerLinkActiveOptions]="{ exact: false }"
-        class="header__nav-link"
-      >
-        {{ item.labelKey | translate }}
-      </a>
-    </nav>
-
-    <div class="header__language-selector">
-      <select [value]="currentLang()" (change)="changeLang($event)" class="header__language-select">
-        <option value="en">{{ 'header.language.en' | translate }}</option>
-        <option value="de">{{ 'header.language.de' | translate }}</option>
-      </select>
-    </div>
-  </div>
-
-  @if (isMenuOpen()) {
-    <nav class="header__nav header__nav--mobile">
-      <div class="header__mobile-close">
-        <button
-          class="header__mobile-close-btn"
-          (click)="closeMenu()"
-          aria-label="Close navigation menu"
-        >
-          ✕
-        </button>
-      </div>
-      <a
-        *ngFor="let item of menuItems"
-        [routerLink]="item.route"
-        routerLinkActive="active"
-        [routerLinkActiveOptions]="{ exact: false }"
-        class="header__nav-link"
-        (click)="closeMenu()"
-      >
-        {{ item.labelKey | translate }}
-      </a>
-    </nav>
-  }
+  <button
+    type="button"
+    class="top__lang"
+    [attr.aria-label]="'header.langSwitch' | translate: { lang: currentLang().toUpperCase() }"
+    (click)="toggleLang()"
+  >
+    <app-icon name="globe" [small]="true" />{{ currentLang().toUpperCase() }}
+  </button>
 </header>
+
+<nav class="tabs" [attr.aria-label]="'header.nav.main' | translate">
+  @for (item of navItems; track item.key) {
+    <a
+      class="tabs__item"
+      [routerLink]="item.route"
+      [attr.aria-current]="isActive(item) ? 'page' : null"
+    >
+      <span class="tabs__pill"><app-icon [name]="item.icon" /></span>
+      {{ 'header.menu.' + item.key | translate }}
+    </a>
+  }
+  <button
+    type="button"
+    class="tabs__item"
+    [class.is-active]="settingsActive()"
+    aria-haspopup="dialog"
+    [attr.aria-expanded]="settingsOpen()"
+    (click)="toggleSettings($event)"
+  >
+    <span class="tabs__pill"><app-icon name="more" /></span>
+    {{ 'header.menu.more' | translate }}
+  </button>
+</nav>
+
+@if (settingsOpen()) {
+  <div class="scrim" (click)="closeSettings()"></div>
+  <div #sheet class="sheet" role="dialog" [attr.aria-label]="'header.menu.settings' | translate">
+    <p class="sheet__heading">{{ 'header.menu.settings' | translate }}</p>
+    @for (item of settingsItems; track item.route) {
+      <a class="sheet__link" [routerLink]="item.route">
+        <app-icon [name]="item.icon" />{{ item.labelKey | translate }}
+      </a>
+    }
+  </div>
+}

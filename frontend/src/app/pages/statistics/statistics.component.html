@@ -1,8 +1,11 @@
-<section class="statistics">
+<section class="page">
+  <a class="crumb" routerLink=".."
+    ><app-icon name="left" [small]="true" />{{ 'statistics.backToHub' | translate }}</a
+  >
   <h2>{{ 'statistics.title' | translate }} — {{ car().name }}</h2>
-  <p>{{ 'statistics.description' | translate }}</p>
-
-  <a routerLink="..">{{ 'statistics.backToHub' | translate }}</a>
+  <p class="msg">
+    <app-icon name="info" [small]="true" />{{ 'statistics.description' | translate }}
+  </p>
 
   <div class="statistics__filter">
     <label for="stats-year">{{ 'statistics.year' | translate }}</label>
@@ -17,7 +20,7 @@
   @if (loading()) {
     <p>{{ 'statistics.loading' | translate }}</p>
   } @else if (errorMessage()) {
-    <p class="statistics__error" role="alert" aria-live="assertive">
+    <p class="msg msg--error" role="alert" aria-live="assertive">
       {{ errorMessage() | translate }}
     </p>
   } @else if (intervals().length === 0) {
@@ -82,7 +85,7 @@
       }
     </svg>
 
-    <table class="statistics__table">
+    <table class="tbl">
       <thead>
         <tr>
           <th scope="col">{{ 'statistics.headers.date' | translate }}</th>
@@ -99,9 +102,9 @@
             <td>{{ interval.date }}</td>
             <td>{{ interval.odometer }}</td>
             <td>{{ interval.distanceKm }}</td>
-            <td>{{ interval.liters | number: '1.2-2' }}</td>
-            <td>{{ interval.price | number: '1.2-2' }}</td>
-            <td>{{ interval.litersPer100Km | number: '1.2-2' }}</td>
+            <td class="num">{{ interval.liters | number: '1.2-2' }}</td>
+            <td class="num">{{ interval.price | number: '1.2-2' }}</td>
+            <td class="num">{{ interval.litersPer100Km | number: '1.2-2' }}</td>
           </tr>
         }
       </tbody>

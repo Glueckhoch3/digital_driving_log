@@ -14,6 +14,7 @@ import {
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
+import { IconComponent } from '../../components/icon/icon.component';
 import { HttpErrorResponse } from '@angular/common/http';
 import { CostService } from '../../services/cost.service';
 import { CarDto } from '../../models/cars';
@@ -27,7 +28,7 @@ import { FieldErrorComponent } from '../../components/field-error/field-error.co
 @Component({
   selector: 'app-cost-form',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink, TranslateModule, FieldErrorComponent],
+  imports: [ReactiveFormsModule, RouterLink, TranslateModule, FieldErrorComponent, IconComponent],
   templateUrl: './cost-form.component.html',
   styleUrl: './cost-form.component.scss',
 })

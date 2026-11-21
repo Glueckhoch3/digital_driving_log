@@ -201,7 +201,7 @@ digital_driving_log/
 ### Full Local Deployment with Docker
 
 ```bash
-docker-compose up -d
+docker-compose up --build -d
 ```
 
 This will start:

@@ -4,6 +4,7 @@ import { DecimalPipe } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
+import { IconComponent } from '../../components/icon/icon.component';
 import { ConsumptionService } from '../../services/consumption.service';
 import { CarDto } from '../../models/cars';
 import { extractApiErrorMessage } from '../../models/api-error';
@@ -22,7 +23,7 @@ interface ChartPoint {
 @Component({
   selector: 'app-statistics',
   standalone: true,
-  imports: [RouterLink, TranslateModule, DecimalPipe],
+  imports: [RouterLink, TranslateModule, DecimalPipe, IconComponent],
   templateUrl: './statistics.component.html',
   styleUrl: './statistics.component.scss',
 })

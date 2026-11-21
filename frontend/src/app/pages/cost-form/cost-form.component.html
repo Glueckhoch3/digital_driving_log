@@ -1,25 +1,31 @@
-<section class="cost-form-page">
+<section class="page page--narrow">
+  <a class="crumb" [routerLink]="['/cars', car().carId, 'costs']"
+    ><app-icon name="left" [small]="true" />{{
+      'carWorkspace.transactionForm.backToList' | translate
+    }}</a
+  >
   @if (car()) {
     <h2>{{ 'carWorkspace.transactionForm.title' | translate }} — {{ car().name }}</h2>
   }
 
-  <a [routerLink]="['/cars', car().carId, 'costs']">{{
-    'carWorkspace.transactionForm.backToList' | translate
-  }}</a>
-
   @if (message()) {
-    <p #statusRegion class="cost-form-page__message" role="status" aria-live="polite" tabindex="-1">
+    <p #statusRegion class="msg msg--ok" role="status" aria-live="polite" tabindex="-1">
       {{ message() | translate }}
     </p>
   }
 
   @if (error()) {
-    <p class="cost-form-page__error" role="alert" aria-live="assertive">
+    <p class="msg msg--error" role="alert" aria-live="assertive">
       {{ error() | translate }}
     </p>
   }
 
-  <form #transactionFormEl [formGroup]="transactionForm" (ngSubmit)="saveTransaction()">
+  <form
+    class="form"
+    #transactionFormEl
+    [formGroup]="transactionForm"
+    (ngSubmit)="saveTransaction()"
+  >
     <label for="cost-dayOfTransaction">{{ 'carWorkspace.transactionForm.date' | translate }}</label>
     <input
       id="cost-dayOfTransaction"
@@ -160,6 +166,8 @@
     <label for="cost-notes">{{ 'carWorkspace.transactionForm.notes' | translate }}</label>
     <textarea id="cost-notes" rows="3" formControlName="notes"></textarea>
 
-    <button type="submit">{{ 'carWorkspace.transactionForm.submit' | translate }}</button>
+    <div class="form__actions">
+      <button type="submit">{{ 'carWorkspace.transactionForm.submit' | translate }}</button>
+    </div>
   </form>
 </section>
