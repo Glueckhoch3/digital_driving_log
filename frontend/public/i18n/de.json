@@ -121,9 +121,9 @@
   },
   "managementOverview": {
     "title": "Log",
-    "loading": "Zusammengeführte Zeitleiste wird geladen...",
+    "loading": "Log wird geladen...",
     "empty": "Keine Einträge verfügbar.",
-    "loadError": "Managementübersicht konnte nicht geladen werden.",
+    "loadError": "Log konnte nicht geladen werden.",
     "headers": {
       "date": "Datum",
       "car": "Auto",
@@ -132,11 +132,15 @@
       "details": "Details",
       "value": "Wert"
     },
+    "value": {
+      "total": "Gesamtpreis",
+      "amount": "Menge"
+    },
     "types": {
       "drive": "Fahrt",
       "transaction": "Ausgabe"
     },
-    "timelineLoadError": "Zeitleisten-Einträge konnten nicht geladen werden."
+    "timelineLoadError": "Log-Einträge konnten nicht geladen werden."
   },
   "carWorkspace": {
     "loading": "Fahrzeugdaten werden geladen...",

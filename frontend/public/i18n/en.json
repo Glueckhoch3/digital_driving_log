@@ -121,9 +121,9 @@
   },
   "managementOverview": {
     "title": "Log",
-    "loading": "Loading merged timeline...",
+    "loading": "Loading log...",
     "empty": "No entries available.",
-    "loadError": "Failed to load management overview.",
+    "loadError": "Failed to load the log.",
     "headers": {
       "date": "Date",
       "car": "Car",
@@ -132,11 +132,15 @@
       "details": "Details",
       "value": "Value"
     },
+    "value": {
+      "total": "Total",
+      "amount": "Amount"
+    },
     "types": {
       "drive": "Trip",
       "transaction": "Expense"
     },
-    "timelineLoadError": "Failed to load timeline entries."
+    "timelineLoadError": "Failed to load log entries."
   },
   "carWorkspace": {
     "loading": "Loading car data...",
