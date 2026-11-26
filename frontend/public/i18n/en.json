@@ -250,7 +250,7 @@
       "combinedTitle": "Result for all cars",
       "combinedDesc": "Who gets money, who pays?",
       "runTitle": "Settle year",
-      "runDesc": "Add up months, then settle the year."
+      "runDesc": "Choose who pays, add up months, then settle the year."
     },
     "run": {
       "title": "Settle year",
@@ -260,7 +260,7 @@
       "calculateBtn": "Settle year",
       "deleteYearBtn": "Delete year",
       "confirmDeleteYear": "Delete this year's calculation? The combined settlement is rebuilt without this car until it is calculated again. To redo the year, calculate it again afterwards.",
-      "participantsBadge": "{{count}} sharing · {{added}} added"
+      "saveParticipantsFirst": "Save or reset the participants before settling the year."
     },
     "participants": {
       "title": "Who shares the costs?",
@@ -271,19 +271,15 @@
       "drove": "drove",
       "noDrives": "no drives in {{year}}",
       "lockedDriver": "Drivers can't be removed — their distance is already recorded.",
-      "driversOnly": "Only people who drove",
       "save": "Save",
       "reset": "Reset",
       "resetConfirm": "Remove every manually added participant and go back to drivers only?",
       "saved": "Participants saved.",
-      "savedStaleRun": "Participants saved. The {{year}} calculation still uses the old group. Delete it here, then calculate the year again on the run page.",
+      "savedStaleRun": "Participants saved. The {{year}} calculation still uses the old group. Delete the year below, then settle it again.",
       "storedYears": "Participants stored for: {{years}}",
       "driverRequired": "A driver who already has recorded distance can't be removed from the group.",
       "unsavedConfirm": "You have unsaved participant changes. Leave without saving?",
-      "defaultsHint": "No participant set stored — the split defaults to today's drivers.",
-      "deleteRunBtn": "Delete the {{year}} calculation",
-      "deleteRunConfirm": "Delete this year's calculation so it can be redone with the new participant group?",
-      "deletedGoToRun": "Calculation deleted. Calculate the year again on the run page."
+      "defaultsHint": "No participant set stored — the split defaults to today's drivers."
     },
     "results": {
       "title": "How it was calculated",

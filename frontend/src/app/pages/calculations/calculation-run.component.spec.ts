@@ -1,9 +1,11 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { provideTranslateService } from '@ngx-translate/core';
 import { provideRouter } from '@angular/router';
+import { By } from '@angular/platform-browser';
 import { of } from 'rxjs';
 import { vi, Mocked } from 'vitest';
 import { CalculationRunComponent } from './calculation-run.component';
+import { ParticipantsPanelComponent } from './participants-panel.component';
 import { AvailabilityStore } from './availability.store';
 import { CarService } from '../../services/car.service';
 import { CalculationService } from '../../services/calculation.service';
@@ -101,6 +103,23 @@ describe('CalculationRunComponent', () => {
 
     expect(calculateBtn?.disabled).toBe(true);
     expect(deleteYearBtn?.disabled).toBe(false);
+  });
+
+  it('blocks settling the year while participant ticks are unsaved', () => {
+    component.year.set(2024);
+    fixture.detectChanges();
+    const panel = fixture.debugElement.query(By.directive(ParticipantsPanelComponent))
+      .componentInstance as ParticipantsPanelComponent;
+    const calculateBtn = (
+      Array.from(fixture.nativeElement.querySelectorAll('button')) as HTMLButtonElement[]
+    ).find((b) => b.textContent?.includes('calculations.run.calculateBtn'))!;
+    expect(calculateBtn.disabled).toBe(false);
+
+    panel.checkedIds.set(new Set([1]));
+    fixture.detectChanges();
+
+    expect(calculateBtn.disabled).toBe(true);
+    expect(fixture.nativeElement.textContent).toContain('calculations.run.saveParticipantsFirst');
   });
 
   it('flips availability-derived state when the month changes to one that is not aggregated', () => {
