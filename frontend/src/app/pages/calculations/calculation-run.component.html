@@ -21,20 +21,26 @@
         <span class="calc__badge" [class.calc__badge--stored]="yearCalculated()">
           {{ year() }} ·
           {{
-            (yearCalculated() ? 'calculations.legend.calculated' : 'calculations.notCalculated')
-              | translate
+            (yearCalculated() ? 'calculations.legend.calculated' : 'calculations.run.notCalculated')
+              | translate: { button: ('calculations.run.calculateBtn' | translate) }
           }}
         </span>
+      </div>
+
+      <div class="calc__chips">
+        @for (m of months; track m) {
+          <span
+            class="calc__chip"
+            [class.calc__chip--stored]="store.monthState(year(), m) === 'stored'"
+            [class.calc__chip--data]="store.monthState(year(), m) === 'data'"
+            >{{ 'calculations.months.' + m | translate }}</span
+          >
+        }
       </div>
     </div>
   </div>
 
-  <!-- 3. Participants, decided before calculating (issue #41) -->
-  @if (carId()) {
-    <app-participants-panel [carId]="carId()" [year]="year()" />
-  }
-
-  <!-- 4. Actions -->
+  <!-- 3. Actions -->
   <div class="calc__panel">
     <div class="calc__panel-body">
       <div class="calc__actions-grid">
@@ -79,4 +85,9 @@
       }
     </div>
   </div>
+
+  <!-- 4. Participants (issue #41), below the actions so those stay near the selection -->
+  @if (carId()) {
+    <app-participants-panel [carId]="carId()" [year]="year()" />
+  }
 </section>

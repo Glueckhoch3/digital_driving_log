@@ -122,6 +122,16 @@ describe('CalculationRunComponent', () => {
     expect(fixture.nativeElement.textContent).toContain('calculations.run.saveParticipantsFirst');
   });
 
+  it('renders a month chip strip with the stored/data markers', () => {
+    const chips: HTMLElement[] = Array.from(fixture.nativeElement.querySelectorAll('.calc__chip'));
+
+    expect(chips.length).toBe(12);
+    expect(chips[0].classList.contains('calc__chip--stored')).toBe(true);
+    expect(chips[1].classList.contains('calc__chip--data')).toBe(true);
+    expect(chips[2].classList.contains('calc__chip--stored')).toBe(false);
+    expect(chips[2].classList.contains('calc__chip--data')).toBe(false);
+  });
+
   it('flips availability-derived state when the month changes to one that is not aggregated', () => {
     component.month.set(6);
     fixture.detectChanges();

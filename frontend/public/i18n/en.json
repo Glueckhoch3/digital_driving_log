@@ -260,7 +260,8 @@
       "calculateBtn": "Settle year",
       "deleteYearBtn": "Delete year",
       "confirmDeleteYear": "Delete this year's calculation? The combined settlement is rebuilt without this car until it is calculated again. To redo the year, calculate it again afterwards.",
-      "saveParticipantsFirst": "Save or reset the participants before settling the year."
+      "saveParticipantsFirst": "Save or reset the participants below before settling the year.",
+      "notCalculated": "Nothing settled yet. Run it with “{{button}}”."
     },
     "participants": {
       "title": "Who shares the costs?",
@@ -275,8 +276,7 @@
       "reset": "Reset",
       "resetConfirm": "Remove every manually added participant and go back to drivers only?",
       "saved": "Participants saved.",
-      "savedStaleRun": "Participants saved. The {{year}} calculation still uses the old group. Delete the year below, then settle it again.",
-      "storedYears": "Participants stored for: {{years}}",
+      "savedStaleRun": "Participants saved. The {{year}} calculation still uses the old group. Delete the year above, then settle it again.",
       "driverRequired": "A driver who already has recorded distance can't be removed from the group.",
       "unsavedConfirm": "You have unsaved participant changes. Leave without saving?",
       "defaultsHint": "No participant set stored — the split defaults to today's drivers."

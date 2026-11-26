@@ -260,7 +260,8 @@
       "calculateBtn": "Jahr abrechnen",
       "deleteYearBtn": "Jahr löschen",
       "confirmDeleteYear": "Die Berechnung dieses Jahres löschen? Die Gesamtabrechnung wird ohne dieses Auto neu aufgebaut, bis es erneut berechnet wird. Um das Jahr neu zu berechnen, danach erneut berechnen.",
-      "saveParticipantsFirst": "Speichere die Beteiligten oder setze sie zurück, bevor du das Jahr abrechnest."
+      "saveParticipantsFirst": "Speichere unten die Beteiligten oder setze sie zurück, bevor du das Jahr abrechnest.",
+      "notCalculated": "Dafür gibt es noch keine Abrechnung. Starte sie mit „{{button}}“."
     },
     "participants": {
       "title": "Wer zahlt mit?",
@@ -275,8 +276,7 @@
       "reset": "Zurücksetzen",
       "resetConfirm": "Alle manuell hinzugefügten Beteiligten entfernen und auf nur Fahrer zurücksetzen?",
       "saved": "Beteiligte gespeichert.",
-      "savedStaleRun": "Beteiligte gespeichert. Die Berechnung für {{year}} verwendet noch die alte Gruppe. Lösche unten das Jahr und rechne es danach neu ab.",
-      "storedYears": "Beteiligte gespeichert für: {{years}}",
+      "savedStaleRun": "Beteiligte gespeichert. Die Berechnung für {{year}} verwendet noch die alte Gruppe. Lösche oben das Jahr und rechne es danach neu ab.",
       "driverRequired": "Ein Fahrer mit bereits erfasster Distanz kann nicht aus der Gruppe entfernt werden.",
       "unsavedConfirm": "Du hast ungespeicherte Änderungen an den Beteiligten. Ohne Speichern verlassen?",
       "defaultsHint": "Kein Beteiligten-Set gespeichert — die Aufteilung folgt standardmäßig den heutigen Fahrern."

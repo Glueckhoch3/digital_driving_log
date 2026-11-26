@@ -5,14 +5,7 @@
     </div>
   </div>
   <div class="calc__panel-body">
-    @if (store.storedYears().length > 0) {
-      <p class="calc__note calc__note--info">
-        {{
-          'calculations.participants.storedYears'
-            | translate: { years: store.storedYears().join(' · ') }
-        }}
-      </p>
-    } @else {
+    @if (store.storedYears().length === 0) {
       <p class="calc__note calc__note--info">
         {{ 'calculations.participants.defaultsHint' | translate }}
       </p>

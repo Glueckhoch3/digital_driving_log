@@ -29,6 +29,8 @@ export class CalculationRunComponent {
   readonly year = signal(new Date().getFullYear());
   readonly month = signal(new Date().getMonth() + 1);
 
+  readonly months = Array.from({ length: 12 }, (_, i) => i + 1);
+
   readonly busy = signal(false);
   readonly message = signal<Message>(null);
 
