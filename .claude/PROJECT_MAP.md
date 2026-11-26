@@ -18,8 +18,8 @@ Shared-vehicle driving log + cost distribution. Spring Boot (Java 21) backend + 
 
 ## Backend — `backend/src/main/java/de/digidrivelog/`
 Layered; all REST under `/ddl/api`.
-- `controller/` — `Car` (`/vehicles`), `User` (`/users`), `Drive` (`/drives`, `/vehicles/{id}/drives`, `/users/{id}/drives`), `Cost` (same pattern), `CostCategory` (`/cost-categories`), `Consumption` (`GET /vehicles/{id}/consumption?year=`), `Import` (`POST /vehicles/{carId}/{drives|costs}/import`, multipart CSV), `Calculation` (`/calculations/{monthly|yearly|participants|availability|…/exists}`)
-- `services/` (`@Transactional`) — Car/User/Drive/Cost/CostCategory/Consumption/Calculation/`CsvImportService`; `services/csv/` = `CsvLocale`, `CsvValueParser`, `CsvParseException`
+- `controller/` — `Car` (`/vehicles`), `User` (`/users`), `Drive` (`/drives`, `/vehicles/{id}/drives`, `/users/{id}/drives`), `Cost` (same pattern), `CostCategory` (`/cost-categories`), `Consumption` (`GET /vehicles/{id}/consumption?year=`), `Import` (`POST /vehicles/{carId}/{drives|costs}/import`, multipart CSV), `Export` (`GET /vehicles/{carId}/{drives|costs}/export`, same CSV layout as import), `Calculation` (`/calculations/{monthly|yearly|participants|availability|…/exists}`)
+- `services/` (`@Transactional`) — Car/User/Drive/Cost/CostCategory/Consumption/Calculation/`CsvImportService`/`CsvExportService`; `services/csv/` = `CsvLocale`, `CsvValueParser`, `CsvParseException`
 - `models/` — JPA entities `Car, User, Drive, Cost, CostCategory(+CostType enum)` and calculation result entities `DriveLogMonthTotal, DriveAccountYear, CostTotalCarYear, CostDistributionLogYear, ExpensesUserYear, UserCostFactorYear`
 - `dto/<domain>/` (car, user, drive, cost, calculation, importing), `mappers/` (static `toDto`/`fromCreate`/`applyUpdate`), `repositories/` (Spring Data JPA)
 - `exception/GlobalExceptionHandler` — RFC-7807 ProblemDetail (400 with per-field `errors`, 409 integrity)
@@ -29,7 +29,7 @@ Layered; all REST under `/ddl/api`.
 - Run: `cd backend && ./mvnw verify` (tests) / `./mvnw spring-boot:run`
 
 ## Frontend — `frontend/src/app/`
-- `pages/` — `car-selection` (home `/`), `car-hub`, `drives-list`, `drive-form`, `costs-list`, `cost-form`, `upload` (CSV import), `statistics` (fuel consumption), `car-management`, `user-management`, `cost-category-management`, `admin-overview` (route `/log`), `calculations/` (hub, run + `participants-panel`, results, yearly-settlement, monthly-distances, distribution-factors, combined-settlement, `availability.store.ts`, `participants-dirty.guard.ts`)
+- `pages/` — `car-selection` (home `/`), `car-hub`, `drives-list`, `drive-form`, `costs-list`, `cost-form`, `upload` (CSV import + download), `statistics` (fuel consumption), `car-management`, `user-management`, `cost-category-management`, `admin-overview` (route `/log`), `calculations/` (hub, run + `participants-panel`, results, yearly-settlement, monthly-distances, distribution-factors, combined-settlement, `availability.store.ts`, `participants-dirty.guard.ts`)
 - `services/` (HttpClient wrappers, base `environment.apiUrl`: car, user, drive, cost, calculation, import), `models/` (TS mirrors of DTOs, `page.ts`/`page-query.ts` for paginated lists, `api-error.ts`, `locale-number.ts`), `resolvers/` (`car`, `users`), `validators/`, `components/` (`header`, `field-error`), `utils/`
 - Routes in `app.routes.ts`: `cars/:carId/{drives,drives/new,costs,costs/new,statistics,upload}`, `manage/cars`, `manage/users`, `manage/cost-categories`, `log` (`overview` redirects), `calculations/{run,results,combined}`; nav = `components/header` (top bar wide / bottom tab bar phone, ADR-019)
 - i18n: `frontend/public/i18n/{en,de}.json` — **always add keys to both**

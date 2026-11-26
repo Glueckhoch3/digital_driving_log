@@ -36,6 +36,14 @@ export class UploadComponent {
   readonly driveBusy = signal(false);
   readonly costBusy = signal(false);
 
+  drivesExportUrl(): string {
+    return this.importService.drivesExportUrl(this.car().carId);
+  }
+
+  costsExportUrl(): string {
+    return this.importService.costsExportUrl(this.car().carId, this.locale());
+  }
+
   setLocale(locale: CsvLocale): void {
     this.locale.set(locale);
   }

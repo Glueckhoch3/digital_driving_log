@@ -5,7 +5,8 @@ import { environment } from '../../environments/environment';
 import { CsvLocale, ImportResult } from '../models/imports';
 
 /**
- * Uploads semicolon-separated CSV files to the car-scoped import endpoints.
+ * Car-scoped CSV import and export: uploads semicolon-separated files and
+ * builds the matching download links.
  * `locale` decides how `amount`/`price` decimals are read (en: `.`, de: `,`).
  */
 @Injectable({ providedIn: 'root' })
@@ -25,6 +26,16 @@ export class ImportService {
       `${this.apiUrl}/vehicles/${carId}/costs/import`,
       this.body(file, locale),
     );
+  }
+
+  /** Download link of the car's drives in the import format. */
+  drivesExportUrl(carId: number): string {
+    return `${this.apiUrl}/vehicles/${carId}/drives/export`;
+  }
+
+  /** Download link of the car's costs; `locale` sets the decimal separator. */
+  costsExportUrl(carId: number, locale: CsvLocale): string {
+    return `${this.apiUrl}/vehicles/${carId}/costs/export?locale=${locale}`;
   }
 
   private body(file: File, locale: CsvLocale): FormData {

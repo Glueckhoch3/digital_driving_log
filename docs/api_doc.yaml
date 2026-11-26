@@ -560,6 +560,66 @@ paths:
         '404':
           description: Vehicle not found
 
+  /vehicles/{carId}/drives/export:
+    get:
+      tags:
+        - imports
+      summary: Download all drives of a car as CSV
+      description: >
+        Semicolon-separated UTF-8 file (with byte order mark) with a header row and the columns
+        `km-end;firstname;lastname;date`, dates as `dd.mm.yyyy`. It can be re-imported with
+        `/vehicles/{carId}/drives/import`. Notes are not included.
+      parameters:
+        - name: carId
+          in: path
+          required: true
+          schema:
+            type: number
+            format: int64
+      responses:
+        '200':
+          description: The CSV file, sent as attachment
+          content:
+            text/csv:
+              schema:
+                type: string
+        '404':
+          description: Vehicle not found
+
+  /vehicles/{carId}/costs/export:
+    get:
+      tags:
+        - imports
+      summary: Download all costs of a car as CSV
+      description: >
+        Semicolon-separated UTF-8 file (with byte order mark) with a header row and the columns
+        `firstname;lastname;date;amount;price;category;odometer`, dates as `dd.mm.yyyy`. It can be re-imported with
+        `/vehicles/{carId}/costs/import`. Notes are not included.
+      parameters:
+        - name: carId
+          in: path
+          required: true
+          schema:
+            type: number
+            format: int64
+        - name: locale
+          in: query
+          required: false
+          description: Decimal separator of `amount` and `price` (`en`, default, `.`; `de` `,`).
+          schema:
+            type: string
+            enum: [en, de]
+            default: en
+      responses:
+        '200':
+          description: The CSV file, sent as attachment
+          content:
+            text/csv:
+              schema:
+                type: string
+        '404':
+          description: Vehicle not found
+
   /vehicles/{carId}/drives/import:
     post:
       tags:

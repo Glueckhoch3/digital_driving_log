@@ -50,6 +50,12 @@
     background: var(--brand);
   }
 
+  // Pinned to the card bottom so both download buttons line up.
+  &__download {
+    margin-top: auto;
+    text-align: center;
+  }
+
   &__error {
     margin: 0;
     padding: var(--s3) var(--s4);

@@ -222,6 +222,8 @@
       "formatDe": "Deutsch  1.234,56",
       "importDrives": "Upload trips",
       "importCosts": "Upload expenses",
+      "exportDrives": "Download trips (CSV)",
+      "exportCosts": "Download expenses (CSV)",
       "importing": "Importing…",
       "imported": "{{count}} rows imported.",
       "rejected": "File rejected — {{count}} rows need fixing. Nothing was imported.",

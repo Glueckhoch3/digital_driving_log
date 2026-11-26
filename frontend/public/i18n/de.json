@@ -222,6 +222,8 @@
       "formatDe": "Deutsch  1.234,56",
       "importDrives": "Fahrten hochladen",
       "importCosts": "Ausgaben hochladen",
+      "exportDrives": "Fahrten herunterladen (CSV)",
+      "exportCosts": "Ausgaben herunterladen (CSV)",
       "importing": "Importiere…",
       "imported": "{{count}} Zeilen importiert.",
       "rejected": "Datei abgelehnt — {{count}} Zeilen müssen korrigiert werden. Es wurde nichts importiert.",
