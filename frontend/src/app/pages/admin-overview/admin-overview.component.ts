@@ -20,7 +20,10 @@ interface ManagementTimelineEntry {
   plateNumber: string;
   participantName: string;
   details: string;
-  valueLabel: string;
+  /** Free text shown in the value column of a drive. */
+  note?: string;
+  /** Total paid and quantity bought; never to be read as a multiplication. */
+  cost?: { total: string; amount: string };
 }
 
 /**
@@ -152,7 +155,7 @@ export class AdminOverviewComponent implements OnInit {
       plateNumber: car.plateNumber,
       participantName: userNameById.get(drive.driverId) ?? `Unknown user #${drive.driverId}`,
       details: `${drive.odometer} km`,
-      valueLabel: drive.notes ?? '',
+      note: drive.notes ?? '',
     }));
 
     const transactionEntries: ManagementTimelineEntry[] = costs.map((cost) => ({
@@ -162,7 +165,10 @@ export class AdminOverviewComponent implements OnInit {
       plateNumber: car.plateNumber,
       participantName: userNameById.get(cost.buyerId) ?? `Unknown user #${cost.buyerId}`,
       details: `${cost.costCategoryName} (${cost.costType})`,
-      valueLabel: `${Number(cost.price).toFixed(2)} € x ${cost.quantity}`,
+      cost: {
+        total: `${Number(cost.price).toFixed(2)} €`,
+        amount: `${cost.quantity} ${cost.unit}`,
+      },
     }));
 
     return [...driveEntries, ...transactionEntries];

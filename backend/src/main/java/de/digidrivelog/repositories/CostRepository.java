@@ -18,6 +18,9 @@ public interface CostRepository extends JpaRepository<Cost, Long> {
 	Page<Cost> findByCarCarId(Long carId, Pageable pageable);
 	Page<Cost> findByBuyerUserId(Long userId, Pageable pageable);
 
+	/** All costs of a car, oldest first (CSV export). */
+	List<Cost> findByCarCarIdOrderByDayOfTransactionAscCostIdAsc(Long carId);
+
 	/** Total of a car's costs of one type in a year — the pool a factor splits. */
 	@Query("""
 			select coalesce(sum(c.price), 0) from Cost c

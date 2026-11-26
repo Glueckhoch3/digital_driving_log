@@ -121,9 +121,9 @@
   },
   "managementOverview": {
     "title": "Log",
-    "loading": "Loading merged timeline...",
+    "loading": "Loading log...",
     "empty": "No entries available.",
-    "loadError": "Failed to load management overview.",
+    "loadError": "Failed to load the log.",
     "headers": {
       "date": "Date",
       "car": "Car",
@@ -132,11 +132,15 @@
       "details": "Details",
       "value": "Value"
     },
+    "value": {
+      "total": "Total",
+      "amount": "Amount"
+    },
     "types": {
       "drive": "Trip",
       "transaction": "Expense"
     },
-    "timelineLoadError": "Failed to load timeline entries."
+    "timelineLoadError": "Failed to load log entries."
   },
   "carWorkspace": {
     "loading": "Loading car data...",
@@ -222,6 +226,8 @@
       "formatDe": "Deutsch  1.234,56",
       "importDrives": "Upload trips",
       "importCosts": "Upload expenses",
+      "exportDrives": "Download trips (CSV)",
+      "exportCosts": "Download expenses (CSV)",
       "importing": "Importing…",
       "imported": "{{count}} rows imported.",
       "rejected": "File rejected — {{count}} rows need fixing. Nothing was imported.",

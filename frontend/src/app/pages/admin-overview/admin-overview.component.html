@@ -42,7 +42,18 @@
               </td>
               <td>{{ entry.participantName }}</td>
               <td>{{ entry.details }}</td>
-              <td class="num">{{ entry.valueLabel || '-' }}</td>
+              <td class="num">
+                @if (entry.cost; as cost) {
+                  <div>
+                    <div>{{ 'managementOverview.value.total' | translate }}: {{ cost.total }}</div>
+                    <div>
+                      {{ 'managementOverview.value.amount' | translate }}: {{ cost.amount }}
+                    </div>
+                  </div>
+                } @else {
+                  {{ entry.note || '-' }}
+                }
+              </td>
             </tr>
           }
         </tbody>

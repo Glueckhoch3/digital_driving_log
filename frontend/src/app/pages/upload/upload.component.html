@@ -66,6 +66,10 @@
           </div>
         }
       }
+
+      <a class="btn upload-card__download" [href]="drivesExportUrl()" download>
+        {{ 'carWorkspace.upload.exportDrives' | translate }}
+      </a>
     </article>
 
     <!-- Costs -->
@@ -118,6 +122,10 @@
           </div>
         }
       }
+
+      <a class="btn upload-card__download" [href]="costsExportUrl()" download>
+        {{ 'carWorkspace.upload.exportCosts' | translate }}
+      </a>
     </article>
   </div>
 </section>

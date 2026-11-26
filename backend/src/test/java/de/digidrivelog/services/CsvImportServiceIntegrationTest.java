@@ -38,6 +38,8 @@ class CsvImportServiceIntegrationTest {
     @Autowired
     private CsvImportService csvImportService;
     @Autowired
+    private CsvExportService csvExportService;
+    @Autowired
     private CarService carService;
     @Autowired
     private UserService userService;
@@ -228,6 +230,53 @@ class CsvImportServiceIntegrationTest {
         assertThatThrownBy(() -> csvImportService.importCosts(car.getCarId(), csv(""), CsvLocale.DE))
                 .isInstanceOf(ResponseStatusException.class)
                 .satisfies(e -> assertThat(((ResponseStatusException) e).getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST));
+    }
+
+    @Test
+    void exportDrives_writesImportFormat_thatImportsAgain() {
+        String rows = "km-end;firstname;lastname;date\r\n"
+                + "146739;Stefan;Meyer;27.12.2020\r\n"
+                + "146766;Anna;König;28.12.2020\r\n";
+        csvImportService.importDrives(car.getCarId(), csv(rows), CsvLocale.EN);
+
+        CsvExportService.CsvFile file = csvExportService.exportDrives(car.getCarId());
+
+        String content = new String(file.content(), StandardCharsets.UTF_8);
+        assertThat(content).isEqualTo("\uFEFF" + rows);
+        assertThat(file.filename()).startsWith("drives_M-IM-1_").endsWith(".csv");
+
+        driveRepository.deleteAll();
+        ImportResultDto result = csvImportService.importDrives(car.getCarId(), csv(content), CsvLocale.EN);
+        assertThat(result.getErrors()).isEmpty();
+        assertThat(result.getImported()).isEqualTo(2);
+    }
+
+    @Test
+    void exportCosts_usesLocaleDecimals_andImportsAgain() {
+        String rows = "firstname;lastname;date;amount;price;category;odometer\r\n"
+                + "Anna;König;06.10.2020;1,00;2700,00;Kaufpreis;\r\n"
+                + "Stefan;Meyer;29.01.2021;36,89;50,50;Tanken;146739\r\n";
+        csvImportService.importCosts(car.getCarId(), csv(rows), CsvLocale.DE);
+
+        String german = new String(
+                csvExportService.exportCosts(car.getCarId(), CsvLocale.DE).content(), StandardCharsets.UTF_8);
+        String english = new String(
+                csvExportService.exportCosts(car.getCarId(), CsvLocale.EN).content(), StandardCharsets.UTF_8);
+
+        assertThat(german).isEqualTo("\uFEFF" + rows);
+        assertThat(english).contains("Stefan;Meyer;29.01.2021;36.89;50.50;Tanken;146739");
+
+        costRepository.deleteAll();
+        ImportResultDto result = csvImportService.importCosts(car.getCarId(), csv(english), CsvLocale.EN);
+        assertThat(result.getErrors()).isEmpty();
+        assertThat(result.getImported()).isEqualTo(2);
+    }
+
+    @Test
+    void export_unknownCar_throwsNotFound() {
+        assertThatThrownBy(() -> csvExportService.exportDrives(999_999L))
+                .isInstanceOf(ResponseStatusException.class)
+                .satisfies(e -> assertThat(((ResponseStatusException) e).getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND));
     }
 
     private UserDto createUser(String firstName, String lastName) {
