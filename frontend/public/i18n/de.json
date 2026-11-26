@@ -250,7 +250,7 @@
       "combinedTitle": "Ergebnis für alle Autos",
       "combinedDesc": "Wer bekommt Geld, wer zahlt?",
       "runTitle": "Jahr abrechnen",
-      "runDesc": "Monate zusammenrechnen, dann das Jahr abrechnen."
+      "runDesc": "Wer zahlt mit, Monate zusammenrechnen, dann das Jahr abrechnen."
     },
     "run": {
       "title": "Jahr abrechnen",
@@ -260,7 +260,8 @@
       "calculateBtn": "Jahr abrechnen",
       "deleteYearBtn": "Jahr löschen",
       "confirmDeleteYear": "Die Berechnung dieses Jahres löschen? Die Gesamtabrechnung wird ohne dieses Auto neu aufgebaut, bis es erneut berechnet wird. Um das Jahr neu zu berechnen, danach erneut berechnen.",
-      "participantsBadge": "{{count}} zahlen mit · {{added}} dazu"
+      "saveParticipantsFirst": "Speichere unten die Beteiligten oder setze sie zurück, bevor du das Jahr abrechnest.",
+      "notCalculated": "Dafür gibt es noch keine Abrechnung. Starte sie mit „{{button}}“."
     },
     "participants": {
       "title": "Wer zahlt mit?",
@@ -271,19 +272,14 @@
       "drove": "gefahren",
       "noDrives": "keine Fahrten in {{year}}",
       "lockedDriver": "Fahrer können nicht entfernt werden — ihre Distanz ist bereits erfasst.",
-      "driversOnly": "Nur wer gefahren ist",
       "save": "Speichern",
       "reset": "Zurücksetzen",
       "resetConfirm": "Alle manuell hinzugefügten Beteiligten entfernen und auf nur Fahrer zurücksetzen?",
       "saved": "Beteiligte gespeichert.",
-      "savedStaleRun": "Beteiligte gespeichert. Die Berechnung für {{year}} verwendet noch die alte Gruppe. Lösche sie hier und berechne das Jahr danach auf der Aktionsseite neu.",
-      "storedYears": "Beteiligte gespeichert für: {{years}}",
+      "savedStaleRun": "Beteiligte gespeichert. Die Berechnung für {{year}} verwendet noch die alte Gruppe. Lösche oben das Jahr und rechne es danach neu ab.",
       "driverRequired": "Ein Fahrer mit bereits erfasster Distanz kann nicht aus der Gruppe entfernt werden.",
       "unsavedConfirm": "Du hast ungespeicherte Änderungen an den Beteiligten. Ohne Speichern verlassen?",
-      "defaultsHint": "Kein Beteiligten-Set gespeichert — die Aufteilung folgt standardmäßig den heutigen Fahrern.",
-      "deleteRunBtn": "Berechnung für {{year}} löschen",
-      "deleteRunConfirm": "Die Berechnung dieses Jahres löschen, damit sie mit der neuen Beteiligtengruppe neu durchgeführt werden kann?",
-      "deletedGoToRun": "Berechnung gelöscht. Berechne das Jahr auf der Aktionsseite neu."
+      "defaultsHint": "Kein Beteiligten-Set gespeichert — die Aufteilung folgt standardmäßig den heutigen Fahrern."
     },
     "results": {
       "title": "So wurde gerechnet",

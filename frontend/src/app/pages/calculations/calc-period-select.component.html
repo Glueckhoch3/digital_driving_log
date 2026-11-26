@@ -31,16 +31,3 @@
     </div>
   }
 </div>
-
-@if (showMonth()) {
-  <div class="calc__chips">
-    @for (m of months; track m) {
-      <span
-        class="calc__chip"
-        [class.calc__chip--stored]="store.monthState(year(), m) === 'stored'"
-        [class.calc__chip--data]="store.monthState(year(), m) === 'data'"
-        >{{ 'calculations.months.' + m | translate }}</span
-      >
-    }
-  </div>
-}

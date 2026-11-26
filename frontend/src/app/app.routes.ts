@@ -44,8 +44,8 @@ export const routes: Routes = [
   {
     path: 'calculations',
     children: [
-      { path: '', component: CalculationHubComponent, canDeactivate: [participantsDirtyGuard] },
-      { path: 'run', component: CalculationRunComponent },
+      { path: '', component: CalculationHubComponent },
+      { path: 'run', component: CalculationRunComponent, canDeactivate: [participantsDirtyGuard] },
       { path: 'results', component: CalculationResultsComponent },
       { path: 'combined', component: CombinedSettlementComponent },
       { path: 'yearly', redirectTo: () => '/calculations/results?tab=yearly' },

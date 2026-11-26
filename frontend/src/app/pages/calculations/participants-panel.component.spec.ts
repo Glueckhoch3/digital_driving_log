@@ -1,30 +1,21 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { provideTranslateService } from '@ngx-translate/core';
-import { provideRouter } from '@angular/router';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { vi, Mocked } from 'vitest';
-import { CalculationHubComponent } from './calculation-hub.component';
+import { ParticipantsPanelComponent } from './participants-panel.component';
 import { AvailabilityStore } from './availability.store';
-import { CarService } from '../../services/car.service';
 import { CalculationService } from '../../services/calculation.service';
-import { CarDto } from '../../models/cars';
 import { CarAvailability, ParticipantSet } from '../../models/calculations';
 
-describe('CalculationHubComponent — participant management', () => {
-  let fixture: ComponentFixture<CalculationHubComponent>;
-  let component: CalculationHubComponent;
+describe('ParticipantsPanelComponent', () => {
+  let fixture: ComponentFixture<ParticipantsPanelComponent>;
+  let component: ParticipantsPanelComponent;
   let calculationService: Mocked<
     Pick<
       CalculationService,
-      | 'getParticipants'
-      | 'saveParticipants'
-      | 'deleteParticipants'
-      | 'deleteYear'
-      | 'getAvailability'
+      'getParticipants' | 'saveParticipants' | 'deleteParticipants' | 'getAvailability'
     >
   >;
-
-  const car: CarDto = { carId: 5, name: 'City Car', plateNumber: 'M-AB-1', ownerId: 1, data: null };
 
   const participantSet: ParticipantSet = {
     carId: 5,
@@ -90,31 +81,25 @@ describe('CalculationHubComponent — participant management', () => {
   }
 
   async function setup(yearCalculated: boolean): Promise<void> {
-    const carService: Mocked<Pick<CarService, 'getCars'>> = {
-      getCars: vi.fn().mockReturnValue(of([car])),
-    };
     calculationService = {
       getParticipants: vi.fn().mockReturnValue(of(participantSet)),
       saveParticipants: vi.fn().mockReturnValue(of(undefined)),
       deleteParticipants: vi.fn().mockReturnValue(of(undefined)),
-      deleteYear: vi.fn().mockReturnValue(of(undefined)),
       getAvailability: vi.fn().mockReturnValue(of(availability(yearCalculated))),
     };
 
     await TestBed.configureTestingModule({
-      imports: [CalculationHubComponent],
+      imports: [ParticipantsPanelComponent],
       providers: [
         provideTranslateService(),
-        provideRouter([]),
-        { provide: CarService, useValue: carService },
         { provide: CalculationService, useValue: calculationService },
       ],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(CalculationHubComponent);
+    fixture = TestBed.createComponent(ParticipantsPanelComponent);
     component = fixture.componentInstance;
-    component.carId.set(5);
-    component.year.set(2025);
+    fixture.componentRef.setInput('carId', 5);
+    fixture.componentRef.setInput('year', 2025);
     TestBed.inject(AvailabilityStore).load(5);
     fixture.detectChanges();
   }
@@ -150,15 +135,33 @@ describe('CalculationHubComponent — participant management', () => {
     expect(component.message()?.key).toBe('calculations.participants.savedStaleRun');
   });
 
-  it('shows the delete-the-calculation button only for a calculated year', async () => {
-    await setup(true);
-    expect(fixture.nativeElement.textContent).toContain('calculations.participants.deleteRunBtn');
+  it('keeps unsaved ticks when reloaded after a calculation action', async () => {
+    await setup(false);
+    component.toggle(participantSet.rows[3]);
+
+    component.reload();
+
+    expect(component.checkedIds().has(4)).toBe(true);
+    expect(component.dirty()).toBe(true);
   });
 
-  it('hides the delete-the-calculation button for a year that is not calculated', async () => {
+  it('drops unsaved ticks when the year changes', async () => {
     await setup(false);
-    expect(fixture.nativeElement.textContent).not.toContain(
-      'calculations.participants.deleteRunBtn',
-    );
+    component.toggle(participantSet.rows[3]);
+
+    fixture.componentRef.setInput('year', 2024);
+    fixture.detectChanges();
+
+    expect(component.dirty()).toBe(false);
+  });
+
+  it('is no longer dirty after saving', async () => {
+    await setup(false);
+    component.toggle(participantSet.rows[3]);
+    calculationService.getParticipants.mockReturnValue(throwError(() => new Error('offline')));
+
+    component.save();
+
+    expect(component.dirty()).toBe(false);
   });
 });

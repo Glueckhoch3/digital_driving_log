@@ -58,13 +58,4 @@ describe('CalcPeriodSelectComponent', () => {
     const yearOption = options.find((o) => o.textContent?.includes('2025'));
     expect(yearOption?.textContent?.trim()).toBe('● 2025');
   });
-
-  it('renders a month chip strip with the stored/data markers', () => {
-    const chips: HTMLElement[] = Array.from(fixture.nativeElement.querySelectorAll('.calc__chip'));
-    expect(chips.length).toBe(12);
-    expect(chips[0].classList.contains('calc__chip--stored')).toBe(true);
-    expect(chips[2].classList.contains('calc__chip--data')).toBe(true);
-    expect(chips[3].classList.contains('calc__chip--stored')).toBe(false);
-    expect(chips[3].classList.contains('calc__chip--data')).toBe(false);
-  });
 });
