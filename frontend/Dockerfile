@@ -7,7 +7,7 @@ COPY . .
 RUN npm run build
 
 # Unprivileged nginx runs as non-root and listens on 8080 instead of 80
-FROM nginxinc/nginx-unprivileged:1.27-alpine
+FROM nginxinc/nginx-unprivileged:1.31-alpine
 
 USER root
 RUN apk upgrade --no-cache
