@@ -1,6 +1,7 @@
 import { Component, inject, input, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
+import { IconComponent } from '../../components/icon/icon.component';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ImportService } from '../../services/import.service';
 import { CarDto } from '../../models/cars';
@@ -12,7 +13,7 @@ type Kind = 'drives' | 'costs';
 @Component({
   selector: 'app-upload',
   standalone: true,
-  imports: [RouterLink, TranslateModule],
+  imports: [RouterLink, TranslateModule, IconComponent],
   templateUrl: './upload.component.html',
   styleUrl: './upload.component.scss',
 })
@@ -34,6 +35,14 @@ export class UploadComponent {
 
   readonly driveBusy = signal(false);
   readonly costBusy = signal(false);
+
+  drivesExportUrl(): string {
+    return this.importService.drivesExportUrl(this.car().carId);
+  }
+
+  costsExportUrl(): string {
+    return this.importService.costsExportUrl(this.car().carId, this.locale());
+  }
 
   setLocale(locale: CsvLocale): void {
     this.locale.set(locale);

@@ -3,7 +3,6 @@ package de.digidrivelog.models;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.NoArgsConstructor;
@@ -23,7 +22,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 @Entity
 @Table(name = "cost", indexes = {
         @Index(name = "idx_cost_car", columnList = "car_id"),
-        @Index(name = "idx_cost_user", columnList = "user_id")
+        @Index(name = "idx_cost_user", columnList = "user_id"),
+        @Index(name = "idx_cost_category", columnList = "cost_category_id")
 })
 @Getter
 @Setter
@@ -47,11 +47,10 @@ public class Cost {
     @JoinColumn(name = "user_id", nullable = false)
     private User buyer;
 
-    /** What was bought (e.g. "Fuel", "Insurance"). */
-    @NotNull
-    @Size(max = 63)
-    @Column(name = "description", nullable = false, length = 63)
-    private String description;
+    /** What was bought; fixes cost type (variable/fixed) and the unit of {@link #quantity}. */
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "cost_category_id", nullable = false)
+    private CostCategory costCategory;
 
     @NotNull
     @Column(name = "price", nullable = false, precision = 10, scale = 2)
@@ -61,12 +60,12 @@ public class Cost {
     @Column(name = "day_of_transaction", nullable = false)
     private LocalDate dayOfTransaction;
 
-    @NotNull
-    @Enumerated(EnumType.STRING)
-    @Column(name = "cost_type", nullable = false, length = 20)
-    private CostType costType;
+    /** Total odometer reading at the time of purchase (required when the category demands it). */
+    @Positive
+    @Column(name = "odometer")
+    private Integer odometer;
 
-    /** Quantity purchased (e.g. litres of fuel, number of tyres). Decimal to allow fractional fuel amounts. */
+    /** Quantity purchased in the category's unit (e.g. litres of fuel). Decimal to allow fractional amounts. */
     @NotNull
     @Positive
     @Column(name = "quantity", nullable = false, precision = 10, scale = 2)

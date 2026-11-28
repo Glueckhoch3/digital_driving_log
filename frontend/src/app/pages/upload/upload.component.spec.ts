@@ -11,7 +11,9 @@ import { ImportResult } from '../../models/imports';
 describe('UploadComponent', () => {
   let fixture: ComponentFixture<UploadComponent>;
   let component: UploadComponent;
-  let importService: Mocked<Pick<ImportService, 'importDrives' | 'importCosts'>>;
+  let importService: Mocked<
+    Pick<ImportService, 'importDrives' | 'importCosts' | 'drivesExportUrl' | 'costsExportUrl'>
+  >;
 
   const car: CarDto = { carId: 7, name: 'Wagon', plateNumber: 'M-XY-9', ownerId: 1, data: null };
 
@@ -24,6 +26,8 @@ describe('UploadComponent', () => {
     importService = {
       importDrives: vi.fn().mockReturnValue(of({ imported: 1, errors: [] } as ImportResult)),
       importCosts: vi.fn().mockReturnValue(of({ imported: 0, errors: [] } as ImportResult)),
+      drivesExportUrl: vi.fn((carId: number) => `/drives/${carId}`),
+      costsExportUrl: vi.fn((carId: number, locale: string) => `/costs/${carId}?locale=${locale}`),
     };
 
     await TestBed.configureTestingModule({
@@ -43,6 +47,17 @@ describe('UploadComponent', () => {
 
   it('defaults to the English number format', () => {
     expect(component.locale()).toBe('en');
+  });
+
+  it('links the downloads to the car and the selected number format', () => {
+    component.setLocale('de');
+    fixture.detectChanges();
+
+    const links: HTMLAnchorElement[] = Array.from(
+      fixture.nativeElement.querySelectorAll('a[download]'),
+    );
+
+    expect(links.map((a) => a.getAttribute('href'))).toEqual(['/drives/7', '/costs/7?locale=de']);
   });
 
   it('does not import until a file is chosen', () => {

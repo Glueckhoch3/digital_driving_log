@@ -1,12 +1,13 @@
 import { Component, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
+import { IconComponent } from '../../components/icon/icon.component';
 import { CarDto } from '../../models/cars';
 
 @Component({
   selector: 'app-car-hub',
   standalone: true,
-  imports: [RouterLink, TranslateModule],
+  imports: [RouterLink, TranslateModule, IconComponent],
   templateUrl: './car-hub.component.html',
   styleUrl: './car-hub.component.scss',
 })

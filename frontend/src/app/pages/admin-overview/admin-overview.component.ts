@@ -1,6 +1,7 @@
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { forkJoin } from 'rxjs';
 import { TranslateModule } from '@ngx-translate/core';
+import { IconComponent } from '../../components/icon/icon.component';
 import { CarService } from '../../services/car.service';
 import { DriveService } from '../../services/drive.service';
 import { CostService } from '../../services/cost.service';
@@ -19,7 +20,10 @@ interface ManagementTimelineEntry {
   plateNumber: string;
   participantName: string;
   details: string;
-  valueLabel: string;
+  /** Free text shown in the value column of a drive. */
+  note?: string;
+  /** Total paid and quantity bought; never to be read as a multiplication. */
+  cost?: { total: string; amount: string };
 }
 
 /**
@@ -34,7 +38,7 @@ const PAGE_SIZE = 20;
 @Component({
   selector: 'app-admin-overview',
   standalone: true,
-  imports: [TranslateModule],
+  imports: [TranslateModule, IconComponent],
   templateUrl: './admin-overview.component.html',
   styleUrl: './admin-overview.component.scss',
 })
@@ -151,7 +155,7 @@ export class AdminOverviewComponent implements OnInit {
       plateNumber: car.plateNumber,
       participantName: userNameById.get(drive.driverId) ?? `Unknown user #${drive.driverId}`,
       details: `${drive.odometer} km`,
-      valueLabel: drive.notes ?? '',
+      note: drive.notes ?? '',
     }));
 
     const transactionEntries: ManagementTimelineEntry[] = costs.map((cost) => ({
@@ -160,8 +164,11 @@ export class AdminOverviewComponent implements OnInit {
       carName: car.name,
       plateNumber: car.plateNumber,
       participantName: userNameById.get(cost.buyerId) ?? `Unknown user #${cost.buyerId}`,
-      details: `${cost.description} (${cost.costType})`,
-      valueLabel: `${Number(cost.price).toFixed(2)} € x ${cost.quantity}`,
+      details: `${cost.costCategoryName} (${cost.costType})`,
+      cost: {
+        total: `${Number(cost.price).toFixed(2)} €`,
+        amount: `${cost.quantity} ${cost.unit}`,
+      },
     }));
 
     return [...driveEntries, ...transactionEntries];

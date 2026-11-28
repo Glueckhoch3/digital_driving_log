@@ -18,10 +18,13 @@ public interface CostRepository extends JpaRepository<Cost, Long> {
 	Page<Cost> findByCarCarId(Long carId, Pageable pageable);
 	Page<Cost> findByBuyerUserId(Long userId, Pageable pageable);
 
+	/** All costs of a car, oldest first (CSV export). */
+	List<Cost> findByCarCarIdOrderByDayOfTransactionAscCostIdAsc(Long carId);
+
 	/** Total of a car's costs of one type in a year — the pool a factor splits. */
 	@Query("""
 			select coalesce(sum(c.price), 0) from Cost c
-			where c.car.carId = :carId and year(c.dayOfTransaction) = :year and c.costType = :type
+			where c.car.carId = :carId and year(c.dayOfTransaction) = :year and c.costCategory.costType = :type
 			""")
 	BigDecimal sumPriceByCarYearAndType(@Param("carId") Long carId,
 			@Param("year") Integer year, @Param("type") CostType type);
@@ -30,7 +33,7 @@ public interface CostRepository extends JpaRepository<Cost, Long> {
 	@Query("""
 			select coalesce(sum(c.price), 0) from Cost c
 			where c.buyer.userId = :userId and year(c.dayOfTransaction) = :year
-			  and c.costType = :type and c.car.carId in :carIds
+			  and c.costCategory.costType = :type and c.car.carId in :carIds
 			""")
 	BigDecimal sumPriceByUserYearTypeAndCars(@Param("userId") Long userId,
 			@Param("year") Integer year, @Param("type") CostType type,
@@ -43,4 +46,12 @@ public interface CostRepository extends JpaRepository<Cost, Long> {
 			""")
 	List<Long> findDistinctBuyerIdsByYearAndCars(@Param("year") Integer year,
 			@Param("carIds") Collection<Long> carIds);
+
+	/** A car's fuel purchases carrying an odometer reading, in driving order (basis of the consumption statistics). */
+	@Query("""
+			select c from Cost c
+			where c.car.carId = :carId and c.costCategory.fuel = true and c.odometer is not null
+			order by c.odometer asc, c.dayOfTransaction asc
+			""")
+	List<Cost> findFuelWithOdometerByCar(@Param("carId") Long carId);
 }

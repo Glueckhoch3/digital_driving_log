@@ -231,12 +231,13 @@ flowchart LR
     classDef raw fill:#dbeafe,stroke:#1d4ed8,color:#1e293b;
     classDef persisted fill:#dcfce7,stroke:#15803d,color:#1e293b;
 
-    A["Cost.price\nCost.dayOfTransaction\nCost.car\nCost.costType"]:::raw --> B["SUM by car/year/type,\nrounded HALF_UP (money())"]:::persisted
+    A["Cost.price\nCost.dayOfTransaction\nCost.car\nCostCategory.costType"]:::raw --> B["SUM by car/year/type,\nrounded HALF_UP (money())"]:::persisted
     B --> C["CostTotalCarYear.fixTotal / varTotal"]:::persisted
 ```
 
 **`CostTotalCarYear.fixTotal` / `varTotal`**
-- Inputs: `Cost.price`, `Cost.dayOfTransaction`, `Cost.car`, `Cost.costType`.
+- Inputs: `Cost.price`, `Cost.dayOfTransaction`, `Cost.car`, and the cost type of
+  the cost's category (`Cost.costCategory.costType`).
 - Formula: `sum(price)` filtered to one car/year, split by `costType`
   (`CostRepository.sumPriceByCarYearAndType`, `CostRepository.java`),
   then rounded to 2 decimals via the shared `money()` helper (HALF_UP,
@@ -385,3 +386,21 @@ diagram:
 - `participantsStored` — does any `manuallyAdded = true` `UserCostFactorYear` row exist for `(car, year)`.
 - `aggregatedMonths` — distinct months with a `DriveLogMonthTotal` row.
 - `monthsWithDrives` — distinct months with at least one qualifying drive delta (Stage 1), whether or not aggregated yet.
+
+---
+
+## Fuel consumption statistics (not part of the settlement)
+
+Read-only statistic, nothing is persisted (`ConsumptionService.java`,
+`GET /vehicles/{carId}/consumption?year=`).
+
+- Inputs: a car's costs whose category is flagged `fuel` and that carry an `odometer`,
+  ordered by odometer (`CostRepository.findFuelWithOdometerByCar`).
+- Formula (full-tank assumption, ADR-018): for each fill-up after the first,
+  `consumption = liters(n) / (odometer(n) − odometer(n−1)) × 100` in l/100 km, rounded
+  HALF_UP to 2 decimals. The first fill-up is only the baseline; intervals with a
+  distance ≤ 0 are skipped.
+- Year filter: applies to the date of the later fill-up, so the baseline may come from
+  the previous year.
+- Average: `Σ liters / Σ km × 100` over the returned intervals (not the mean of the
+  per-interval values).

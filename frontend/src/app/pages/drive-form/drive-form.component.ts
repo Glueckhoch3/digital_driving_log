@@ -13,28 +13,25 @@ import {
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
+import { IconComponent } from '../../components/icon/icon.component';
 import { HttpErrorResponse } from '@angular/common/http';
 import { DriveService } from '../../services/drive.service';
-import { CostService } from '../../services/cost.service';
 import { CarDto } from '../../models/cars';
 import { UserDto } from '../../models/users';
 import { CreateDriveRequest } from '../../models/drives';
-import { CreateCostRequest } from '../../models/costs';
 import { extractApiErrorMessage } from '../../models/api-error';
-import { localeDecimalValidator, parseLocaleNumber } from '../../models/locale-number';
 import { FieldErrorComponent } from '../../components/field-error/field-error.component';
 
 @Component({
   selector: 'app-drive-form',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink, TranslateModule, FieldErrorComponent],
+  imports: [ReactiveFormsModule, RouterLink, TranslateModule, FieldErrorComponent, IconComponent],
   templateUrl: './drive-form.component.html',
   styleUrl: './drive-form.component.scss',
 })
 export class DriveFormComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly driveService = inject(DriveService);
-  private readonly costService = inject(CostService);
   private readonly injector = inject(Injector);
 
   readonly car = input.required<CarDto>();
@@ -51,12 +48,6 @@ export class DriveFormComponent implements OnInit {
     odometer: [0, [Validators.required, Validators.min(1)]],
     driverId: [0, [Validators.required, Validators.min(1)]],
     notes: [''],
-    includeFuel: [false],
-    fuelPrice: ['0'],
-    fuelQuantity: ['0'],
-    fuelDate: [new Date().toISOString().slice(0, 10)],
-    fuelBuyerId: [0],
-    fuelNotes: [''],
   });
 
   constructor() {
@@ -68,27 +59,10 @@ export class DriveFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.driveForm.controls.includeFuel.valueChanges.subscribe((includeFuel) => {
-      this.setFuelValidatorsEnabled(!!includeFuel);
-    });
-
     const firstUser = this.users()[0];
     if (firstUser) {
-      this.driveForm.patchValue({ driverId: firstUser.userId, fuelBuyerId: firstUser.userId });
+      this.driveForm.patchValue({ driverId: firstUser.userId });
     }
-  }
-
-  /** The fuel sub-fields mirror CreateCostRequest's own constraints, but only when fuel is actually being logged. */
-  private setFuelValidatorsEnabled(enabled: boolean): void {
-    const { fuelBuyerId, fuelPrice, fuelQuantity, fuelDate } = this.driveForm.controls;
-    fuelBuyerId.setValidators(enabled ? [Validators.required, Validators.min(1)] : []);
-    fuelPrice.setValidators(enabled ? [Validators.required, localeDecimalValidator(0)] : []);
-    fuelQuantity.setValidators(enabled ? [Validators.required, localeDecimalValidator(0)] : []);
-    fuelDate.setValidators(enabled ? [Validators.required] : []);
-    fuelBuyerId.updateValueAndValidity();
-    fuelPrice.updateValueAndValidity();
-    fuelQuantity.updateValueAndValidity();
-    fuelDate.updateValueAndValidity();
   }
 
   private focusFirstInvalidControl(): void {
@@ -123,30 +97,6 @@ export class DriveFormComponent implements OnInit {
 
     this.driveService.createDrive(request).subscribe({
       next: () => {
-        if (value.includeFuel) {
-          const fuelRequest: CreateCostRequest = {
-            carId,
-            buyerId: Number(value.fuelBuyerId),
-            description: 'Fuel',
-            price: parseLocaleNumber(value.fuelPrice) ?? 0,
-            quantity: parseLocaleNumber(value.fuelQuantity) ?? 0,
-            dayOfTransaction: value.fuelDate ?? new Date().toISOString().slice(0, 10),
-            costType: 'VARIABLE',
-            notes: value.fuelNotes ?? undefined,
-          };
-
-          this.costService.createCost(fuelRequest).subscribe({
-            next: () => {
-              this.message.set('carWorkspace.messages.driveAndFuelSaved');
-              this.resetDriveForm();
-            },
-            error: (err: HttpErrorResponse) => {
-              this.error.set(extractApiErrorMessage(err, 'carWorkspace.messages.fuelSaveFailed'));
-            },
-          });
-          return;
-        }
-
         this.message.set('carWorkspace.messages.driveSaved');
         this.resetDriveForm();
       },
@@ -162,12 +112,6 @@ export class DriveFormComponent implements OnInit {
       odometer: 0,
       driverId: this.users()[0]?.userId ?? 0,
       notes: '',
-      includeFuel: false,
-      fuelPrice: '0',
-      fuelQuantity: '0',
-      fuelDate: new Date().toISOString().slice(0, 10),
-      fuelBuyerId: this.users()[0]?.userId ?? 0,
-      fuelNotes: '',
     });
   }
 }

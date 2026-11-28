@@ -52,6 +52,9 @@ export class FieldErrorComponent {
     if (errors['pastDate']) {
       entries.push({ key: 'validation.pastDate' });
     }
+    if (errors['pattern']) {
+      entries.push({ key: 'validation.integer' });
+    }
     if (errors['decimal']) {
       entries.push({ key: 'validation.decimal' });
     }

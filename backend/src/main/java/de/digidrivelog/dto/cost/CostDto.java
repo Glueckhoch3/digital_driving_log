@@ -14,10 +14,13 @@ public class CostDto {
     private Long costId;
     private Long carId;
     private Long buyerId;
-    private String description;
+    private Long costCategoryId;
+    private String costCategoryName;
+    private String unit;
     private BigDecimal price;
     private LocalDate dayOfTransaction;
     private CostType costType;
+    private Integer odometer;
     private BigDecimal quantity;
     private String notes;
 }

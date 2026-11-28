@@ -1,7 +1,8 @@
 .field-error {
-  color: #b02020;
-  font-size: 0.85rem;
-  margin: 0.15rem 0 0.5rem;
+  margin: var(--s1) 0 var(--s2);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--neg);
 
   span + span::before {
     content: ' ';

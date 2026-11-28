@@ -433,12 +433,23 @@ API Documentation see: [api_doc](./api_doc.yaml)
 - `costType` accepts `fixed` or `variable` (case-insensitive); responses return enum values in uppercase
 - **List endpoints are paginated.** The drive/cost list endpoints (`/vehicles/{carId}/drives`, `/users/{userId}/drives`, `/vehicles/{carId}/users/{userId}/drives`, `/costs`, `/vehicles/{carId}/costs`, `/users/{userId}/costs`) return a Spring `Page` object (`content` array plus `totalElements`, `totalPages`, `number`, `size`). They accept `?page`, `?size` and `?sort`; drives default to `driveDate` desc, costs to `dayOfTransaction` desc, page size 50.
 
+### CSV export
+
+All drives or costs of a car can be downloaded from the upload page. The files use the import column layout (below), `;` as separator, `dd.mm.yyyy` dates and UTF-8, so they can be opened in a spreadsheet or imported again.
+
+- `GET /vehicles/{carId}/drives/export`
+- `GET /vehicles/{carId}/costs/export?locale=en|de` — `locale` sets the decimal separator; use the same number format when re-importing
+
+Notes are not part of the format. Importing always adds rows, so re-importing a file into a car that still holds the data creates duplicates.
+
 ### CSV import
 
 Two `multipart/form-data` endpoints bulk-load historical data for a car. They are **all-or-nothing**: every row is validated first, and only a fully valid file is written. A file with any invalid row is rejected in full — the response's `errors` array lists the offending line numbers and nothing is persisted, so re-uploading a corrected file never creates duplicates.
 
 - `POST /vehicles/{carId}/drives/import` — columns `km-end;firstname;lastname;date`
-- `POST /vehicles/{carId}/costs/import` — columns `firstname;lastname;date;amount;price;description;cost_type`
+- `POST /vehicles/{carId}/costs/import` — columns `firstname;lastname;date;amount;price;category[;odometer]`
+
+Columns may be separated by `;` or by a tab (e.g. copied from a spreadsheet) — the separator is detected from the first data line of the file; a leading byte order mark is ignored. The cost file may omit the odometer column (6 columns: `Firstname  Lastname  Datum  Anzahl  Preis  Beschreibung`, where *Beschreibung* is the cost category name and must already exist).
 
 Both return an `ImportResult` (`{ imported, errors: [{ line, message }] }`). Field structure and restrictions:
 
@@ -454,10 +465,10 @@ Both return an `ImportResult` (`{ imported, errors: [{ line, message }] }`). Fie
 
 ### Frontend routes
 - `/` - Start page
-- `/overview` - Management overview
+- `/log` - Log (formerly `/overview`, which redirects)
 - `/cars/select` - Car selection
 - `/cars/{carId}` - Car workspace
-- `/cars/{carId}/upload` - CSV import (drives and costs)
+- `/cars/{carId}/upload` - CSV import and download (drives and costs)
 - `/manage/users` - User management (create/update/delete)
 - `/manage/cars` - Car management (create/update/delete)
 - `/calculations` - Calculation hub: links to results/combined/run, plus per-car-year participant management (issue #32)

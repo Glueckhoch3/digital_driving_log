@@ -1,7 +1,6 @@
 <section class="calc">
   <a class="calc__back" routerLink="/calculations">{{ 'calculations.back' | translate }}</a>
   <h2 class="calc__title">{{ 'calculations.run.title' | translate }}</h2>
-  <p class="calc__sub">{{ 'calculations.run.subtitle' | translate }}</p>
 
   <!-- 1. Selection -->
   <div class="calc__panel">
@@ -22,20 +21,21 @@
         <span class="calc__badge" [class.calc__badge--stored]="yearCalculated()">
           {{ year() }} ·
           {{
-            (yearCalculated() ? 'calculations.legend.calculated' : 'calculations.notCalculated')
-              | translate
+            (yearCalculated() ? 'calculations.legend.calculated' : 'calculations.run.notCalculated')
+              | translate: { button: ('calculations.run.calculateBtn' | translate) }
           }}
         </span>
-        <span class="calc__badge" [class.calc__badge--stored]="participantAddedCount() > 0">
-          <a routerLink="/calculations">
-            {{
-              participantAddedCount() > 0
-                ? ('calculations.run.participantsBadge'
-                  | translate: { count: participantCount(), added: participantAddedCount() })
-                : ('calculations.participants.driversOnly' | translate)
-            }}
-          </a>
-        </span>
+      </div>
+
+      <div class="calc__chips">
+        @for (m of months; track m) {
+          <span
+            class="calc__chip"
+            [class.calc__chip--stored]="store.monthState(year(), m) === 'stored'"
+            [class.calc__chip--data]="store.monthState(year(), m) === 'data'"
+            >{{ 'calculations.months.' + m | translate }}</span
+          >
+        }
       </div>
     </div>
   </div>
@@ -60,7 +60,7 @@
         </button>
         <button
           class="calc__btn calc__btn--primary"
-          [disabled]="busy() || yearCalculated()"
+          [disabled]="busy() || yearCalculated() || participantsPending()"
           (click)="calculateYear()"
         >
           {{ 'calculations.run.calculateBtn' | translate }}
@@ -74,9 +74,20 @@
         </button>
       </div>
 
+      @if (participantsPending() && !yearCalculated()) {
+        <p class="calc__note calc__note--warn">
+          {{ 'calculations.run.saveParticipantsFirst' | translate }}
+        </p>
+      }
+
       @if (message(); as msg) {
         <div class="calc__note calc__note--{{ msg.type }}">{{ msg.key | translate }}</div>
       }
     </div>
   </div>
+
+  <!-- 4. Participants (issue #41), below the actions so those stay near the selection -->
+  @if (carId()) {
+    <app-participants-panel [carId]="carId()" [year]="year()" />
+  }
 </section>

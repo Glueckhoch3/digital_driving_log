@@ -42,7 +42,8 @@
 ### Cost Management
 - **Fixed Costs**: Insurance, registration fees (distributed equally)
 - **Variable Costs**: Fuel, maintenance, repairs (distributed by distance)
-- **Fuel Tracking**: Cost calculation per drive
+- **Cost Categories**: Extensible catalogue of cost products (type, unit, odometer requirement)
+- **Fuel Tracking**: Fill-ups with odometer reading, consumption statistics (l/100 km)
 - **Real-time Distribution**: View current cost balances anytime
 
 ### Shareholder Management
@@ -200,13 +201,25 @@ digital_driving_log/
 ### Full Local Deployment with Docker
 
 ```bash
-docker-compose up -d
+docker-compose up --build -d
 ```
 
 This will start:
 - PostgreSQL (port 5432)
 - Backend API (port 8080)
 - Frontend (port 4200)
+
+### Deployment with Published DockerHub Images
+
+Instead of building the images locally, `docker-compose.prod.yml` pulls the `ddl-backend`/`ddl-frontend`
+images published by the [release workflow](.github/workflows/ci.yml) on each `vX.Y.Z` tag:
+
+```bash
+DOCKERHUB_USER=<dockerhub-namespace> TAG=<released-version> docker compose -f docker-compose.prod.yml up -d
+```
+
+- `DOCKERHUB_USER` is the DockerHub namespace the images were pushed to.
+- `TAG` must be a version that was actually released (e.g. `1.2.3`) - the workflow does not publish a `latest` tag.
 
 ### First-Run Data Flow
 - Create at least one user first in **User management** (`/manage/users`).

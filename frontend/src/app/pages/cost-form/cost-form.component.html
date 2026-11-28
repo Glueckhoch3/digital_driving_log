@@ -1,25 +1,31 @@
-<section class="cost-form-page">
+<section class="page page--narrow">
+  <a class="crumb" [routerLink]="['/cars', car().carId, 'costs']"
+    ><app-icon name="left" [small]="true" />{{
+      'carWorkspace.transactionForm.backToList' | translate
+    }}</a
+  >
   @if (car()) {
     <h2>{{ 'carWorkspace.transactionForm.title' | translate }} — {{ car().name }}</h2>
   }
 
-  <a [routerLink]="['/cars', car().carId, 'costs']">{{
-    'carWorkspace.transactionForm.backToList' | translate
-  }}</a>
-
   @if (message()) {
-    <p #statusRegion class="cost-form-page__message" role="status" aria-live="polite" tabindex="-1">
+    <p #statusRegion class="msg msg--ok" role="status" aria-live="polite" tabindex="-1">
       {{ message() | translate }}
     </p>
   }
 
   @if (error()) {
-    <p class="cost-form-page__error" role="alert" aria-live="assertive">
+    <p class="msg msg--error" role="alert" aria-live="assertive">
       {{ error() | translate }}
     </p>
   }
 
-  <form #transactionFormEl [formGroup]="transactionForm" (ngSubmit)="saveTransaction()">
+  <form
+    class="form"
+    #transactionFormEl
+    [formGroup]="transactionForm"
+    (ngSubmit)="saveTransaction()"
+  >
     <label for="cost-dayOfTransaction">{{ 'carWorkspace.transactionForm.date' | translate }}</label>
     <input
       id="cost-dayOfTransaction"
@@ -60,41 +66,41 @@
     </select>
     <app-field-error id="cost-buyerId-error" [control]="transactionForm.controls.buyerId" />
 
-    <label for="cost-description">{{
-      'carWorkspace.transactionForm.description' | translate
+    <label for="cost-costCategoryId">{{
+      'carWorkspace.transactionForm.category' | translate
     }}</label>
-    <input
-      id="cost-description"
-      type="text"
-      formControlName="description"
-      [attr.aria-invalid]="
-        transactionForm.controls.description.invalid && transactionForm.controls.description.touched
-      "
-      [attr.aria-describedby]="
-        transactionForm.controls.description.invalid && transactionForm.controls.description.touched
-          ? 'cost-description-error'
-          : null
-      "
-    />
-    <app-field-error id="cost-description-error" [control]="transactionForm.controls.description" />
-
-    <label for="cost-costType">{{ 'carWorkspace.transactionForm.type' | translate }}</label>
     <select
-      id="cost-costType"
-      formControlName="costType"
+      id="cost-costCategoryId"
+      formControlName="costCategoryId"
       [attr.aria-invalid]="
-        transactionForm.controls.costType.invalid && transactionForm.controls.costType.touched
+        transactionForm.controls.costCategoryId.invalid &&
+        transactionForm.controls.costCategoryId.touched
       "
       [attr.aria-describedby]="
-        transactionForm.controls.costType.invalid && transactionForm.controls.costType.touched
-          ? 'cost-costType-error'
+        transactionForm.controls.costCategoryId.invalid &&
+        transactionForm.controls.costCategoryId.touched
+          ? 'cost-costCategoryId-error'
           : null
       "
     >
-      <option value="VARIABLE">{{ 'carWorkspace.costTypes.VARIABLE' | translate }}</option>
-      <option value="FIXED">{{ 'carWorkspace.costTypes.FIXED' | translate }}</option>
+      @for (category of costCategories(); track category.costCategoryId) {
+        <option [value]="category.costCategoryId">
+          {{ category.name }} ({{ 'carWorkspace.costTypes.' + category.costType | translate }})
+        </option>
+      }
     </select>
-    <app-field-error id="cost-costType-error" [control]="transactionForm.controls.costType" />
+    <app-field-error
+      id="cost-costCategoryId-error"
+      [control]="transactionForm.controls.costCategoryId"
+    />
+    @if (costCategories().length === 0) {
+      <p>
+        {{ 'carWorkspace.transactionForm.noCategories' | translate }}
+        <a routerLink="/manage/cost-categories">{{
+          'header.menu.manageCostCategories' | translate
+        }}</a>
+      </p>
+    }
 
     <label for="cost-price">{{ 'carWorkspace.transactionForm.price' | translate }}</label>
     <input
@@ -113,7 +119,12 @@
     />
     <app-field-error id="cost-price-error" [control]="transactionForm.controls.price" />
 
-    <label for="cost-quantity">{{ 'carWorkspace.transactionForm.quantity' | translate }}</label>
+    <label for="cost-quantity"
+      >{{ 'carWorkspace.transactionForm.quantity' | translate }}
+      @if (selectedCategory(); as category) {
+        ({{ category.unit }})
+      }
+    </label>
     <input
       id="cost-quantity"
       type="text"
@@ -130,9 +141,33 @@
     />
     <app-field-error id="cost-quantity-error" [control]="transactionForm.controls.quantity" />
 
+    <label for="cost-odometer"
+      >{{ 'carWorkspace.transactionForm.odometer' | translate }}
+      @if (!selectedCategory()?.requiresOdometer) {
+        ({{ 'carWorkspace.transactionForm.optional' | translate }})
+      }
+    </label>
+    <input
+      id="cost-odometer"
+      type="text"
+      inputmode="numeric"
+      formControlName="odometer"
+      [attr.aria-invalid]="
+        transactionForm.controls.odometer.invalid && transactionForm.controls.odometer.touched
+      "
+      [attr.aria-describedby]="
+        transactionForm.controls.odometer.invalid && transactionForm.controls.odometer.touched
+          ? 'cost-odometer-error'
+          : null
+      "
+    />
+    <app-field-error id="cost-odometer-error" [control]="transactionForm.controls.odometer" />
+
     <label for="cost-notes">{{ 'carWorkspace.transactionForm.notes' | translate }}</label>
     <textarea id="cost-notes" rows="3" formControlName="notes"></textarea>
 
-    <button type="submit">{{ 'carWorkspace.transactionForm.submit' | translate }}</button>
+    <div class="form__actions">
+      <button type="submit">{{ 'carWorkspace.transactionForm.submit' | translate }}</button>
+    </div>
   </form>
 </section>
